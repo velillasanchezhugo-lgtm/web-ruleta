@@ -232,5 +232,22 @@ document.querySelectorAll('.beat').forEach(el => {
 
 ---
 
+## 8. Variante sin vídeo: "objeto-hilo" en 3D (probada en UMOTION)
+Cuando no hay metraje (o no se quiere gastar en IA), el plano continuo lo da **un objeto 3D que viaja y se transforma** por toda la página.
+- Un `<canvas>` fijo de Three.js detrás del contenido; cada `<section data-scene="…">` define dónde está el objeto (x, y, z, rotación, escala, forma).
+- Se calculan "anclas" (scrollY en que empieza cada sección) y se interpola entre ellas con smoothstep; el render suaviza con `1 - exp(-dt·k)` → sensación pesada y cinematográfica.
+- Forma morfable a mano: misma cantidad de triángulos en cada estado (caos → hoja → grulla), con retraso escalonado por triángulo y un pequeño arco en z al pasar = "se dobla".
+- Las secciones *sticky* (manifiesto de palabras que se encienden, número gigante, scroll horizontal de pasos) son las "paradas" de cámara.
+- Código de referencia: `umotion/src/origami.js` + `umotion/src/main.js` (tabla `SCENES`).
+
+### Lecciones / bugs a evitar
+- **`background-clip: text` no pinta hijos con transform** → al partir un titular en palabras animadas, el degradado debe ir en cada palabra (`.split em .wi`), no en el `<em>`.
+- No poner el objeto 3D encima de columnas de texto: reservar un lado de la pantalla por sección.
+- En móvil: bajar DPR, acercar el objeto al centro (x × 0.35) y atenuar el canvas (~0.7).
+- Las capturas de Playwright durante el scroll salen "fantasma"; verificar con una captura quieta tras esperar.
+
+## Proyectos hechos
+- **UMOTION v1 (2026-11-17)** — `umotion/` (Vite + Three + GSAP + Lenis). Hilo: papeles sueltos (trabajo repetitivo) → hoja ordenada → grulla de origami que vuela al final ("Menos tareas. Más negocio."). Mundo azul noche, Instrument Sans + Instrument Serif cursiva.
+
 ## Registro de referencias
 - **Lote 1** (2026-11-17): 7 vídeos TikTok/IG — R1–R7 arriba.

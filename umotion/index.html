@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Umotion · Más clientes, menos trabajo repetitivo · Zaragoza</title>
+  <meta name="description" content="Webs, tiendas online, marketing y automatizaciones con IA para negocios de Zaragoza. El primer paso, un diagnóstico gratuito." />
+  <meta name="theme-color" content="#04060d" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6 6v11a10 10 0 0 0 20 0V6h-6v11a4 4 0 0 1-8 0V6z' fill='%233b82f6'/%3E%3C/svg%3E" />
+</head>
+<body>
+  <a class="skip" href="#contenido">Saltar al contenido</a>
+
+  <!-- Loader -->
+  <div class="loader" aria-hidden="true">
+    <div class="loader__logo"><span class="u">U</span>motion</div>
+    <div class="loader__bar"><i></i></div>
+    <div class="loader__pct mono">000</div>
+  </div>
+
+  <!-- Escena 3D fija (la grulla) -->
+  <canvas id="origami" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="nav">
+    <a href="#top" class="nav__logo" aria-label="Umotion, inicio"><span class="u">U</span>motion</a>
+    <nav class="nav__links" aria-label="Principal">
+      <a href="#servicios">Servicios</a>
+      <a href="#ejemplos">Ejemplos</a>
+      <a href="#metodo">Cómo trabajamos</a>
+      <a href="#donde">Contacto</a>
+    </nav>
+    <div class="nav__right">
+      <span class="nav__status mono"><i class="dot"></i><span data-status>Abierto</span></span>
+      <a href="#diagnostico" class="btn btn--pill">Diagnóstico gratis</a>
+    </div>
+  </header>
+
+  <div class="progress" aria-hidden="true"><i></i></div>
+
+  <main id="contenido">
+
+    <!-- 0 · HERO -->
+    <section class="hero" id="top" data-scene="hero">
+      <p class="eyebrow mono reveal"><span class="chip">Digital + IA</span> para negocios de Zaragoza</p>
+      <h1 class="hero__title split">
+        Más clientes,<br />menos trabajo<br /><em>repetitivo.</em>
+      </h1>
+      <div class="hero__foot">
+        <p class="hero__lead reveal">Webs, tiendas online y marketing para que te encuentren. Automatizaciones para que reservas, facturas y correos se hagan solos. El primer paso, un diagnóstico gratuito.</p>
+        <div class="hero__cta reveal">
+          <a href="#diagnostico" class="btn btn--primary">Pide tu diagnóstico gratis <span aria-hidden="true">→</span></a>
+          <a href="https://wa.me/34633275909?text=Hola%2C%20Umotion.%20Quer%C3%ADa%20informaci%C3%B3n%20sobre%20el%20diagn%C3%B3stico%20gratuito%20para%20mi%20negocio." class="btn btn--ghost" target="_blank" rel="noopener">WhatsApp</a>
+        </div>
+      </div>
+      <div class="scrollhint mono" aria-hidden="true"><span>Desliza</span><i></i></div>
+    </section>
+
+    <!-- 1 · MANIFIESTO (palabras que se encienden) -->
+    <section class="manifesto" data-scene="sheet">
+      <div class="manifesto__sticky">
+        <p class="label mono">El problema</p>
+        <p class="manifesto__text" data-words>
+          Coger el teléfono en plena hora punta. Apuntar reservas a mano. Pasar facturas. Contestar el mismo correo por quinta vez.
+          <strong>Cada tarea repetida es un trozo de papel arrugado.</strong>
+          Nosotros lo desdoblamos, lo ordenamos y lo doblamos hasta que <em>vuela solo.</em>
+        </p>
+      </div>
+    </section>
+
+    <!-- 2 · QUÉ HACEMOS -->
+    <section class="services" id="servicios" data-scene="fold">
+      <div class="wrap">
+        <p class="label mono reveal">01 · Qué hacemos</p>
+        <h2 class="h2 split">Entender, atraer, <em>automatizar.</em></h2>
+        <p class="sub reveal">No hace falta contratarlo todo. En el diagnóstico vemos qué te aporta más y empezamos por ahí.</p>
+        <div class="cards">
+          <article class="glass card reveal">
+            <span class="card__n mono">01 / 03</span>
+            <span class="card__tag mono">Entender</span>
+            <h3>Análisis de tu negocio</h3>
+            <p>Miramos cómo trabajas y cómo te llegan los clientes, y te decimos dónde se escapa el tiempo.</p>
+            <ul class="mono"><li>Diagnóstico gratuito</li><li>Prioridades claras</li></ul>
+          </article>
+          <article class="glass card reveal">
+            <span class="card__n mono">02 / 03</span>
+            <span class="card__tag mono">Atraer</span>
+            <h3>Webs, tiendas online y marketing</h3>
+            <p>Una web clara, una tienda que vende sola y un marketing con los pies en el suelo para que lleguen clientes de tu zona.</p>
+            <ul class="mono"><li>Web para tu negocio</li><li>Tienda online</li><li>Marketing local</li></ul>
+          </article>
+          <article class="glass card reveal">
+            <span class="card__n mono">03 / 03</span>
+            <span class="card__tag mono">Automatizar</span>
+            <h3>Automatización de procesos</h3>
+            <p>Conectamos tus herramientas para que el dato se escriba una vez y el resto ocurra solo.</p>
+            <ul class="mono"><li>Pedidos, reservas y citas</li><li>Facturas y administración</li><li>Correo y atención al cliente</li></ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 · EJEMPLOS INTERACTIVOS -->
+    <section class="examples" id="ejemplos" data-scene="crane">
+      <div class="wrap examples__grid">
+        <div>
+          <p class="label mono reveal">02 · Automatización en tu negocio</p>
+          <h2 class="h2 split">Elige tu negocio. Mira lo que dejaría de ser <em>tarea tuya.</em></h2>
+          <p class="sub reveal">Son ejemplos de automatizaciones habituales, no casos de clientes. En el diagnóstico buscamos las de tu negocio.</p>
+          <div class="tabs reveal" role="tablist" aria-label="Tipo de negocio">
+            <button role="tab" aria-selected="true" data-sector="hosteleria">Hostelería</button>
+            <button role="tab" aria-selected="false" data-sector="comercio">Comercio</button>
+            <button role="tab" aria-selected="false" data-sector="profesionales">Profesionales</button>
+            <button role="tab" aria-selected="false" data-sector="pymes">Pymes</button>
+          </div>
+          <ol class="tasks reveal" aria-label="Elige una tarea"></ol>
+        </div>
+        <div class="flow glass reveal" aria-live="polite">
+          <p class="flow__sector mono" data-flow="sector"></p>
+          <p class="flow__headline" data-flow="headline"></p>
+          <div class="flow__step">
+            <span class="mono k">Cuando</span>
+            <p data-flow="cuando"></p>
+          </div>
+          <div class="flow__line"><i></i></div>
+          <div class="flow__step flow__step--u">
+            <span class="mono k">Umotion se encarga</span>
+            <p>Sin que nadie tenga que acordarse ni teclearlo</p>
+          </div>
+          <div class="flow__line"><i></i></div>
+          <div class="flow__step flow__step--ok">
+            <span class="mono k">Entonces</span>
+            <p data-flow="entonces"></p>
+          </div>
+          <div class="flow__foot">
+            <span>¿Te pasa algo parecido?</span>
+            <a href="#diagnostico" class="btn btn--primary btn--sm">Quiero algo así →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 · NÚMERO GIGANTE -->
+    <section class="bignum" data-scene="crane-turn">
+      <div class="bignum__inner">
+        <p class="label mono">Lo que cuesta el primer paso</p>
+        <p class="bignum__value"><span data-count>0</span><small>€</small></p>
+        <p class="bignum__caption">Un diagnóstico de tu negocio, en tu local o por videollamada. <em>Sin coste y sin compromiso.</em></p>
+      </div>
+    </section>
+
+    <!-- 5 · MÉTODO · scroll horizontal -->
+    <section class="method" id="metodo" data-scene="crane-steps">
+      <div class="method__sticky">
+        <div class="method__head wrap">
+          <p class="label mono">03 · Cómo trabajamos</p>
+          <h2 class="h2">Cuatro pasos. <em>El primero es gratis.</em></h2>
+        </div>
+        <div class="method__track">
+          <article class="step glass">
+            <span class="step__n">01</span>
+            <span class="chip mono">Gratis</span>
+            <h3>Diagnóstico gratuito</h3>
+            <p>Hablamos contigo en tu negocio o por videollamada. Nos enseñas cómo trabajas y localizamos juntos las tareas que se repiten.</p>
+            <p class="step__ok mono">✓ Sabes qué se puede automatizar y qué no</p>
+          </article>
+          <article class="step glass">
+            <span class="step__n">02</span>
+            <h3>Propuesta</h3>
+            <p>Te proponemos qué automatizar primero, con qué herramientas y cuánto cuesta. Con eso delante, decides si seguimos.</p>
+            <p class="step__ok mono">✓ Precio y alcance claros antes de empezar</p>
+          </article>
+          <article class="step glass">
+            <span class="step__n">03</span>
+            <h3>Puesta en marcha</h3>
+            <p>Montamos las automatizaciones, las probamos con casos reales de tu negocio y te enseñamos a usarlas.</p>
+            <p class="step__ok mono">✓ Probado con tus casos reales</p>
+          </article>
+          <article class="step glass">
+            <span class="step__n">04</span>
+            <h3>Seguimiento</h3>
+            <p>Comprobamos que todo va bien, ajustamos lo que haga falta y, cuando quieras, pasamos a la siguiente tarea.</p>
+            <p class="step__ok mono">✓ Tu negocio sigue mejorando paso a paso</p>
+          </article>
+        </div>
+        <div class="method__bar"><i></i></div>
+      </div>
+    </section>
+
+    <!-- 6 · DIAGNÓSTICO -->
+    <section class="diag" id="diagnostico" data-scene="crane-side">
+      <div class="wrap diag__grid">
+        <div>
+          <p class="label mono reveal">04 · El primer paso</p>
+          <h2 class="h2 split">Tu diagnóstico, <em>gratis.</em></h2>
+          <p class="sub reveal">Una conversación de trabajo sobre tu negocio, en tu local o por videollamada. Vemos cómo trabajas y te decimos qué mejorar y por dónde empezar.</p>
+          <ul class="checks reveal">
+            <li>Sabes qué mejorar primero y qué no hace falta</li>
+            <li>Precio claro antes de empezar nada</li>
+            <li>No necesitas saber de tecnología</li>
+          </ul>
+        </div>
+        <div class="options reveal">
+          <p class="label mono">Elige cómo pedirlo</p>
+          <a class="option glass" href="https://umotion-com.vercel.app/diagnostico">
+            <span class="option__ico" aria-hidden="true">✎</span>
+            <span><b>Rellena el formulario</b> <span class="chip mono">Recomendado</span><br /><small>Un minuto. Nos cuentas tu negocio y qué te quita tiempo.</small></span>
+            <span class="option__arr" aria-hidden="true">→</span>
+          </a>
+          <a class="option glass" href="https://wa.me/34633275909?text=Hola%2C%20Umotion.%20Quer%C3%ADa%20informaci%C3%B3n%20sobre%20el%20diagn%C3%B3stico%20gratuito%20para%20mi%20negocio." target="_blank" rel="noopener">
+            <span class="option__ico" aria-hidden="true">✆</span>
+            <span><b>Escríbenos por WhatsApp</b><br /><small>Al 633 27 59 09. Te respondemos para quedar.</small></span>
+            <span class="option__arr" aria-hidden="true">→</span>
+          </a>
+          <a class="option glass" href="tel:+34633275909">
+            <span class="option__ico" aria-hidden="true">☏</span>
+            <span><b>Llámanos</b><br /><small>Si lo tuyo es hablar. Lunes a sábado, de 9:00 a 20:00.</small></span>
+            <span class="option__arr" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 · DÓNDE + FAQ -->
+    <section class="where" id="donde" data-scene="crane-side">
+      <div class="wrap where__grid">
+        <div>
+          <p class="label mono reveal">05 · Dónde y cuándo</p>
+          <h2 class="h2 split">Sin oficina. <em>Vamos a tu negocio.</em></h2>
+          <ul class="places reveal">
+            <li class="glass"><b>En tu negocio</b><small>Si estás en Zaragoza, vamos a verte.</small></li>
+            <li class="glass"><b>Por videollamada</b><small>Compartes pantalla y nos enseñas tus herramientas.</small></li>
+            <li class="glass"><b>Por WhatsApp o teléfono</b><small>Para dudas rápidas o para quedar.</small></li>
+          </ul>
+          <dl class="hours mono reveal">
+            <div><dt>Lunes a sábado</dt><dd>9:00 – 20:00</dd></div>
+            <div><dt>Domingos</dt><dd>Cerrado</dd></div>
+          </dl>
+        </div>
+        <div class="faq reveal">
+          <p class="label mono">Preguntas frecuentes</p>
+          <details open><summary>¿En qué consiste el diagnóstico gratuito?</summary><p>Es una primera conversación de trabajo, en tu negocio o por videollamada. Nos cuentas cómo trabajas y cómo te llegan los clientes, y te decimos qué mejorar y por dónde empezaríamos. No tiene coste.</p></details>
+          <details><summary>¿Necesito saber de tecnología o de inteligencia artificial?</summary><p>No. Nosotros nos encargamos de la parte técnica y te enseñamos a usar lo que montemos, con tus casos reales.</p></details>
+          <details><summary>¿Tengo que cambiar los programas que ya uso?</summary><p>Normalmente no. Primero miramos qué herramientas usas y buscamos conectarlas antes que sustituirlas.</p></details>
+          <details><summary>¿Cuánto cuestan vuestros servicios?</summary><p>Depende de lo que haga falta. Tras el diagnóstico te damos una propuesta con precio y alcance claros antes de empezar nada.</p></details>
+          <details><summary>¿Venís a mi negocio?</summary><p>Sí, si estás en Zaragoza vamos a verte. Si no, lo hacemos por videollamada.</p></details>
+          <details><summary>¿Para qué tipo de negocio es?</summary><p>Hostelería, comercio, profesionales y pymes: cualquier negocio con tareas que se repiten cada día.</p></details>
+          <details><summary>¿Cómo pido el diagnóstico?</summary><p>Rellena el formulario, escríbenos por WhatsApp al 633 27 59 09 o llámanos de lunes a sábado de 9:00 a 20:00.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8 · CIERRE: la grulla echa a volar -->
+    <section class="finale" data-scene="fly">
+      <p class="label mono reveal">¿Hablamos de tu negocio?</p>
+      <h2 class="finale__title split">Menos tareas.<br /><em>Más negocio.</em></h2>
+      <div class="hero__cta reveal">
+        <a href="#diagnostico" class="btn btn--primary">Pide tu diagnóstico gratis <span aria-hidden="true">→</span></a>
+        <a href="https://wa.me/34633275909" class="btn btn--ghost" target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer__grid">
+      <div>
+        <a href="#top" class="nav__logo"><span class="u">U</span>motion</a>
+        <p>Webs, marketing y automatización con IA para negocios de Zaragoza.</p>
+      </div>
+      <div>
+        <p class="label mono">Contacto</p>
+        <a href="tel:+34633275909">633 27 59 09</a>
+        <a href="mailto:umotionzaragoza@gmail.com">umotionzaragoza@gmail.com</a>
+      </div>
+      <div>
+        <p class="label mono">Para</p>
+        <span>Hostelería</span><span>Comercio</span><span>Profesionales</span><span>Pymes</span>
+      </div>
+      <div>
+        <p class="label mono">Legal</p>
+        <a href="https://umotion-com.vercel.app/aviso-legal">Aviso legal</a>
+        <a href="https://umotion-com.vercel.app/privacidad">Privacidad</a>
+        <a href="https://umotion-com.vercel.app/cookies">Cookies</a>
+      </div>
+    </div>
+    <p class="footer__copy wrap mono">© 2026 Umotion · Zaragoza</p>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
