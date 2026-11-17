@@ -249,5 +249,13 @@ Cuando no hay metraje (o no se quiere gastar en IA), el plano continuo lo da **u
 ## Proyectos hechos
 - **UMOTION v1 (2026-11-17)** — `umotion/` (Vite + Three + GSAP + Lenis). Hilo: papeles sueltos (trabajo repetitivo) → hoja ordenada → grulla de origami que vuela al final ("Menos tareas. Más negocio."). Mundo azul noche, Instrument Sans + Instrument Serif cursiva.
 
+- **Medicalmarca (concepto, 2026-11-17)** — `medicalmarca/`. Distribuidor dental (tienda PrestaShop). Hilo: instrumento de acero de doble extremo en 3D (LatheGeometry con moleteado + puntas TubeGeometry + bandas CP15) con reflejos reales (`RoomEnvironment` + metalness 1) sobre fondo claro de "paño clínico". Firma: **regla milimetrada fija** con las bandas de una sonda CP15 que marca el progreso de lectura. Archivo variable (eje `wdth`): ancha para titulares, estrecha y tabular para precios. Catálogo con foto que sigue al cursor, escena fijada con 3 ideas, carril horizontal de productos reales con precios. Vídeo: `medicalmarca/preview/medicalmarca-scroll.mp4`.
+
+### Más lecciones
+- Fondo claro + metal: el `RoomEnvironment` (PMREM) da reflejos creíbles sin texturas; la sombra con `ShadowMaterial` "posa" el objeto en el fondo.
+- Girar el objeto sobre su propio eje ligado al scroll hace "correr" los reflejos: sensación de movimiento sin desplazar nada.
+- Cada proyecto necesita su propia firma (grulla/papel en Umotion, regla milimetrada en Medicalmarca): no repetir el mismo truco.
+- Webs de terceros (clientes potenciales): no publicarlas como artifact con su marca; entregar en el repo + vídeo de scroll grabado con Playwright (`recordVideo`).
+
 ## Registro de referencias
 - **Lote 1** (2026-11-17): 7 vídeos TikTok/IG — R1–R7 arriba.

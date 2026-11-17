@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Medicalmarca · Instrumental y producto dental</title>
+  <meta name="description" content="Distribución de producto e instrumental dental desde 2006. Envío gratis a España peninsular desde 150 €, entrega en 2 días laborables y devoluciones gratuitas." />
+  <meta name="theme-color" content="#f3f5f7" />
+</head>
+<body>
+  <a class="skip" href="#contenido">Saltar al contenido</a>
+  <canvas id="instrument" aria-hidden="true"></canvas>
+
+  <!-- Regla milimetrada: progreso de lectura con las bandas de una sonda CP15 -->
+  <div class="ruler" aria-hidden="true">
+    <div class="ruler__scale"></div>
+    <div class="ruler__depth"><i></i></div>
+    <output class="ruler__read">0,0 mm</output>
+  </div>
+
+  <header class="nav">
+    <a href="#top" class="nav__logo" aria-label="Medicalmarca, inicio">
+      <svg viewBox="0 0 28 24" aria-hidden="true"><path d="M14 22c-1.6-2.6-2.2-6-3.4-6s-1.4 4.4-3.3 4.4C4.6 20.4 3 13 3 8.6 3 4.3 5.6 2 8.5 2 11 2 12.2 3.6 14 3.6S17 2 19.5 2C22.4 2 25 4.3 25 8.6c0 4.4-1.6 11.8-4.3 11.8-1.9 0-2.1-4.4-3.3-4.4S15.6 19.4 14 22z" fill="currentColor"/></svg>
+      Medicalmarca
+    </a>
+    <nav class="nav__links" aria-label="Principal">
+      <a href="#catalogo">Catálogo</a>
+      <a href="#destacados">Ofertas</a>
+      <a href="#nosotros">Nosotros</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+    <div class="nav__right">
+      <a class="nav__phone" href="tel:+34665479381">665 479 381</a>
+      <a class="btn btn--dark" href="https://medicalmarca.com/tienda">Ir a la tienda</a>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <!-- HERO -->
+    <section class="hero" id="top" data-scene="hero">
+      <h1 class="hero__title">
+        <span class="line"><span>Instrumental dental,</span></span>
+        <span class="line"><span>en tu clínica</span></span>
+        <span class="line"><span>en dos días.</span></span>
+      </h1>
+      <div class="hero__foot">
+        <p class="hero__lead">Distribuimos fresas, instrumental, implantología, sutura y material de protección a clínicas de toda España desde 2006.</p>
+        <div class="hero__cta">
+          <a class="btn btn--violet" href="https://medicalmarca.com/tienda">Ver el catálogo completo</a>
+          <a class="btn btn--line" href="https://medicalmarca.com/ofertas">Ver ofertas</a>
+        </div>
+      </div>
+      <ul class="facts" aria-label="Condiciones de envío">
+        <li><b>Envío gratis</b> a España peninsular a partir de 150 €</li>
+        <li><b>Entrega en 2 días</b> laborables</li>
+        <li><b>Devoluciones</b> gratuitas</li>
+      </ul>
+    </section>
+
+    <!-- CATÁLOGO: lista grande + foto que sigue al cursor -->
+    <section class="catalog" id="catalogo" data-scene="catalog">
+      <div class="wrap catalog__grid">
+        <div class="catalog__intro">
+          <h2 class="h2">Doce familias de producto para el gabinete y el quirófano.</h2>
+          <p class="sub">Elige una familia para ver todos sus productos en la tienda.</p>
+        </div>
+        <ul class="cats" data-cats></ul>
+      </div>
+      <img class="cats__preview" alt="" aria-hidden="true" />
+    </section>
+
+    <!-- PIEZA: el instrumento en primer plano, con tres ideas que aparecen al bajar -->
+    <section class="piece" data-scene="piece">
+      <div class="piece__sticky">
+        <div class="piece__beat" data-beat="0">
+          <h2>Acero inoxidable que aguanta cada ciclo de autoclave.</h2>
+          <p>Instrumental Ustomed para exploración, periodoncia y cirugía: sondas, curetas, pinzas y raspadores.</p>
+        </div>
+        <div class="piece__beat" data-beat="1">
+          <h2>Cajas y kits completos, listos para la intervención.</h2>
+          <p>Implantología, microcirugía, cirugía apical o tunelización: el instrumental que necesitas, ordenado en su caja.</p>
+        </div>
+        <div class="piece__beat" data-beat="2">
+          <h2>Marcas que ya conoces.</h2>
+          <p>NSK, Ustomed y Perfustomed, con asesoramiento y garantía en todos los productos.</p>
+          <a class="link" href="https://medicalmarca.com/es/instrumental/1974-sonda-univ-north-carolina-cp15-med-1-2-3-4-5-ustomed.html">Ver la sonda North Carolina CP15</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- DESTACADOS: carril horizontal de productos -->
+    <section class="featured" id="destacados" data-scene="featured">
+      <div class="featured__sticky">
+        <div class="wrap featured__head">
+          <h2 class="h2">Destacados con descuento.</h2>
+          <a class="link" href="https://medicalmarca.com/ofertas">Todas las ofertas</a>
+        </div>
+        <div class="rail" data-products></div>
+        <p class="wrap featured__note">Precios con IVA según la tienda online. Pueden cambiar; el precio final es el del carrito.</p>
+      </div>
+    </section>
+
+    <!-- NOSOTROS -->
+    <section class="about" id="nosotros" data-scene="about">
+      <div class="wrap about__grid">
+        <p class="about__year" aria-hidden="true">2006</p>
+        <div>
+          <h2 class="h2">Casi veinte años sirviendo a clínicas dentales.</h2>
+          <p class="sub">Medicalmarca nació en 2006 especializada en la distribución de producto dental, y desde entonces no ha dejado de crecer. Hoy servimos a todo el territorio español, Baleares y Canarias.</p>
+          <p class="sub">Nuestra misión es hacer más fácil el día a día de tu clínica: te asesoramos y garantizamos todos nuestros productos.</p>
+          <ul class="langs" aria-label="Tienda disponible en">
+            <li>Castellano</li><li>Català</li><li>Galego</li><li>Euskara</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACTO + NEWSLETTER -->
+    <section class="contact" id="contacto" data-scene="contact">
+      <div class="wrap contact__grid">
+        <div>
+          <h2 class="h2">¿Buscas un producto que no ves en la web?</h2>
+          <p class="sub">Llámanos o escríbenos y te decimos si lo tenemos o te lo conseguimos.</p>
+          <div class="contact__ways">
+            <a href="tel:+34665479381"><span>Teléfono</span>665 479 381</a>
+            <a href="mailto:info@medicalmarca.com"><span>Correo</span>info@medicalmarca.com</a>
+          </div>
+        </div>
+        <form class="news" novalidate>
+          <h3>Ofertas y novedades en tu correo</h3>
+          <p>Un correo cuando entran productos nuevos o hay ofertas. Puedes darte de baja cuando quieras.</p>
+          <label for="email">Correo electrónico</label>
+          <div class="news__row">
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="clinica@ejemplo.com" required />
+            <button class="btn btn--violet" type="submit">Suscribirme</button>
+          </div>
+          <label class="news__ok"><input type="checkbox" required /> He leído y acepto la <a href="https://medicalmarca.com/es/content/9-politica-de-cookies">política de privacidad</a></label>
+          <p class="news__msg" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer__grid">
+      <a href="#top" class="nav__logo">Medicalmarca</a>
+      <nav aria-label="Tienda">
+        <a href="https://medicalmarca.com/tienda">Tienda</a>
+        <a href="https://medicalmarca.com/ofertas">Ofertas</a>
+        <a href="https://medicalmarca.com/es/novedades">Novedades</a>
+        <a href="https://medicalmarca.com/es/iniciar-sesion">Iniciar sesión</a>
+      </nav>
+      <nav aria-label="Información">
+        <a href="https://medicalmarca.com/es/content/1-entrega">Envío</a>
+        <a href="https://medicalmarca.com/es/content/5-pago-seguro">Pago seguro</a>
+        <a href="https://medicalmarca.com/es/content/6-politica-de-devoluciones">Devoluciones</a>
+        <a href="https://medicalmarca.com/es/content/2-aviso-legal">Aviso legal</a>
+        <a href="https://medicalmarca.com/es/content/9-politica-de-cookies">Cookies</a>
+      </nav>
+      <nav aria-label="Redes">
+        <a href="https://www.instagram.com/medicalmarca/">Instagram</a>
+        <a href="https://www.facebook.com/medicalmarca/">Facebook</a>
+      </nav>
+    </div>
+    <p class="wrap footer__copy">© Medicalmarca 2026</p>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
