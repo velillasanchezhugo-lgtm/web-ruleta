@@ -210,3 +210,8 @@ main, .footer { position: relative; z-index: 1; }
 .reduced .piece__beat { position: static; translate: none; max-width: 640px; margin: 0 var(--gutter) 3rem; }
 .reduced .rail { width: auto; flex-wrap: wrap; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+
+/* Aviso de maqueta (quitar en la versión final) */
+.concept-banner { position: fixed; left: 50%; bottom: 14px; translate: -50% 0; z-index: 60; margin: 0; padding: 8px 14px; border-radius: 999px; background: var(--ink); color: #fff; font-size: 0.8rem; white-space: nowrap; box-shadow: 0 10px 30px -10px rgba(0,0,0,.4); }
+.concept-banner a { color: #cdbcf3; }
+@media (max-width: 600px) { .concept-banner { white-space: normal; width: calc(100% - 24px); text-align: center; border-radius: 10px; } }
