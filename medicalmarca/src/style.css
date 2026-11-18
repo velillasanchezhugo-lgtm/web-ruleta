@@ -236,7 +236,7 @@ main, .footer { position: relative; z-index: 1; }
 /* Aviso de maqueta (quitar en la versión final) */
 .concept-banner { position: fixed; left: 50%; bottom: 14px; translate: -50% 0; z-index: 60; margin: 0; padding: 8px 14px; border-radius: 999px; background: var(--ink); color: #fff; font-size: 0.8rem; white-space: nowrap; box-shadow: 0 10px 30px -10px rgba(0,0,0,.4); }
 .concept-banner a { color: #cdbcf3; }
-@media (max-width: 600px) { .concept-banner { white-space: normal; width: calc(100% - 24px); text-align: center; border-radius: 10px; } }
+@media (max-width: 600px) { .concept-banner { position: absolute; top: 70px; bottom: auto; white-space: normal; width: calc(100% - 24px); text-align: center; border-radius: 10px; font-size: 0.72rem; } }
 
 /* Película en pantallas estrechas: texto abajo sobre un velo inferior */
 @media (max-width: 760px) {

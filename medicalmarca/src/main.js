@@ -59,8 +59,11 @@ $$('a[href^="#"]').forEach((a) => a.addEventListener('click', (e) => {
 // (smoothstep), así se "detiene" en cada aparato mientras aparece su texto.
 const filmEl = $('.film');
 const mobileFilm = window.matchMedia('(max-width: 760px)').matches;
+const seq = mobileFilm ? FILM.mobile : FILM.desktop;
 const film = createFilm($('.film__canvas'), {
-  count: FILM.count,
+  count: seq.count,
+  cuts: seq.cuts,
+  focalX: mobileFilm ? 0.72 : 0.5,
   src: (i) => `${import.meta.env.BASE_URL}${mobileFilm ? 'film-m' : 'film'}/f_${String(i + 1).padStart(4, '0')}.webp`,
 });
 film.onProgress((r) => { $('.film__loading i').style.transform = `scaleX(${r})`; if (r >= 1) $('.film__loading').classList.add('is-done'); });

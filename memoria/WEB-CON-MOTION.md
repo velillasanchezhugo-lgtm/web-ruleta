@@ -251,6 +251,17 @@ Cuando no hay metraje (o no se quiere gastar en IA), el plano continuo lo da **u
 
 - **Medicalmarca (concepto, 2026-11-17)** — `medicalmarca/`. Distribuidor dental (tienda PrestaShop). Hilo: instrumento de acero de doble extremo en 3D (LatheGeometry con moleteado + puntas TubeGeometry + bandas CP15) con reflejos reales (`RoomEnvironment` + metalness 1) sobre fondo claro de "paño clínico". Firma: **regla milimetrada fija** con las bandas de una sonda CP15 que marca el progreso de lectura. Archivo variable (eje `wdth`): ancha para titulares, estrecha y tabular para precios. Catálogo con foto que sigue al cursor, escena fijada con 3 ideas, carril horizontal de productos reales con precios. Vídeo: `medicalmarca/preview/medicalmarca-scroll.mp4`.
 
+- **Medicalmarca v2 (2026-11-18)** — a petición de Hugo, el instrumento 3D se sustituyó por una **película de recorrido de cámara por una clínica dental** (puerta → piezas de mano → lámpara → sillón y escupidera → mueble), guiada por scroll. Cada parada muestra una familia de producto. Código: `medicalmarca/src/film.js` + `src/film.json`.
+
+### Receta probada: película IA desde UNA foto (Higgsfield)
+1. Subir la foto del cliente (`media_upload` + PUT + `media_confirm`).
+2. `gpt_image_2_6` 16:9 con la foto como referencia → **plano general** fiel (0,25 cr).
+3. Con el plano general + la foto como referencias → **primeros planos** de cada parada, dejando el sujeto a la derecha para el texto (0,25 cr c/u).
+4. `flux_3_video` 15 s 1080p sin audio (120 cr): `start_image` = plano general, `image_references` = paradas intermedias en orden, `end_image` = última parada.
+5. **Revisar cortes**: FLUX puede meter cortes secos entre fotogramas clave. Detectarlos con `ffmpeg ... select=gte(scene,0),metadata=print` (score > 0,2 = corte) y disimularlos en el canvas con fundido + zoom hacia delante (~9 fotogramas a cada lado).
+6. Extraer WebP: escritorio 1600 px q72 a 24 fps (~15 MB / 361 fotogramas), móvil 1100 px q62 a 18 fps (~6 MB). En móvil, encuadre desplazado (`focalX` 0,72) hacia donde están los aparatos.
+7. Mapear scroll → vídeo con smoothstep entre paradas: la cámara frena sola en cada aparato mientras aparece su texto.
+
 ### Más lecciones
 - Fondo claro + metal: el `RoomEnvironment` (PMREM) da reflejos creíbles sin texturas; la sombra con `ShadowMaterial` "posa" el objeto en el fondo.
 - Girar el objeto sobre su propio eje ligado al scroll hace "correr" los reflejos: sensación de movimiento sin desplazar nada.

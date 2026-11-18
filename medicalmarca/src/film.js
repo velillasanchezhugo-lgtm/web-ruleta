@@ -1,66 +1,84 @@
 // Película guiada por scroll: una secuencia de fotogramas (recorrido de cámara por la clínica)
-// pintada en un <canvas>. El progreso del scroll dentro de la sección decide el fotograma.
+// pintada en un <canvas>. El progreso del scroll decide el fotograma.
+// Los cortes del vídeo generado se disimulan con un fundido + zoom hacia delante ("atravesar").
 
-export function createFilm(canvas, { count, src, firstBatch = 24 }) {
+const smooth = (t) => t * t * (3 - 2 * t);
+
+export function createFilm(canvas, { count, src, cuts = [], blend = 9, focalX = 0.5, firstBatch = 24 }) {
   const ctx = canvas.getContext('2d', { alpha: false });
   const frames = new Array(count);
-  let current = 0, drawn = -1, loaded = 0;
+  let pos = 0, lastKey = '', loaded = 0;
   const listeners = [];
 
+  function ok(i) { const im = frames[i]; return im && im.complete && im.naturalWidth > 0; }
   function load(i) {
-    if (frames[i]) return frames[i];
+    if (frames[i]) return;
     const im = new Image();
     im.decoding = 'async';
     im.src = src(i);
-    im.onload = () => { loaded++; listeners.forEach((f) => f(loaded / count)); if (i === nearestLoaded(current)) draw(true); };
+    im.onload = () => { loaded++; listeners.forEach((f) => f(loaded / count)); lastKey = ''; draw(); };
     frames[i] = im;
-    return im;
   }
   // primero el arranque, luego fotogramas espaciados (para poder hacer scroll rápido) y después el resto
   for (let i = 0; i < Math.min(firstBatch, count); i++) load(i);
-  const rest = [];
-  for (let step = 16; step >= 1; step = step >> 1) for (let i = 0; i < count; i += step) rest.push(i);
-  let ri = 0;
+  cuts.forEach((c) => { load(c - 1); load(c); });
+  const order = [];
+  for (let step = 16; step >= 1; step >>= 1) for (let i = 0; i < count; i += step) order.push(i);
+  let oi = 0;
   (function idle() {
-    for (let n = 0; n < 6 && ri < rest.length; n++) load(rest[ri++]);
-    if (ri < rest.length) setTimeout(idle, 30);
+    for (let n = 0; n < 6 && oi < order.length; n++) load(order[oi++]);
+    if (oi < order.length) setTimeout(idle, 25);
   })();
 
-  function nearestLoaded(i) {
+  function nearest(i) {
+    i = Math.max(0, Math.min(count - 1, i));
     for (let d = 0; d < count; d++) {
-      const a = frames[i - d], b = frames[i + d];
-      if (a && a.complete && a.naturalWidth) return i - d;
-      if (b && b.complete && b.naturalWidth) return i + d;
+      if (ok(i - d)) return i - d;
+      if (ok(i + d)) return i + d;
     }
     return -1;
+  }
+
+  function paint(i, alpha, zoom) {
+    const j = nearest(i);
+    if (j < 0) return;
+    const im = frames[j];
+    const cw = canvas.width, ch = canvas.height;
+    const s = Math.max(cw / im.naturalWidth, ch / im.naturalHeight) * zoom; // cover
+    const w = im.naturalWidth * s, h = im.naturalHeight * s;
+    ctx.globalAlpha = alpha;
+    ctx.drawImage(im, (cw - w) * focalX, (ch - h) / 2, w, h);
+  }
+
+  function draw() {
+    const f = pos * (count - 1);
+    const i = Math.round(f);
+    // ¿estamos cerca de un corte?
+    const c = cuts.find((k) => f > k - 0.5 - blend && f < k - 0.5 + blend);
+    const key = c ? `${c}:${f.toFixed(2)}` : `${i}`;
+    if (key === lastKey) return;
+    lastKey = key;
+    if (!c) { paint(i, 1, 1); return; }
+    // t: 0 → 1 a lo largo de la ventana del corte
+    const t = smooth((f - (c - 0.5 - blend)) / (2 * blend));
+    const before = Math.min(i, c - 1), after = Math.max(i, c);
+    paint(before, 1, 1 + 0.22 * t);           // el plano que sale avanza hacia la cámara
+    paint(after, t, 1.12 - 0.12 * t);         // el que entra llega desde un poco más cerca y se asienta
+    ctx.globalAlpha = 1;
   }
 
   function resize() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = Math.round(canvas.clientWidth * dpr);
     canvas.height = Math.round(canvas.clientHeight * dpr);
-    draw(true);
+    lastKey = '';
+    draw();
   }
-
-  function draw(force = false) {
-    const i = nearestLoaded(current);
-    if (i < 0 || (i === drawn && !force)) return;
-    const im = frames[i];
-    const cw = canvas.width, ch = canvas.height;
-    const s = Math.max(cw / im.naturalWidth, ch / im.naturalHeight); // cover
-    const w = im.naturalWidth * s, h = im.naturalHeight * s;
-    ctx.drawImage(im, (cw - w) / 2, (ch - h) / 2, w, h);
-    drawn = i;
-  }
-
   window.addEventListener('resize', resize);
   resize();
 
   return {
-    set progress(p) {
-      current = Math.max(0, Math.min(count - 1, Math.round(p * (count - 1))));
-      draw();
-    },
+    set progress(p) { pos = Math.max(0, Math.min(1, p)); draw(); },
     onProgress(f) { listeners.push(f); },
   };
 }
