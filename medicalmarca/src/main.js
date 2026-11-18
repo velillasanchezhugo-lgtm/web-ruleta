@@ -4,7 +4,8 @@ import './style.css';
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { createInstrument } from './instrument.js';
+import { createFilm } from './film.js';
+import FILM from './film.json';
 import { CATEGORIES, PRODUCTS } from './data.js';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -53,39 +54,49 @@ $$('a[href^="#"]').forEach((a) => a.addEventListener('click', (e) => {
   lenis ? lenis.scrollTo(el, { duration: 1.4 }) : el.scrollIntoView();
 }));
 
-// ---------- Instrumento 3D ----------
-const tool = createInstrument($('#instrument'), { reduced });
-const SCENES = {
-  hero:     { x: 2.5,  y: 1.15, z: 0,    rx: 0.2,  ry: -0.35, rz: 0.36, sc: 1.1,  spin: 0, shadow: 1 },
-  catalog:  { x: -3.3, y: -1.9, z: -1.5, rx: 0.1,  ry: 0.5,   rz: 0.3,  sc: 0.8,  spin: 0.5, shadow: 0 },
-  piece:    { x: 1.5,  y: 0,    z: 1.6,  rx: 0.35, ry: -0.2,  rz: 0.05, sc: 1.2,  spin: 1, shadow: 0.6 },
-  featured: { x: 1.4,  y: -3.0, z: -2,   rx: 0.05, ry: 0,     rz: 0,    sc: 0.7,  spin: 0.2, shadow: 0 },
-  about:    { x: -2.8, y: -1.7, z: -1,   rx: 0.4,  ry: 0.5,   rz: -0.15, sc: 0.95, spin: 0.4, shadow: 0 },
-  contact:  { x: 3.2,  y: 2.4,  z: -2,   rx: 0.2,  ry: -0.4,  rz: 0.12, sc: 0.75, spin: 0.2, shadow: 0 },
-};
-const SCENE_END = { piece: { ry: 1.4, rz: -0.25, x: 1.3 }, featured: { ry: 0.4 } };
+// ---------- Película: recorrido de cámara por la clínica ----------
+// FILM.stops: posición (0–1) de cada parada dentro del vídeo. Entre paradas la cámara acelera y frena
+// (smoothstep), así se "detiene" en cada aparato mientras aparece su texto.
+const filmEl = $('.film');
+const mobileFilm = window.matchMedia('(max-width: 760px)').matches;
+const film = createFilm($('.film__canvas'), {
+  count: FILM.count,
+  src: (i) => `${import.meta.env.BASE_URL}${mobileFilm ? 'film-m' : 'film'}/f_${String(i + 1).padStart(4, '0')}.webp`,
+});
+film.onProgress((r) => { $('.film__loading i').style.transform = `scaleX(${r})`; if (r >= 1) $('.film__loading').classList.add('is-done'); });
 
-let anchors = [];
-function computeAnchors() {
-  const vh = window.innerHeight;
-  anchors = [];
-  $$('[data-scene]').forEach((el) => {
-    const name = el.dataset.scene, st = SCENES[name];
-    if (name === 'hero') { anchors.push({ y: 0, st }); return; }
-    anchors.push({ y: Math.max(1, el.offsetTop - vh * 0.4), st });
-    if (SCENE_END[name] && el.offsetHeight > vh * 1.4) anchors.push({ y: el.offsetTop + el.offsetHeight - vh, st: { ...st, ...SCENE_END[name] } });
+const stops = $$('.stop');
+const dots = $$('.film__progress span');
+const N = FILM.stops.length;
+let filmTarget = 0, filmNow = 0;
+
+function filmProgress(y) {
+  const span = filmEl.offsetHeight - window.innerHeight;
+  return Math.min(1, Math.max(0, (y - filmEl.offsetTop) / (span || 1)));
+}
+function videoAt(p) {
+  const seg = Math.min(N - 2, Math.floor(p * (N - 1)));
+  const t = p * (N - 1) - seg;
+  const e = t * t * (3 - 2 * t);
+  return FILM.stops[seg] + (FILM.stops[seg + 1] - FILM.stops[seg]) * e;
+}
+function paintStops(p) {
+  let active = 0;
+  stops.forEach((el, i) => {
+    const at = i / (N - 1);
+    const d = Math.abs(p - at);
+    const o = reduced ? (Math.round(p * (N - 1)) === i ? 1 : 0) : Math.max(0, Math.min(1, 1 - (d - 0.045) / 0.06));
+    el.style.opacity = o;
+    el.style.visibility = o < 0.01 ? 'hidden' : 'visible';
+    el.style.transform = `translateY(${(p < at ? 1 : -1) * (1 - o) * 40}px)`;
+    if (d < 0.5 / (N - 1)) active = i;
   });
-  anchors.sort((a, b) => a.y - b.y);
+  dots.forEach((d, i) => d.classList.toggle('is-on', i === active));
 }
-function applyScroll(y) {
-  let a = anchors[0], b = anchors[0];
-  for (let i = 0; i < anchors.length - 1; i++) if (y >= anchors[i].y) { a = anchors[i]; b = anchors[i + 1]; }
-  if (y >= anchors[anchors.length - 1].y) a = b = anchors[anchors.length - 1];
-  const t0 = Math.min(1, Math.max(0, (y - a.y) / ((b.y - a.y) || 1)));
-  const t = t0 * t0 * (3 - 2 * t0);
-  for (const k in tool.target) tool.target[k] = a.st[k] + (b.st[k] - a.st[k]) * t;
-  tool.setScroll(y);
-}
+gsap.ticker.add(() => {
+  filmNow += (filmTarget - filmNow) * (reduced ? 1 : 0.18);
+  film.progress = videoAt(filmNow);
+});
 
 // ---------- Regla milimetrada ----------
 const scale = $('.ruler__scale');
@@ -110,12 +121,12 @@ function onScroll(y) {
   depth.style.transform = `scaleY(${p})`;
   read.textContent = `${mmFmt.format(p * 15)} mm`;
   $('.nav').classList.toggle('is-solid', y > 40);
-  applyScroll(y);
+  filmTarget = filmProgress(y);
+  paintStops(filmTarget);
 }
 if (lenis) lenis.on('scroll', (e) => onScroll(e.scroll));
 else window.addEventListener('scroll', () => onScroll(window.scrollY), { passive: true });
-window.addEventListener('resize', () => { computeAnchors(); onScroll(window.scrollY); });
-ScrollTrigger.addEventListener('refresh', () => { computeAnchors(); onScroll(window.scrollY); });
+window.addEventListener('resize', () => onScroll(window.scrollY));
 
 // ---------- Catálogo: la foto sigue al cursor (respuesta a la acción) ----------
 const preview = $('.cats__preview');
@@ -132,15 +143,6 @@ if (finePointer && !reduced) {
 
 // ---------- Escenas fijadas ----------
 if (!reduced) {
-  // Pieza: tres ideas que se suceden mientras el instrumento gira en primer plano
-  const beats = $$('.piece__beat');
-  gsap.set(beats, { autoAlpha: 0, y: 30 });
-  const tl = gsap.timeline({ scrollTrigger: { trigger: '.piece', start: 'top top', end: 'bottom bottom', scrub: true } });
-  beats.forEach((b, i) => {
-    tl.to(b, { autoAlpha: 1, y: 0, duration: 0.6 }, i * 2)
-      .to(b, { autoAlpha: i === beats.length - 1 ? 1 : 0, y: i === beats.length - 1 ? 0 : -30, duration: 0.6 }, i * 2 + 1.4);
-  });
-
   // Destacados: el carril se desplaza en horizontal
   const rail = $('.rail');
   gsap.to(rail, {
@@ -152,15 +154,11 @@ if (!reduced) {
 
 // ---------- Entrada: un único momento orquestado ----------
 function intro() {
-  computeAnchors(); onScroll(window.scrollY);
-  if (reduced || window.scrollY > 10) { tool.snap(); return; }
-  // el instrumento entra deslizándose sobre el paño desde la derecha
-  const end = { x: tool.target.x, rz: tool.target.rz };
-  tool.target.x = 8; tool.target.rz = 1.1; tool.snap();
-  Object.assign(tool.target, end);
+  onScroll(window.scrollY); filmNow = filmTarget;
+  if (reduced || window.scrollY > 10) return;
   gsap.timeline()
     .from('.hero__title .line > span', { yPercent: 105, duration: 1.2, stagger: 0.09, ease: 'expo.out' }, 0.15)
-    .from('.hero__foot, .facts', { autoAlpha: 0, y: 16, duration: 0.9, stagger: 0.1, ease: 'power3.out' }, 0.7)
-    .from('.nav', { autoAlpha: 0, duration: 0.8 }, 0.5);
+    .from('.stop--hero .hero__lead, .stop--hero .hero__cta, .stop--hero .facts', { autoAlpha: 0, y: 16, duration: 0.9, stagger: 0.1, ease: 'power3.out' }, 0.6)
+    .from('.nav, .film__progress', { autoAlpha: 0, duration: 0.8 }, 0.5);
 }
 if (document.readyState === 'complete') intro(); else window.addEventListener('load', intro);

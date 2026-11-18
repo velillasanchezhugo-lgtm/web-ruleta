@@ -11,8 +11,6 @@
 <body>
   <a class="skip" href="#contenido">Saltar al contenido</a>
   <p class="concept-banner">Concepto de rediseño · No es la web oficial de Medicalmarca · <a href="https://medicalmarca.com/es/">Ir a la tienda real</a></p>
-  <canvas id="instrument" aria-hidden="true"></canvas>
-
   <!-- Regla milimetrada: progreso de lectura con las bandas de una sonda CP15 -->
   <div class="ruler" aria-hidden="true">
     <div class="ruler__scale"></div>
@@ -38,29 +36,67 @@
   </header>
 
   <main id="contenido">
-    <!-- HERO -->
-    <section class="hero" id="top" data-scene="hero">
-      <h1 class="hero__title">
-        <span class="line"><span>Instrumental dental,</span></span>
-        <span class="line"><span>en tu clínica</span></span>
-        <span class="line"><span>en dos días.</span></span>
-      </h1>
-      <div class="hero__foot">
-        <p class="hero__lead">Distribuimos fresas, instrumental, implantología, sutura y material de protección a clínicas de toda España desde 2006.</p>
-        <div class="hero__cta">
-          <a class="btn btn--violet" href="https://medicalmarca.com/tienda">Ver el catálogo completo</a>
-          <a class="btn btn--line" href="https://medicalmarca.com/ofertas">Ver ofertas</a>
+    <!-- PELÍCULA: recorrido de cámara por la clínica, guiado por el scroll -->
+    <section class="film" id="top">
+      <div class="film__stage">
+        <canvas class="film__canvas" aria-hidden="true"></canvas>
+        <div class="film__veil" aria-hidden="true"></div>
+
+        <div class="stop stop--hero" data-stop="0">
+          <h1 class="hero__title">
+            <span class="line"><span>Instrumental dental,</span></span>
+            <span class="line"><span>en tu clínica</span></span>
+            <span class="line"><span>en dos días.</span></span>
+          </h1>
+          <p class="hero__lead">Todo lo que usa tu gabinete, de la pieza de mano al guante. Distribuimos producto dental a clínicas de toda España desde 2006.</p>
+          <div class="hero__cta">
+            <a class="btn btn--violet" href="https://medicalmarca.com/tienda">Ver el catálogo completo</a>
+            <a class="btn btn--line" href="https://medicalmarca.com/ofertas">Ver ofertas</a>
+          </div>
+          <ul class="facts" aria-label="Condiciones de envío">
+            <li><b>Envío gratis</b> a España peninsular desde 150 €</li>
+            <li><b>Entrega en 2 días</b> laborables</li>
+            <li><b>Devoluciones</b> gratuitas</li>
+          </ul>
         </div>
+
+        <div class="stop" data-stop="1">
+          <p class="stop__where">En la bandeja</p>
+          <h2>Piezas de mano, fresas e insertos.</h2>
+          <p>Aparatología e instrumental rotatorio, como el destornillador protésico inalámbrico IDS 900 de NSK, y las fresas e insertos que lo acompañan.</p>
+          <a class="link" href="https://medicalmarca.com/es/72-aparatologia-y-instrumental-rotatorio">Ver instrumental rotatorio</a>
+        </div>
+
+        <div class="stop" data-stop="2">
+          <p class="stop__where">Bajo la lámpara</p>
+          <h2>Kits completos para cada intervención.</h2>
+          <p>Implantología, microcirugía, cirugía apical o tunelización: el instrumental que necesitas, ordenado en su caja.</p>
+          <a class="link" href="https://medicalmarca.com/es/50-implantologia">Ver implantología</a>
+        </div>
+
+        <div class="stop" data-stop="3">
+          <p class="stop__where">En el sillón</p>
+          <h2>Profilaxis, pulido y sutura.</h2>
+          <p>Lo que usas en cada paciente, cada día, con entrega en dos días laborables para que no te quedes sin stock.</p>
+          <a class="link" href="https://medicalmarca.com/es/46-profilaxis">Ver profilaxis</a>
+        </div>
+
+        <div class="stop" data-stop="4">
+          <p class="stop__where">En el mueble</p>
+          <h2>Protección, desinfección e instrumental esterilizable.</h2>
+          <p>Guantes y material de protección, gel hidroalcohólico, desinfección e instrumental Ustomed de acero inoxidable.</p>
+          <a class="link" href="https://medicalmarca.com/es/79-material-proteccion">Ver material de protección</a>
+        </div>
+
+        <div class="film__progress" aria-hidden="true">
+          <span data-dot="0">Clínica</span><span data-dot="1">Bandeja</span><span data-dot="2">Lámpara</span><span data-dot="3">Sillón</span><span data-dot="4">Mueble</span>
+        </div>
+        <div class="film__loading" aria-hidden="true"><i></i></div>
       </div>
-      <ul class="facts" aria-label="Condiciones de envío">
-        <li><b>Envío gratis</b> a España peninsular a partir de 150 €</li>
-        <li><b>Entrega en 2 días</b> laborables</li>
-        <li><b>Devoluciones</b> gratuitas</li>
-      </ul>
     </section>
 
     <!-- CATÁLOGO: lista grande + foto que sigue al cursor -->
-    <section class="catalog" id="catalogo" data-scene="catalog">
+    <section class="catalog" id="catalogo">
       <div class="wrap catalog__grid">
         <div class="catalog__intro">
           <h2 class="h2">Doce familias de producto para el gabinete y el quirófano.</h2>
@@ -71,27 +107,8 @@
       <img class="cats__preview" alt="" aria-hidden="true" />
     </section>
 
-    <!-- PIEZA: el instrumento en primer plano, con tres ideas que aparecen al bajar -->
-    <section class="piece" data-scene="piece">
-      <div class="piece__sticky">
-        <div class="piece__beat" data-beat="0">
-          <h2>Acero inoxidable que aguanta cada ciclo de autoclave.</h2>
-          <p>Instrumental Ustomed para exploración, periodoncia y cirugía: sondas, curetas, pinzas y raspadores.</p>
-        </div>
-        <div class="piece__beat" data-beat="1">
-          <h2>Cajas y kits completos, listos para la intervención.</h2>
-          <p>Implantología, microcirugía, cirugía apical o tunelización: el instrumental que necesitas, ordenado en su caja.</p>
-        </div>
-        <div class="piece__beat" data-beat="2">
-          <h2>Marcas que ya conoces.</h2>
-          <p>NSK, Ustomed y Perfustomed, con asesoramiento y garantía en todos los productos.</p>
-          <a class="link" href="https://medicalmarca.com/es/instrumental/1974-sonda-univ-north-carolina-cp15-med-1-2-3-4-5-ustomed.html">Ver la sonda North Carolina CP15</a>
-        </div>
-      </div>
-    </section>
-
     <!-- DESTACADOS: carril horizontal de productos -->
-    <section class="featured" id="destacados" data-scene="featured">
+    <section class="featured" id="destacados">
       <div class="featured__sticky">
         <div class="wrap featured__head">
           <h2 class="h2">Destacados con descuento.</h2>
@@ -103,7 +120,7 @@
     </section>
 
     <!-- NOSOTROS -->
-    <section class="about" id="nosotros" data-scene="about">
+    <section class="about" id="nosotros">
       <div class="wrap about__grid">
         <p class="about__year" aria-hidden="true">2006</p>
         <div>
@@ -118,7 +135,7 @@
     </section>
 
     <!-- CONTACTO + NEWSLETTER -->
-    <section class="contact" id="contacto" data-scene="contact">
+    <section class="contact" id="contacto">
       <div class="wrap contact__grid">
         <div>
           <h2 class="h2">¿Buscas un producto que no ves en la web?</h2>

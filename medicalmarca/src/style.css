@@ -90,9 +90,31 @@ main, .footer { position: relative; z-index: 1; }
 .ruler__depth i { position: absolute; inset: 0; background: linear-gradient(var(--violet), var(--violet)) center / 2px 100% no-repeat; transform: scaleY(0); transform-origin: top; }
 .ruler__read { position: absolute; top: calc(100% + 14px); left: -2px; font-size: 0.72rem; font-stretch: 75%; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--violet-ink); }
 
-/* HERO */
-.hero { min-height: 100svh; padding: 120px var(--gutter) 36px; display: grid; grid-template-rows: 1fr auto auto; gap: 2.5rem; max-width: 1500px; margin: 0 auto; }
-.hero__title { align-self: end; margin: 0; font-size: clamp(2.7rem, 7.2vw, 7.6rem); line-height: 0.95; }
+/* PELÍCULA (recorrido de cámara por la clínica) */
+.film { height: 760vh; position: relative; }
+.film__stage { position: sticky; top: 0; height: 100vh; overflow: hidden; background: #eef1f4; }
+.film__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+/* velo blanco desde la izquierda para que el texto se lea sobre la imagen clara */
+.film__veil { position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(90deg, rgba(243, 245, 247, 0.92) 0%, rgba(243, 245, 247, 0.72) 30%, rgba(243, 245, 247, 0) 55%); }
+.stop { position: absolute; left: calc(var(--gutter) + 24px); top: 50%; translate: 0 -50%; width: min(520px, 40vw); will-change: transform, opacity; }
+.stop h2 { font-stretch: 118%; font-weight: 600; letter-spacing: -0.025em; text-wrap: balance; font-size: clamp(1.9rem, 3.4vw, 3.1rem); line-height: 1.04; margin: 0 0 1rem; }
+.stop p { color: var(--ink); opacity: 0.78; margin: 0 0 1.1rem; max-width: 44ch; }
+.stop .stop__where { opacity: 1; color: var(--violet-ink); font-weight: 600; font-stretch: 90%; margin-bottom: 0.6rem; }
+.stop--hero { width: min(760px, 58vw); top: auto; bottom: 7vh; translate: none; }
+.stop--hero .hero__lead { margin: 1.4rem 0 1.4rem; }
+.stop--hero .facts { margin-top: 1.8rem; }
+.film__progress { position: absolute; right: var(--gutter); bottom: 5vh; display: flex; gap: 18px; font-size: 0.82rem; font-stretch: 90%; color: var(--muted); }
+.film__progress span { position: relative; padding-top: 10px; transition: color 0.3s; }
+.film__progress span::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--steel); transition: background 0.3s; }
+.film__progress span.is-on { color: var(--ink); }
+.film__progress span.is-on::before { background: var(--violet); }
+.film__loading { position: absolute; left: 0; right: 0; top: 0; height: 2px; }
+.film__loading i { display: block; height: 100%; background: var(--violet); transform: scaleX(0); transform-origin: left; transition: transform 0.2s; }
+.film__loading.is-done { opacity: 0; transition: opacity 0.6s 0.3s; }
+
+/* HERO (dentro de la película) */
+.hero__title { margin: 0; font-size: clamp(2.6rem, 6.2vw, 6.6rem); line-height: 0.95; }
 .hero__title .line { display: block; overflow: hidden; padding-bottom: 0.04em; }
 .hero__title .line > span { display: inline-block; }
 .hero__foot { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1.5rem 3rem; }
@@ -215,3 +237,12 @@ main, .footer { position: relative; z-index: 1; }
 .concept-banner { position: fixed; left: 50%; bottom: 14px; translate: -50% 0; z-index: 60; margin: 0; padding: 8px 14px; border-radius: 999px; background: var(--ink); color: #fff; font-size: 0.8rem; white-space: nowrap; box-shadow: 0 10px 30px -10px rgba(0,0,0,.4); }
 .concept-banner a { color: #cdbcf3; }
 @media (max-width: 600px) { .concept-banner { white-space: normal; width: calc(100% - 24px); text-align: center; border-radius: 10px; } }
+
+/* Película en pantallas estrechas: texto abajo sobre un velo inferior */
+@media (max-width: 760px) {
+  .film__veil { background: linear-gradient(0deg, rgba(243,245,247,0.96) 0%, rgba(243,245,247,0.85) 42%, rgba(243,245,247,0) 70%); }
+  .stop, .stop--hero { left: var(--gutter); right: var(--gutter); width: auto; top: auto; bottom: 11vh; translate: none; }
+  .stop--hero .facts { display: none; }
+  .stop h2 { font-size: clamp(1.6rem, 7vw, 2.2rem); }
+  .film__progress { left: var(--gutter); right: var(--gutter); bottom: 3.5vh; justify-content: space-between; gap: 6px; font-size: 0.72rem; }
+}
