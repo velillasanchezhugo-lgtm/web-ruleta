@@ -72,7 +72,8 @@ main, .footer { position: relative; z-index: 1; }
 }
 .nav.is-solid { background: rgba(243, 245, 247, 0.82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 1px 0 var(--line); }
 .nav__logo { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-stretch: 112%; font-size: 1.2rem; letter-spacing: -0.02em; text-decoration: none; color: var(--ink); }
-.nav__logo svg { width: 26px; color: var(--violet); }
+.nav__logo img { display: block; height: 30px; width: auto; }
+.footer .nav__logo img { height: 34px; }
 .nav__links { display: flex; gap: 2rem; font-size: 0.95rem; }
 .nav__links a { text-decoration: none; color: var(--muted); transition: color 0.2s; }
 .nav__links a:hover { color: var(--ink); }
@@ -236,13 +237,31 @@ main, .footer { position: relative; z-index: 1; }
 /* Aviso de maqueta (quitar en la versión final) */
 .concept-banner { position: fixed; left: 50%; bottom: 14px; translate: -50% 0; z-index: 60; margin: 0; padding: 8px 14px; border-radius: 999px; background: var(--ink); color: #fff; font-size: 0.8rem; white-space: nowrap; box-shadow: 0 10px 30px -10px rgba(0,0,0,.4); }
 .concept-banner a { color: #cdbcf3; }
-@media (max-width: 600px) { .concept-banner { position: absolute; top: 70px; bottom: auto; white-space: normal; width: calc(100% - 24px); text-align: center; border-radius: 10px; font-size: 0.72rem; } }
+@media (max-width: 600px), (max-width: 1100px) and (orientation: portrait) { .concept-banner { position: absolute; top: 70px; bottom: auto; white-space: normal; width: calc(100% - 24px); text-align: center; border-radius: 10px; font-size: 0.72rem; } }
 
-/* Película en pantallas estrechas: texto abajo sobre un velo inferior */
-@media (max-width: 760px) {
+/* Película en pantallas estrechas o tabletas en vertical: texto abajo sobre un velo inferior */
+@media (max-width: 760px), (max-width: 1100px) and (orientation: portrait) {
   .film__veil { background: linear-gradient(0deg, rgba(243,245,247,0.96) 0%, rgba(243,245,247,0.85) 42%, rgba(243,245,247,0) 70%); }
   .stop, .stop--hero { left: var(--gutter); right: var(--gutter); width: auto; top: auto; bottom: 11vh; translate: none; }
   .stop--hero .facts { display: none; }
   .stop h2 { font-size: clamp(1.6rem, 7vw, 2.2rem); }
   .film__progress { left: var(--gutter); right: var(--gutter); bottom: 3.5vh; justify-content: space-between; gap: 6px; font-size: 0.72rem; }
 }
+
+/* Accesibilidad: zonas táctiles de al menos 24 px (WCAG 2.2) y 44 px en móvil */
+.nav__links a { display: inline-block; padding: 10px 2px; }
+.news__ok input { width: 22px; height: 22px; flex: none; }
+.news__ok a { display: inline-block; padding: 4px 0; }
+.footer nav a { display: inline-block; padding: 6px 0; }
+@media (pointer: coarse) { .news__ok input { width: 26px; height: 26px; } .link { display: inline-block; padding: 8px 0; } }
+
+/* Móviles muy estrechos (320–380 px) */
+.btn--dark { white-space: nowrap; }
+@media (max-width: 380px) {
+  .nav { gap: 0.75rem; }
+  .nav__logo img { height: 24px; }
+  .btn--dark { padding: 0 12px; font-size: 0.82rem; }
+  .contact__ways a { flex-direction: column; gap: 2px; font-size: 1.05rem; }
+  .contact__ways a span { align-self: flex-start; }
+}
+.contact__ways a { overflow-wrap: normal; word-break: normal; }

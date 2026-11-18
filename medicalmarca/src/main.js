@@ -17,17 +17,28 @@ const img = (n) => `${import.meta.env.BASE_URL}img/${n}.jpg`;
 const eur = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' });
 
 // ---------- Contenido ----------
+// Seguridad: todo dato que entra en el HTML se escapa, y solo se aceptan enlaces https a la tienda.
+// Así, si mañana estos datos vienen de la API de la tienda, no se puede inyectar código.
+const esc = (v) => String(v).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+const safeUrl = (u) => {
+  try { const x = new URL(u); return x.protocol === 'https:' && x.hostname === 'medicalmarca.com' ? x.href : 'https://medicalmarca.com/tienda'; }
+  catch { return 'https://medicalmarca.com/tienda'; }
+};
+const imgName = (n) => (/^[a-z0-9-]+$/i.test(n) ? n : 'logo');
+
 $('[data-cats]').innerHTML = CATEGORIES.map((c) => `
-  <li><a href="${c.url}" data-img="${img(c.img)}"><span>${c.name}</span></a></li>`).join('');
+  <li><a href="${esc(safeUrl(c.url))}" data-img="${esc(img(imgName(c.img)))}"><span>${esc(c.name)}</span></a></li>`).join('');
 
 $('[data-products]').innerHTML = PRODUCTS.map((p) => {
-  const off = Math.round((1 - p.now / p.was) * 100);
+  const now = Number(p.now), was = Number(p.was);
+  const off = Math.round((1 - now / was) * 100);
+  const url = esc(safeUrl(p.url));
   return `<article class="prod">
-    <a class="prod__img" href="${p.url}"><img src="${img(p.img)}" alt="${p.name}" loading="lazy" width="400" height="400" /></a>
-    <p class="prod__brand">${p.brand ?? 'Medicalmarca'}</p>
-    <h3><a href="${p.url}">${p.name}</a></h3>
-    <p class="prod__price"><b>${eur.format(p.now)}</b> <s aria-label="Antes">${eur.format(p.was)}</s> <span class="prod__off">−${off} %</span></p>
-    <a class="btn btn--line btn--sm" href="${p.url}">Ver producto</a>
+    <a class="prod__img" href="${url}"><img src="${esc(img(imgName(p.img)))}" alt="${esc(p.name)}" loading="lazy" width="400" height="400" /></a>
+    <p class="prod__brand">${esc(p.brand ?? 'Medicalmarca')}</p>
+    <h3><a href="${url}">${esc(p.name)}</a></h3>
+    <p class="prod__price"><b>${eur.format(now)}</b> <s aria-label="Antes">${eur.format(was)}</s> <span class="prod__off">−${off} %</span></p>
+    <a class="btn btn--line btn--sm" href="${url}">Ver producto</a>
   </article>`;
 }).join('');
 
@@ -63,7 +74,7 @@ const seq = mobileFilm ? FILM.mobile : FILM.desktop;
 const film = createFilm($('.film__canvas'), {
   count: seq.count,
   cuts: seq.cuts,
-  focalX: mobileFilm ? 0.72 : 0.5,
+  focalX: window.matchMedia('(max-width: 760px), (max-width: 1100px) and (orientation: portrait)').matches ? 0.72 : 0.5,
   src: (i) => `${import.meta.env.BASE_URL}${mobileFilm ? 'film-m' : 'film'}/f_${String(i + 1).padStart(4, '0')}.webp`,
 });
 film.onProgress((r) => { $('.film__loading i').style.transform = `scaleX(${r})`; if (r >= 1) $('.film__loading').classList.add('is-done'); });
