@@ -33,7 +33,8 @@ $('[data-cats]').innerHTML = CATEGORIES.map((c) => `
 $('[data-products]').innerHTML = PRODUCTS.map((p) => {
   const now = Number(p.now), was = Number(p.was);
   const off = Math.round((1 - now / was) * 100);
-  const url = esc(safeUrl(p.url));
+  const pid = String(p.url).match(/\/(\d+)-[^/]+\.html$/)?.[1];
+  const url = pid ? `/tienda/#producto-${pid}` : esc(safeUrl(p.url));
   return `<article class="prod">
     <a class="prod__img" href="${url}"><img src="${esc(img(imgName(p.img)))}" alt="${esc(p.name)}" loading="lazy" width="400" height="400" /></a>
     <p class="prod__brand">${esc(p.brand ?? 'Medicalmarca')}</p>
@@ -49,7 +50,9 @@ $('.news').addEventListener('submit', (e) => {
   const f = e.currentTarget, msg = $('.news__msg');
   if (!f.email.checkValidity()) { msg.textContent = 'Escribe un correo válido, por ejemplo clinica@ejemplo.com.'; f.email.focus(); return; }
   if (!f.querySelector('[type=checkbox]').checked) { msg.textContent = 'Para suscribirte, acepta la política de privacidad.'; return; }
-  msg.textContent = 'Suscripción preparada. En la web real se conectará con el sistema de correo de la tienda.';
+  const body = `Hola, quiero recibir las ofertas y novedades de Medicalmarca en este correo: ${f.email.value}\n\nHe leído y acepto la política de privacidad.`;
+  window.location.href = `mailto:info@medicalmarca.com?subject=${encodeURIComponent('Alta en la newsletter')}&body=${encodeURIComponent(body)}`;
+  msg.textContent = 'Se ha abierto tu correo con la solicitud. Envíala y te daremos de alta.';
 });
 
 // ---------- Scroll suave ----------

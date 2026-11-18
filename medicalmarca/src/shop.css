@@ -130,3 +130,9 @@ dialog::backdrop { background: rgba(28, 26, 36, 0.45); backdrop-filter: blur(3px
   .sheet__actions .btn { flex: 1 1 100%; }
   .shop__perks { display: none; }
 }
+
+.grid__empty--cat { display: grid; grid-template-columns: 141px minmax(0, 1fr); gap: 24px; align-items: center; text-align: left; }
+.grid__empty--cat img { width: 141px; height: 180px; object-fit: cover; border-radius: 8px; }
+.grid__empty--cat .btn { margin: 6px 8px 0 0; }
+@media (max-width: 600px) { .grid__empty--cat { grid-template-columns: 1fr; text-align: center; justify-items: center; } }
+.qty__ctrl button:disabled { color: #b5b9c2; cursor: not-allowed; background: var(--paper); }

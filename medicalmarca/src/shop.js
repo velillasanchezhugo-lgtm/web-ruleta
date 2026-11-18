@@ -37,7 +37,14 @@ const BY_ID = new Map(PRODUCTS.map((p) => [p.id, p]));
 // ---------- Estado ----------
 const PAGE = 24;
 const state = { cat: 'todas', q: '', sort: 'relevance', offers: false, shown: PAGE };
-const fromHash = () => { const h = decodeURIComponent(location.hash.slice(1)); state.cat = CAT_NAME[h] ? h : 'todas'; };
+let pendingProduct = null;
+function fromHash() {
+  const h = decodeURIComponent(location.hash.slice(1));
+  const prod = h.match(/^producto-(\d+)$/);
+  if (h === 'ofertas') { state.cat = 'todas'; state.offers = true; }
+  else if (prod) { pendingProduct = +prod[1]; }
+  else { state.cat = CAT_NAME[h] ? h : 'todas'; state.offers = false; }
+}
 fromHash();
 
 // ---------- Categorías ----------
@@ -46,7 +53,7 @@ function renderCats() {
   const items = [{ slug: 'todas', name: 'Todas' }, ...CATS];
   $('[data-cats]').innerHTML = items.map((c) => `
     <li><a href="#${esc(c.slug === 'todas' ? '' : c.slug)}" data-cat="${esc(c.slug)}" ${state.cat === c.slug ? 'aria-current="true"' : ''}>
-      <span>${esc(c.name)}</span><small>${countIn(c.slug)}</small></a></li>`).join('');
+      <span>${esc(c.name)}</span><small>${countIn(c.slug) || '<span aria-label="en la tienda completa">↗</span>'}</small></a></li>`).join('');
 }
 $('[data-cats]').addEventListener('click', (e) => {
   const a = e.target.closest('[data-cat]'); if (!a) return;
@@ -56,7 +63,7 @@ $('[data-cats]').addEventListener('click', (e) => {
   renderCats(); render(true);
   $('.shop__main').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
 });
-window.addEventListener('hashchange', () => { fromHash(); state.shown = PAGE; renderCats(); render(true); });
+window.addEventListener('hashchange', () => { fromHash(); tools.offers.checked = state.offers; state.shown = PAGE; renderCats(); render(true); openPending(); });
 
 // ---------- Herramientas ----------
 const tools = $('[data-tools]');
@@ -64,7 +71,7 @@ tools.addEventListener('submit', (e) => e.preventDefault());
 let qTimer;
 tools.q.addEventListener('input', () => { clearTimeout(qTimer); qTimer = setTimeout(() => { state.q = tools.q.value.slice(0, 60); state.shown = PAGE; render(true); }, 160); });
 tools.sort.addEventListener('change', () => { state.sort = tools.sort.value; render(true); });
-tools.offers.addEventListener('change', () => { state.offers = tools.offers.checked; state.shown = PAGE; render(true); });
+tools.offers.addEventListener('change', () => { state.offers = tools.offers.checked; state.shown = PAGE; history.replaceState(null, '', state.offers ? '#ofertas' : location.pathname); render(true); });
 $('[data-more]').addEventListener('click', () => { state.shown += PAGE; render(false); });
 
 function filtered() {
@@ -98,7 +105,18 @@ function card(p) {
 function render(fromStart) {
   const list = filtered();
   const slice = list.slice(0, state.shown);
-  grid.innerHTML = slice.length ? slice.map(card).join('') : `
+  const catInfo = CATS.find((x) => x.slug === state.cat);
+  const catEmpty = catInfo && countIn(state.cat) === 0;
+  grid.innerHTML = slice.length ? slice.map(card).join('') : catEmpty ? `
+    <div class="grid__empty grid__empty--cat">
+      <img src="/img/c${Number(catInfo.id)}.jpg" alt="" width="141" height="180" />
+      <div>
+        <p><b>${esc(catInfo.name)}</b></p>
+        <p>${catInfo.total ? `Hay ${Number(catInfo.total)} productos de ${esc(catInfo.name.toLowerCase())}` : `Todos los productos de ${esc(catInfo.name.toLowerCase())} están`} en la tienda de Medicalmarca, con precios y stock al día.</p>
+        <a class="btn btn--violet" href="${esc(safeUrl(`https://medicalmarca.com/es/${catInfo.id}-${catInfo.slug}`))}">Ver ${esc(catInfo.name.toLowerCase())} en medicalmarca.com</a>
+        <button class="btn btn--line" type="button" data-reset>Ver otros productos</button>
+      </div>
+    </div>` : `
     <div class="grid__empty">
       <p><b>No hay productos con esos filtros.</b></p>
       <p>Prueba con otra palabra, quita «Solo ofertas» o mira todas las categorías.</p>
@@ -137,14 +155,23 @@ function openSheet(id) {
   $('[data-f=name]', sheet).textContent = p.name;
   $('[data-f=price]', sheet).innerHTML = `<b>${eur.format(p.now)}</b>${p.was ? ` <s aria-label="Antes">${eur.format(p.was)}</s> <span class="prod__off">−${p.off} %</span>` : ''}`;
   $('[data-f=url]', sheet).href = p.url;
-  $('#ficha-qty').value = 1;
+  qtyInput.value = 1; syncQty();
   sheet.showModal();
 }
 sheet.addEventListener('error', (e) => { if (e.target.tagName === 'IMG' && !e.target.src.endsWith(PLACEHOLDER)) e.target.src = PLACEHOLDER; }, true);
-$$('[data-step]', sheet).forEach((b) => b.addEventListener('click', () => { const q = $('#ficha-qty'); q.value = clampQty(+q.value + +b.dataset.step); }));
+const qtyInput = $('#ficha-qty');
+function syncQty() {
+  qtyInput.value = clampQty(+qtyInput.value);
+  qtyInput.setAttribute('value', qtyInput.value);
+  $('[data-step="-1"]', sheet).disabled = +qtyInput.value <= 1;
+  $('[data-step="1"]', sheet).disabled = +qtyInput.value >= 999;
+}
+$$('[data-step]', sheet).forEach((b) => b.addEventListener('click', () => { qtyInput.value = +qtyInput.value + +b.dataset.step; syncQty(); }));
+qtyInput.addEventListener('change', syncQty);
 $('[data-add]', sheet).addEventListener('click', () => { addToList(sheetId, clampQty(+$('#ficha-qty').value)); sheet.close(); openList(); });
 
 // cerrar diálogos: botón ×, tecla Esc (nativa) y clic fuera
+sheet.addEventListener('close', () => { if (/^#producto-/.test(location.hash)) history.replaceState(null, '', location.pathname); });
 $$('dialog').forEach((d) => {
   d.addEventListener('click', (e) => { if (e.target === d || e.target.closest('[data-close]')) d.close(); });
 });
@@ -232,6 +259,13 @@ window.addEventListener('storage', (e) => { if (e.key === KEY) { list = loadList
 const day = new Date(`${DATA.scraped}T12:00:00`);
 $('[data-date]').textContent = Number.isNaN(day.getTime()) ? DATA.scraped : day.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
 $('[data-summary]').textContent = `${PRODUCTS.length} productos seleccionados en ${CATS.length} categorías. Elige una categoría, busca por nombre u ordena por precio.`;
+function openPending() {
+  if (pendingProduct && BY_ID.has(pendingProduct)) openSheet(pendingProduct);
+  else if (pendingProduct) location.href = STORE;
+  pendingProduct = null;
+}
+tools.offers.checked = state.offers;
 renderCats();
 render(true);
 renderList();
+openPending();
