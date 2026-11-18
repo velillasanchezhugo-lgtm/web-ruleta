@@ -23,37 +23,37 @@
    "slug": "profilaxis",
    "name": "Profilaxis",
    "id": 46,
-   "total": null
+   "total": 38
   },
   {
    "slug": "implantologia",
    "name": "Implantología",
    "id": 50,
-   "total": null
+   "total": 4
   },
   {
    "slug": "sutura",
    "name": "Sutura",
    "id": 60,
-   "total": null
+   "total": 63
   },
   {
    "slug": "micro-cirugia",
    "name": "Microcirugía",
    "id": 68,
-   "total": null
+   "total": 44
   },
   {
    "slug": "aparatologia-y-instrumental-rotatorio",
    "name": "Aparatología e instrumental rotatorio",
    "id": 72,
-   "total": null
+   "total": 30
   },
   {
    "slug": "material-proteccion",
    "name": "Material de protección",
    "id": 79,
-   "total": null
+   "total": 1
   },
   {
    "slug": "gel-hidroalcoholico",
@@ -65,7 +65,7 @@
    "slug": "desinfeccion",
    "name": "Desinfección",
    "id": 88,
-   "total": null
+   "total": 1
   },
   {
    "slug": "instrumental",
@@ -76,8 +76,35 @@
  ],
  "products": [
   {
+   "id": 1958,
+   "name": "CONTRA ANGULO S-MAX M25 NSK 1:1 ACERO INOXIDABLE",
+   "url": "https://medicalmarca.com/es/aparatologia-y-instrumental-rotatorio/1958-contra-angulo-s-max-m25-nsk-11-acero-inoxidable.html",
+   "img": "https://medicalmarca.com/2286-home_default/contra-angulo-s-max-m25-nsk-11-acero-inoxidable.jpg",
+   "now": 305.55,
+   "was": 339.5,
+   "cat": "aparatologia-y-instrumental-rotatorio"
+  },
+  {
+   "id": 1508,
+   "name": "ICARE Limpieza y lubricacion automatica de instrumentos rotatorios",
+   "url": "https://medicalmarca.com/es/mantenimiento/1508-icare-limpieza-y-lubricacion-automatica-de-instrumentos-rotatorios.html",
+   "img": "https://medicalmarca.com/1678-home_default/icare-limpieza-y-lubricacion-automatica-de-instrumentos-rotatorios.jpg",
+   "now": 1601.1,
+   "was": 1779,
+   "cat": "aparatologia-y-instrumental-rotatorio"
+  },
+  {
+   "id": 1509,
+   "name": "ICLAVE Plus Autoclave clase B de 18 litros NSK",
+   "url": "https://medicalmarca.com/es/autoclaves/1509-iclave-plus-autoclave-clase-b-de-18-litros-nsk.html",
+   "img": "https://medicalmarca.com/1686-home_default/iclave-plus-autoclave-clase-b-de-18-litros-nsk.jpg",
+   "now": 3699,
+   "was": null,
+   "cat": "aparatologia-y-instrumental-rotatorio"
+  },
+  {
    "id": 1510,
-   "name": "IDS 900, destornillador protésico inalámbrico NSK",
+   "name": "IDS 900 DESTORNILLADOR PROTESICO INALAMBRICO NSK",
    "url": "https://medicalmarca.com/es/inicio/1510-ids-900-destornillador-protesico-inalambrico-nsk.html",
    "img": "https://medicalmarca.com/1688-home_default/ids-900-destornillador-protesico-inalambrico-nsk.jpg",
    "now": 1169.1,
@@ -85,12 +112,111 @@
    "cat": "aparatologia-y-instrumental-rotatorio"
   },
   {
+   "id": 1504,
+   "name": "M40 XS MICROMOTOR ELECTRICO CON LUZ NSK",
+   "url": "https://medicalmarca.com/es/micromotores/1504-m40-xs-micromotor-electrico-con-luz-nsk.html",
+   "img": "https://medicalmarca.com/1669-home_default/m40-xs-micromotor-electrico-con-luz-nsk.jpg",
+   "now": 659,
+   "was": null,
+   "cat": "aparatologia-y-instrumental-rotatorio"
+  },
+  {
+   "id": 1495,
+   "name": "PACK 2 CONTRA-ANGULOS MULTIPLICADORES 1:5 SIN LUZ NSK",
+   "url": "https://medicalmarca.com/es/contra-angulos-multiplicadores/1495-pack-2-contra-angulos-multiplicadores-15-sin-luz-nsk.html",
+   "img": "https://medicalmarca.com/1659-home_default/pack-2-contra-angulos-multiplicadores-15-sin-luz-nsk.jpg",
+   "now": 769.86,
+   "was": 819,
+   "cat": "aparatologia-y-instrumental-rotatorio"
+  },
+  {
+   "id": 1505,
+   "name": "S-MAX M 205 MICRO MOTOR NEUMÁTICO NSK",
+   "url": "https://medicalmarca.com/es/micromotores/1505-s-max-m-205-micro-motor-neumatico-nsk.html",
+   "img": "https://medicalmarca.com/1670-home_default/s-max-m-205-micro-motor-neumatico-nsk.jpg",
+   "now": 429,
+   "was": null,
+   "cat": "aparatologia-y-instrumental-rotatorio"
+  },
+  {
+   "id": 1491,
+   "name": "S-MAX M CONTRA-ANGULO DE ACERO INOXIDABLE SIN LUZ NSK",
+   "url": "https://medicalmarca.com/es/contra-angulos/1491-s-max-m-contra-angulo-de-acero-inoxidable-sin-luz-nsk.html",
+   "img": "https://medicalmarca.com/1655-home_default/s-max-m-contra-angulo-de-acero-inoxidable-sin-luz-nsk.jpg",
+   "now": 305.55,
+   "was": 339.5,
+   "cat": "aparatologia-y-instrumental-rotatorio"
+  },
+  {
+   "id": 1494,
+   "name": "S-MAX M CONTRA-ANGULO MULTIPLICADOR 1:5 SIN LUZ NSK",
+   "url": "https://medicalmarca.com/es/contra-angulos-multiplicadores/1494-s-max-m-contra-angulo-multiplicador-15-sin-luz-nsk.html",
+   "img": "https://medicalmarca.com/1658-home_default/s-max-m-contra-angulo-multiplicador-15-sin-luz-nsk.jpg",
+   "now": 409.5,
+   "was": null,
+   "cat": "aparatologia-y-instrumental-rotatorio"
+  },
+  {
+   "id": 1493,
+   "name": "S-MAX M PIEZA DE MANO 1:1 SIN LUZ NSK",
+   "url": "https://medicalmarca.com/es/piezas-de-mano/1493-s-max-m-pieza-de-mano-11-sin-luz-nsk.html",
+   "img": "https://medicalmarca.com/1657-home_default/s-max-m-pieza-de-mano-11-sin-luz-nsk.jpg",
+   "now": 377.1,
+   "was": 419,
+   "cat": "aparatologia-y-instrumental-rotatorio"
+  },
+  {
+   "id": 1481,
+   "name": "S-MAX M Turbina de acero inoxidable con luz led NSK",
+   "url": "https://medicalmarca.com/es/turbinas/1481-s-max-m-turbina-de-acero-inoxidable-con-luz-led-nsk.html",
+   "img": "https://medicalmarca.com/1639-home_default/s-max-m-turbina-de-acero-inoxidable-con-luz-led-nsk.jpg",
+   "now": 409.5,
+   "was": null,
+   "cat": "aparatologia-y-instrumental-rotatorio"
+  },
+  {
+   "id": 1957,
+   "name": "TURBINA NSK TI-MAX Z CON CUERPO DE TITANIO DURAGRIP CONEXION MULTIFLEX KAVO",
+   "url": "https://medicalmarca.com/es/aparatologia-y-instrumental-rotatorio/1957-turbina-nsk-ti-max-z-con-cuerpo-de-titanio-duragrip-conexion-multiflex-kavo.html",
+   "img": "https://medicalmarca.com/2285-home_default/turbina-nsk-ti-max-z-con-cuerpo-de-titanio-duragrip-conexion-multiflex-kavo.jpg",
+   "now": 755.1,
+   "was": 839,
+   "cat": "aparatologia-y-instrumental-rotatorio"
+  },
+  {
+   "id": 1979,
+   "name": "Caja esterilizadora de agujas y brocas, perf.USTOMED",
+   "url": "https://medicalmarca.com/es/desinfeccion/1979-caja-esterilizadora-de-agujas-y-brocas-perfustomed.html",
+   "img": "https://medicalmarca.com/2378-home_default/caja-esterilizadora-de-agujas-y-brocas-perfustomed.jpg",
+   "now": 45.34,
+   "was": 47.73,
+   "cat": "desinfeccion"
+  },
+  {
    "id": 1976,
-   "name": "Caja básica de implantología con 13 instrumentos Ustomed",
+   "name": "CAJA BASICA DE IMPLANTOLOGIA CON 13 INSTRUMETOS USTOMED",
    "url": "https://medicalmarca.com/es/inicio/1976-caja-basica-de-implantologia-con-13-instrumetos-ustomed.html",
    "img": "https://medicalmarca.com/2371-home_default/caja-basica-de-implantologia-con-13-instrumetos-ustomed.jpg",
    "now": 923.4,
    "was": 972,
+   "cat": "implantologia"
+  },
+  {
+   "id": 1960,
+   "name": "CONTRA ANGULO QUIRURGICO 20:1 NSK SIN LUZ",
+   "url": "https://medicalmarca.com/es/implantologia/1960-contra-angulo-quirurgico-201-nsk-sin-luz.html",
+   "img": "https://medicalmarca.com/2288-home_default/contra-angulo-quirurgico-201-nsk-sin-luz.jpg",
+   "now": 591.75,
+   "was": 789,
+   "cat": "implantologia"
+  },
+  {
+   "id": 1956,
+   "name": "Kit básico curetas gracey rosas recubiertas de DLC para implantes Ustomed",
+   "url": "https://medicalmarca.com/es/implantologia/1956-kit-basico-curetas-gracey-rosas-recubiertas-de-dlc-para-implantes-ustomed.html",
+   "img": "https://medicalmarca.com/2284-home_default/kit-basico-curetas-gracey-rosas-recubiertas-de-dlc-para-implantes-ustomed.jpg",
+   "now": 519.65,
+   "was": 547,
    "cat": "implantologia"
   },
   {
@@ -109,6 +235,15 @@
    "img": "https://medicalmarca.com/1819-home_default/kit-10-chinchetas-de-titanio-de-3-mm.jpg",
    "now": 373.6,
    "was": 467,
+   "cat": "implantologia"
+  },
+  {
+   "id": 1849,
+   "name": "ZIELINSKY, calibre de medición - sólo para mediciones comparativas - USTOMED",
+   "url": "https://medicalmarca.com/es/implantologia/1849-zielinsky-calibre-de-medicion-solo-para-mediciones-comparativas-ustomed.html",
+   "img": "https://medicalmarca.com/2144-home_default/zielinsky-calibre-de-medicion-solo-para-mediciones-comparativas-ustomed.jpg",
+   "now": 129.26,
+   "was": 136.06,
    "cat": "implantologia"
   },
   {
@@ -238,12 +373,84 @@
    "cat": "instrumental"
   },
   {
+   "id": 1035,
+   "name": "Bata quirurgica impermeable con puños de polipropileno",
+   "url": "https://medicalmarca.com/es/material-proteccion/1035-bata-quirurgica-impermeable-con-punos-de-polipropileno.html",
+   "img": "https://medicalmarca.com/1045-home_default/bata-quirurgica-impermeable-con-punos-de-polipropileno.jpg",
+   "now": 2.25,
+   "was": null,
+   "cat": "material-proteccion"
+  },
+  {
+   "id": 1894,
+   "name": "BARRAQUER, microaguja, 14cm, curvo, TC USTOMED",
+   "url": "https://medicalmarca.com/es/micro-cirugia/1894-barraquer-microaguja-14cm-curvo-tc-ustomed.html",
+   "img": "https://medicalmarca.com/2188-home_default/barraquer-microaguja-14cm-curvo-tc-ustomed.jpg",
+   "now": 395.07,
+   "was": 415.86,
+   "cat": "micro-cirugia"
+  },
+  {
+   "id": 1892,
+   "name": "BARRAQUER, microaguja, 14cm, recto, TC USTOMED",
+   "url": "https://medicalmarca.com/es/micro-cirugia/1892-barraquer-microaguja-14cm-recto-tc-ustomed.html",
+   "img": "https://medicalmarca.com/2186-home_default/barraquer-microaguja-14cm-recto-tc-ustomed.jpg",
+   "now": 374.27,
+   "was": 415.86,
+   "cat": "micro-cirugia"
+  },
+  {
+   "id": 1895,
+   "name": "BARRAQUER, microaguja, 18cm, CURVO, TC USTOMED",
+   "url": "https://medicalmarca.com/es/micro-cirugia/1895-barraquer-microaguja-18cm-curvo-tc-ustomed.html",
+   "img": "https://medicalmarca.com/2189-home_default/barraquer-microaguja-18cm-curvo-tc-ustomed.jpg",
+   "now": 395.07,
+   "was": 415.86,
+   "cat": "micro-cirugia"
+  },
+  {
+   "id": 1893,
+   "name": "BARRAQUER, microaguja, 18cm, recto, TC USTOMED",
+   "url": "https://medicalmarca.com/es/micro-cirugia/1893-barraquer-microaguja-18cm-recto-tc-ustomed.html",
+   "img": "https://medicalmarca.com/2187-home_default/barraquer-microaguja-18cm-recto-tc-ustomed.jpg",
+   "now": 374.27,
+   "was": 415.86,
+   "cat": "micro-cirugia"
+  },
+  {
    "id": 1973,
    "name": "Caja de microcirugía básica Ustomed",
    "url": "https://medicalmarca.com/es/inicio/1973-caja-micro-cirugia-basica-ustomed.html",
    "img": "https://medicalmarca.com/2362-home_default/caja-micro-cirugia-basica-ustomed.jpg",
    "now": 1549.13,
    "was": 1630.66,
+   "cat": "micro-cirugia"
+  },
+  {
+   "id": 589,
+   "name": "Hoja bisturi micro-cirugia MJK",
+   "url": "https://medicalmarca.com/es/micro-cirugia/589-hoja-bisturi-micro-cirugia-mjk.html",
+   "img": "https://medicalmarca.com/589-home_default/hoja-bisturi-micro-cirugia-mjk.jpg",
+   "now": 59.9,
+   "was": null,
+   "cat": "micro-cirugia"
+  },
+  {
+   "id": 590,
+   "name": "Hoja Bisturi micro-cirugia MJK",
+   "url": "https://medicalmarca.com/es/micro-cirugia/590-hoja-bisturi-micro-cirugia-mjk.html",
+   "img": "https://medicalmarca.com/590-home_default/hoja-bisturi-micro-cirugia-mjk.jpg",
+   "now": 59.9,
+   "was": null,
+   "cat": "micro-cirugia"
+  },
+  {
+   "id": 595,
+   "name": "Mango bisturi micro-cirugia MJK",
+   "url": "https://medicalmarca.com/es/micro-cirugia/595-mango-bisturi-micro-cirugia-mjk.html",
+   "img": "https://medicalmarca.com/595-home_default/mango-bisturi-micro-cirugia-mjk.jpg",
+   "now": 69,
+   "was": null,
    "cat": "micro-cirugia"
   },
   {
@@ -263,6 +470,258 @@
    "now": 890.1,
    "was": 989,
    "cat": "micro-cirugia"
+  },
+  {
+   "id": 1784,
+   "name": "Tijeras Castroviejo para encías, puntas muy finas, 14, USTOMED 5 cm",
+   "url": "https://medicalmarca.com/es/cirugia/1784-tijeras-para-encias-puntas-muy-finas-14-5-cm.html",
+   "img": "https://medicalmarca.com/2074-home_default/tijeras-para-encias-puntas-muy-finas-14-5-cm.jpg",
+   "now": 203.39,
+   "was": 214.09,
+   "cat": "micro-cirugia"
+  },
+  {
+   "id": 1402,
+   "name": "USTOMED Hoja microbisturi fig 63 caja 25 unidades",
+   "url": "https://medicalmarca.com/es/micro-bisturis/1402-ustomed-hoja-microbisturi-fig-63-caja-25-unidades.html",
+   "img": "https://medicalmarca.com/1554-home_default/ustomed-hoja-microbisturi-fig-63-caja-25-unidades.jpg",
+   "now": 133.29,
+   "was": 190.42,
+   "cat": "micro-cirugia"
+  },
+  {
+   "id": 1401,
+   "name": "USTOMED Hoja super micro bisturí, fig 69 caja 6 und",
+   "url": "https://medicalmarca.com/es/micro-bisturis/1401-ustomed-hoja-super-micro-bisturi-fig-69-caja-6-und.html",
+   "img": "https://medicalmarca.com/1553-home_default/ustomed-hoja-super-micro-bisturi-fig-69-caja-6-und.jpg",
+   "now": 87.91,
+   "was": 125.58,
+   "cat": "micro-cirugia"
+  },
+  {
+   "id": 1395,
+   "name": "USTOMED Mango Micro-bisturí anatómico redondo, 14cm",
+   "url": "https://medicalmarca.com/es/hojas-de-bisturis-y-mangos/1395-ustomed-mango-micro-bisturi-anatomico-redondo-14cm.html",
+   "img": "https://medicalmarca.com/1547-home_default/ustomed-mango-micro-bisturi-anatomico-redondo-14cm.jpg",
+   "now": 93.82,
+   "was": 104.24,
+   "cat": "micro-cirugia"
+  },
+  {
+   "id": 98,
+   "name": "1220 Pasta de profilaxis para la maxima limpieza de la supercie dental",
+   "url": "https://medicalmarca.com/es/profilaxis/98-1220-pasta-de-profilaxis-para-la-maxima-limpieza-de-la-supercie-dental.html",
+   "img": "https://medicalmarca.com/98-home_default/1220-pasta-de-profilaxis-para-la-maxima-limpieza-de-la-supercie-dental.jpg",
+   "now": 69.9,
+   "was": null,
+   "cat": "profilaxis"
+  },
+  {
+   "id": 100,
+   "name": "1233RA Pulidor para profilaxis sin pasta.",
+   "url": "https://medicalmarca.com/es/profilaxis/100-1233ra-pulidor-para-profilaxis-sin-pasta.html",
+   "img": "https://medicalmarca.com/100-home_default/1233ra-pulidor-para-profilaxis-sin-pasta.jpg",
+   "now": 41,
+   "was": null,
+   "cat": "profilaxis"
+  },
+  {
+   "id": 118,
+   "name": "1259RA Cepillo de nylon para contra angulo",
+   "url": "https://medicalmarca.com/es/profilaxis/118-1259ra-cepillo-de-nylon-para-contra-angulo.html",
+   "img": "https://medicalmarca.com/118-home_default/1259ra-cepillo-de-nylon-para-contra-angulo.jpg",
+   "now": 157.68,
+   "was": null,
+   "cat": "profilaxis"
+  },
+  {
+   "id": 140,
+   "name": "1482SC Cepillo nylon rosa  con rosca para eliminacion de placa densidad suave",
+   "url": "https://medicalmarca.com/es/profilaxis/140-1482sc-cepillo-nylon-rosa-con-rosca-para-eliminacion-de-placa-densidad-suave.html",
+   "img": "https://medicalmarca.com/140-home_default/1482sc-cepillo-nylon-rosa-con-rosca-para-eliminacion-de-placa-densidad-suave.jpg",
+   "now": 180.15,
+   "was": null,
+   "cat": "profilaxis"
+  },
+  {
+   "id": 141,
+   "name": "1483SC Cepillo nylon rosa  con rosca para eliminacion de placa densidad suave",
+   "url": "https://medicalmarca.com/es/profilaxis/141-1483sc-cepillo-nylon-rosa-con-rosca-para-eliminacion-de-placa-densidad-suave.html",
+   "img": "https://medicalmarca.com/141-home_default/1483sc-cepillo-nylon-rosa-con-rosca-para-eliminacion-de-placa-densidad-suave.jpg",
+   "now": 180.15,
+   "was": null,
+   "cat": "profilaxis"
+  },
+  {
+   "id": 142,
+   "name": "1485SC Cepillo nylon amarillo  con rosca para eliminacion de placa densidad duro",
+   "url": "https://medicalmarca.com/es/profilaxis/142-1485sc-cepillo-nylon-amarillo-con-rosca-para-eliminacion-de-placa-densidad-duro.html",
+   "img": "https://medicalmarca.com/142-home_default/1485sc-cepillo-nylon-amarillo-con-rosca-para-eliminacion-de-placa-densidad-duro.jpg",
+   "now": 180.15,
+   "was": null,
+   "cat": "profilaxis"
+  },
+  {
+   "id": 143,
+   "name": "1486SC Cepillo nylon amarillo  con rosca para eliminacion de placa densidad duro",
+   "url": "https://medicalmarca.com/es/profilaxis/143-1486sc-cepillo-nylon-amarillo-con-rosca-para-eliminacion-de-placa-densidad-duro.html",
+   "img": "https://medicalmarca.com/143-home_default/1486sc-cepillo-nylon-amarillo-con-rosca-para-eliminacion-de-placa-densidad-duro.jpg",
+   "now": 180.15,
+   "was": null,
+   "cat": "profilaxis"
+  },
+  {
+   "id": 144,
+   "name": "1490UM Cepillos naylon Snap-on estandar para eliminacion de placa con pasta",
+   "url": "https://medicalmarca.com/es/profilaxis/144-1490um-cepillos-naylon-snap-on-estandar-para-eliminacion-de-placa-con-pasta.html",
+   "img": "https://medicalmarca.com/144-home_default/1490um-cepillos-naylon-snap-on-estandar-para-eliminacion-de-placa-con-pasta.jpg",
+   "now": 112.6,
+   "was": null,
+   "cat": "profilaxis"
+  },
+  {
+   "id": 145,
+   "name": "1491UM Cepillos naylon Snap-on estandar para eliminacion de placa con pasta",
+   "url": "https://medicalmarca.com/es/profilaxis/145-1491um-cepillos-naylon-snap-on-estandar-para-eliminacion-de-placa-con-pasta.html",
+   "img": "https://medicalmarca.com/145-home_default/1491um-cepillos-naylon-snap-on-estandar-para-eliminacion-de-placa-con-pasta.jpg",
+   "now": 112.6,
+   "was": null,
+   "cat": "profilaxis"
+  },
+  {
+   "id": 146,
+   "name": "1500RA TopBrush Cepillo nylon con particulas de carburo de silicio",
+   "url": "https://medicalmarca.com/es/profilaxis/146-1500ra-topbrush-cepillo-nylon-con-particulas-de-carburo-de-silicio.html",
+   "img": "https://medicalmarca.com/146-home_default/1500ra-topbrush-cepillo-nylon-con-particulas-de-carburo-de-silicio.jpg",
+   "now": 38.3,
+   "was": null,
+   "cat": "profilaxis"
+  },
+  {
+   "id": 147,
+   "name": "1501RA TopBrush Cepillo nylon con particulas de carburo de silicio",
+   "url": "https://medicalmarca.com/es/profilaxis/147-1501ra-topbrush-cepillo-nylon-con-particulas-de-carburo-de-silicio.html",
+   "img": "https://medicalmarca.com/147-home_default/1501ra-topbrush-cepillo-nylon-con-particulas-de-carburo-de-silicio.jpg",
+   "now": 38.3,
+   "was": null,
+   "cat": "profilaxis"
+  },
+  {
+   "id": 148,
+   "name": "1502RA TopBrush Cepillo nylon con particulas de carburo de silicio",
+   "url": "https://medicalmarca.com/es/profilaxis/148-1502ra-topbrush-cepillo-nylon-con-particulas-de-carburo-de-silicio.html",
+   "img": "https://medicalmarca.com/148-home_default/1502ra-topbrush-cepillo-nylon-con-particulas-de-carburo-de-silicio.jpg",
+   "now": 38.3,
+   "was": null,
+   "cat": "profilaxis"
+  },
+  {
+   "id": 1641,
+   "name": "Sutura de poliamida 5/0 con aguja triangular 16mm 45cm, caja de 24 unidades",
+   "url": "https://medicalmarca.com/es/sutura/1641-sutura-de-poliamida-50-con-aguja-triangular-16mm-45cm-caja-de-24-unidades.html",
+   "img": "https://medicalmarca.com/1858-home_default/sutura-de-poliamida-50-con-aguja-triangular-16mm-45cm-caja-de-24-unidades.jpg",
+   "now": 44.25,
+   "was": null,
+   "cat": "sutura"
+  },
+  {
+   "id": 1640,
+   "name": "Sutura de poliamida 6/0 con aguja triangular 16mm 45cm caja de 24 unidades",
+   "url": "https://medicalmarca.com/es/sutura/1640-sutura-de-poliamida-60-con-aguja-triangular-16mm-45cm-caja-de-24-unidades-.html",
+   "img": "https://medicalmarca.com/1856-home_default/sutura-de-poliamida-60-con-aguja-triangular-16mm-45cm-caja-de-24-unidades-.jpg",
+   "now": 51.05,
+   "was": null,
+   "cat": "sutura"
+  },
+  {
+   "id": 1639,
+   "name": "Sutura de poliamida 6/0 con aguja triangular de 12mm 45cm caja de 24 unidades",
+   "url": "https://medicalmarca.com/es/sutura/1639-sutura-de-poliamida-60-con-aguja-triangular-de-12mm-45cm-caja-de-24-unidades-.html",
+   "img": "https://medicalmarca.com/1854-home_default/sutura-de-poliamida-60-con-aguja-triangular-de-12mm-45cm-caja-de-24-unidades-.jpg",
+   "now": 51.05,
+   "was": null,
+   "cat": "sutura"
+  },
+  {
+   "id": 1645,
+   "name": "Sutura de propileno 5/0 con aguja triangular 16mm 75cm caja de 24 unidades",
+   "url": "https://medicalmarca.com/es/sutura/1645-sutura-de-propileno-50-con-aguja-triangular-16mm-75cm-caja-de-24-unidades-.html",
+   "img": "https://medicalmarca.com/1866-home_default/sutura-de-propileno-50-con-aguja-triangular-16mm-75cm-caja-de-24-unidades-.jpg",
+   "now": 53.16,
+   "was": null,
+   "cat": "sutura"
+  },
+  {
+   "id": 1644,
+   "name": "Sutura de propileno 6/0 con aguja triangular 16mm, 45cm caja de 24 unidades",
+   "url": "https://medicalmarca.com/es/sutura/1644-sutura-de-propileno-60-con-aguja-triangular-16mm-45cm-caja-de-24-unidades-.html",
+   "img": "https://medicalmarca.com/1864-home_default/sutura-de-propileno-60-con-aguja-triangular-16mm-45cm-caja-de-24-unidades-.jpg",
+   "now": 48.32,
+   "was": null,
+   "cat": "sutura"
+  },
+  {
+   "id": 1636,
+   "name": "Sutura de seda 3/0 aguja triangular 16mm 75cm caja 24 unidades",
+   "url": "https://medicalmarca.com/es/sutura/1636-sutura-de-seda-30-aguja-triangular-16mm-75cm-caja-24-unidades-.html",
+   "img": "https://medicalmarca.com/1845-home_default/sutura-de-seda-30-aguja-triangular-16mm-75cm-caja-24-unidades-.jpg",
+   "now": 35.88,
+   "was": null,
+   "cat": "sutura"
+  },
+  {
+   "id": 1634,
+   "name": "Sutura de seda 4/0 aguja redonda 22mm  75 cm caja 24 unidades",
+   "url": "https://medicalmarca.com/es/no-readsorbible/1634-sutura-de-seda-40-aguja-redonda-22mm-75-cm-caja-24-unidades.html",
+   "img": "https://medicalmarca.com/1839-home_default/sutura-de-seda-40-aguja-redonda-22mm-75-cm-caja-24-unidades.jpg",
+   "now": 40.5,
+   "was": null,
+   "cat": "sutura"
+  },
+  {
+   "id": 1635,
+   "name": "Sutura de seda 5/0 aguja triangular 16mm 75 cm caja 24 unidades",
+   "url": "https://medicalmarca.com/es/sutura/1635-sutura-de-seda-50-aguja-triangular-16mm-75-cm-caja-24-unidades.html",
+   "img": "https://medicalmarca.com/1842-home_default/sutura-de-seda-50-aguja-triangular-16mm-75-cm-caja-24-unidades.jpg",
+   "now": 40.84,
+   "was": null,
+   "cat": "sutura"
+  },
+  {
+   "id": 1647,
+   "name": "Sutura monosorb 5/0 con aguja triangular 12mm, 45cm caja de 24 unidades",
+   "url": "https://medicalmarca.com/es/sutura/1647-sutura-monosorb-50-con-aguja-triangular-12mm-45cm-caja-de-24-unidades.html",
+   "img": "https://medicalmarca.com/1870-home_default/sutura-monosorb-50-con-aguja-triangular-12mm-45cm-caja-de-24-unidades.jpg",
+   "now": 71.75,
+   "was": null,
+   "cat": "sutura"
+  },
+  {
+   "id": 1646,
+   "name": "Sutura monosorb 5/0 con aguja triangular 17mm, 75cm caja de 24 unidades",
+   "url": "https://medicalmarca.com/es/sutura/1646-sutura-monosorb-50-con-aguja-triangular-17mm-75cm-caja-de-24-unidades-.html",
+   "img": "https://medicalmarca.com/1868-home_default/sutura-monosorb-50-con-aguja-triangular-17mm-75cm-caja-de-24-unidades-.jpg",
+   "now": 68.52,
+   "was": null,
+   "cat": "sutura"
+  },
+  {
+   "id": 1649,
+   "name": "Sutura monosorb 5/0 con aguja triangular de 16mm, 45cm, caja de 24 unidades",
+   "url": "https://medicalmarca.com/es/sutura/1649-sutura-monosorb-50-con-aguja-triangular-de-16mm-45cm-caja-de-24-unidades-.html",
+   "img": "https://medicalmarca.com/1874-home_default/sutura-monosorb-50-con-aguja-triangular-de-16mm-45cm-caja-de-24-unidades-.jpg",
+   "now": 71.5,
+   "was": null,
+   "cat": "sutura"
+  },
+  {
+   "id": 1648,
+   "name": "Sutura monosorb 6/0 con aguja triangular 16mm, 45cm caja de 24 unidades",
+   "url": "https://medicalmarca.com/es/sutura/1648-sutura-monosorb-60-con-aguja-triangular-16mm-45cm-caja-de-24-unidades-.html",
+   "img": "https://medicalmarca.com/1872-home_default/sutura-monosorb-60-con-aguja-triangular-16mm-45cm-caja-de-24-unidades-.jpg",
+   "now": 85,
+   "was": null,
+   "cat": "sutura"
   }
  ]
 }

@@ -21,12 +21,29 @@ function safeUrl(u, fallback = STORE) {
 const PLACEHOLDER = '/brand/logo-color.png';
 const norm = (s) => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
+// Nombres en MAYÚSCULAS de la tienda → tipo frase, conservando marcas y modelos (NSK, S-MAX, M25…)
+const KEEP = new Set(['NSK', 'IDS', 'LED', 'PEEK', 'UNC', 'CP15', 'ICARE', 'KAVO', 'W&H', 'S-MAX', 'TI-MAX', 'X-SMART']);
+const BRANDS = { USTOMED: 'Ustomed', PERFUSTOMED: 'Perfustomed', ICARE: 'iCare' };
+function niceName(n) {
+  n = n.replace(/\.(?=[A-Z]{3,})/g, '. ').replace(/PERFUSTOMED/g, 'Perfustomed').replace(/USTOMED/g, 'Ustomed');
+  const letters = n.replace(/[^A-Za-zÁÉÍÓÚÑÜáéíóúñü]/g, '');
+  const upper = letters.replace(/[^A-ZÁÉÍÓÚÑÜ]/g, '').length;
+  if (!letters || upper / letters.length < 0.6) return n;
+  const out = n.split(/(\s+)/).map((w) => {
+    const bare = w.replace(/[^\w&-]/g, '');
+    if (BRANDS[bare]) return w.replace(bare, BRANDS[bare]);
+    if (KEEP.has(bare) || /\d/.test(w)) return w;
+    if (/^[A-ZÑ]$/.test(bare) && !'YAOEU'.includes(bare)) return w; // letra de modelo: S-MAX M, TI-MAX Z
+    return w.toLowerCase().replace(/perfustomed/g, 'Perfustomed').replace(/ustomed/g, 'Ustomed');
+  }).join('');
+  return out.charAt(0).toUpperCase() + out.slice(1);
+}
 const CATS = DATA.categories.filter((c) => /^[a-z0-9-]+$/.test(c.slug));
 const CAT_NAME = Object.fromEntries(CATS.map((c) => [c.slug, c.name]));
 const PRODUCTS = DATA.products
   .filter((p) => Number.isInteger(p.id) && typeof p.name === 'string' && Number.isFinite(p.now) && CAT_NAME[p.cat])
   .map((p, i) => ({
-    id: p.id, order: i, name: p.name.trim(), cat: p.cat,
+    id: p.id, order: i, name: niceName(p.name.trim()), cat: p.cat,
     url: safeUrl(p.url), img: safeUrl(p.img, PLACEHOLDER),
     now: p.now, was: Number.isFinite(p.was) && p.was > p.now ? p.was : null,
     key: norm(`${p.name} ${CAT_NAME[p.cat]}`),
