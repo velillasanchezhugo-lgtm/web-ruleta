@@ -24,10 +24,11 @@ const safeUrl = (u) => {
   try { const x = new URL(u); return x.protocol === 'https:' && x.hostname === 'medicalmarca.com' ? x.href : 'https://medicalmarca.com/tienda'; }
   catch { return 'https://medicalmarca.com/tienda'; }
 };
+const catSlug = (u) => String(u).split('/').pop().replace(/^\d+-/, '').replace(/[^a-z0-9-]/g, '');
 const imgName = (n) => (/^[a-z0-9-]+$/i.test(n) ? n : 'logo');
 
 $('[data-cats]').innerHTML = CATEGORIES.map((c) => `
-  <li><a href="${esc(safeUrl(c.url))}" data-img="${esc(img(imgName(c.img)))}"><span>${esc(c.name)}</span></a></li>`).join('');
+  <li><a href="/tienda/#${esc(catSlug(c.url))}" data-img="${esc(img(imgName(c.img)))}"><span>${esc(c.name)}</span></a></li>`).join('');
 
 $('[data-products]').innerHTML = PRODUCTS.map((p) => {
   const now = Number(p.now), was = Number(p.was);

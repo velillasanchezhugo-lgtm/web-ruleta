@@ -1,0 +1,187 @@
+{
+ "scraped": "2026-11-18",
+ "categories": [
+  {
+   "slug": "fresas",
+   "name": "Fresas",
+   "id": 4,
+   "total": null
+  },
+  {
+   "slug": "pulidores",
+   "name": "Pulidores",
+   "id": 35,
+   "total": null
+  },
+  {
+   "slug": "insertos",
+   "name": "Insertos",
+   "id": 41,
+   "total": null
+  },
+  {
+   "slug": "profilaxis",
+   "name": "Profilaxis",
+   "id": 46,
+   "total": null
+  },
+  {
+   "slug": "implantologia",
+   "name": "Implantología",
+   "id": 50,
+   "total": null
+  },
+  {
+   "slug": "sutura",
+   "name": "Sutura",
+   "id": 60,
+   "total": null
+  },
+  {
+   "slug": "micro-cirugia",
+   "name": "Microcirugía",
+   "id": 68,
+   "total": null
+  },
+  {
+   "slug": "aparatologia-y-instrumental-rotatorio",
+   "name": "Aparatología e instrumental rotatorio",
+   "id": 72,
+   "total": null
+  },
+  {
+   "slug": "material-proteccion",
+   "name": "Material de protección",
+   "id": 79,
+   "total": null
+  },
+  {
+   "slug": "gel-hidroalcoholico",
+   "name": "Gel hidroalcohólico",
+   "id": 87,
+   "total": null
+  },
+  {
+   "slug": "desinfeccion",
+   "name": "Desinfección",
+   "id": 88,
+   "total": null
+  },
+  {
+   "slug": "instrumental",
+   "name": "Instrumental",
+   "id": 89,
+   "total": 499
+  }
+ ],
+ "products": [
+  {
+   "id": 1821,
+   "name": "Pinza para microtejidos, 18 cm, est., 1, 2 mm USTOMED",
+   "url": "https://medicalmarca.com/es/micro-cirugia/1821-pinza-para-microtejidos-18-cm-est-1-2-mm-ustomed.html",
+   "img": "https://medicalmarca.com/2112-home_default/pinza-para-microtejidos-18-cm-est-1-2-mm-ustomed.jpg",
+   "now": 328.35,
+   "was": 345.63,
+   "cat": "instrumental"
+  },
+  {
+   "id": 1391,
+   "name": "USTOMED Mango de bisturi planto nº 3",
+   "url": "https://medicalmarca.com/es/hojas-de-bisturis-y-mangos/1391-ustomed-mango-de-bisturi-planto-n-3.html",
+   "img": "https://medicalmarca.com/1544-home_default/ustomed-mango-de-bisturi-planto-n-3.jpg",
+   "now": 10.45,
+   "was": 11.61,
+   "cat": "instrumental"
+  },
+  {
+   "id": 1329,
+   "name": "Ustomed NENTWIG, condensador de hueso, bayoneta, para el sistema ANKYLOS",
+   "url": "https://medicalmarca.com/es/osteotomos/1329-ustomed-nentwig-condensador-de-hueso-bayoneta-para-el-sistema-ankylos.html",
+   "img": "https://medicalmarca.com/1430-home_default/ustomed-nentwig-condensador-de-hueso-bayoneta-para-el-sistema-ankylos.jpg",
+   "now": 138.65,
+   "was": null,
+   "cat": "instrumental"
+  },
+  {
+   "id": 1326,
+   "name": "Ustomed MOLT, Periostotomo 17.5 cm, curvo",
+   "url": "https://medicalmarca.com/es/preiostotomos/1326-ustomed-molt-periostotomo-175-cm-curvo.html",
+   "img": "https://medicalmarca.com/2266-home_default/ustomed-molt-periostotomo-175-cm-curvo.jpg",
+   "now": 46.98,
+   "was": 52.2,
+   "cat": "instrumental"
+  },
+  {
+   "id": 1322,
+   "name": "Ustomed CRILE-WOOD, porta-agujas, 15 cm, TC",
+   "url": "https://medicalmarca.com/es/porta-agujas/1322-ustomed-crile-wood-porta-agujas-15-cm-tc.html",
+   "img": "https://medicalmarca.com/1420-home_default/ustomed-crile-wood-porta-agujas-15-cm-tc.jpg",
+   "now": 70.34,
+   "was": 100.49,
+   "cat": "instrumental"
+  },
+  {
+   "id": 1315,
+   "name": "Ustomed METZENBAUM-DELIKAT, tijeras de preparación, 14,5 cm, curva, filo supercortado USTOMED",
+   "url": "https://medicalmarca.com/es/tijeras/1315-ustomed-metzenbaum-delikat-tijeras-de-preparacion-145-cm-curva-filo-supercortado.html",
+   "img": "https://medicalmarca.com/1416-home_default/ustomed-metzenbaum-delikat-tijeras-de-preparacion-145-cm-curva-filo-supercortado.jpg",
+   "now": 75.96,
+   "was": 108.52,
+   "cat": "instrumental"
+  },
+  {
+   "id": 1304,
+   "name": "Ustomed MINI-LAMBOTTE, osteótomo, 13 cm, 4 mm, corto \"",
+   "url": "https://medicalmarca.com/es/cinceles-y-martillos/1304-ustomed-mini-lambotte-osteotomo-13-cm-4-mm-corto-.html",
+   "img": "https://medicalmarca.com/1401-home_default/ustomed-mini-lambotte-osteotomo-13-cm-4-mm-corto-.jpg",
+   "now": 37.1,
+   "was": null,
+   "cat": "instrumental"
+  },
+  {
+   "id": 1259,
+   "name": "Ustomed Cureta GRACEY mod. 5/6 mango USTO-SOFT amarillo",
+   "url": "https://medicalmarca.com/es/periodoncia/1259-ustomed-cureta-gracey-mod-56-mango-usto-soft-amarillo.html",
+   "img": "https://medicalmarca.com/1298-home_default/ustomed-cureta-gracey-mod-56-mango-usto-soft-amarillo.jpg",
+   "now": 40.99,
+   "was": null,
+   "cat": "instrumental"
+  },
+  {
+   "id": 1248,
+   "name": "Ustomed Caja de esterilización y Almacenamiento para 4 instrumentos",
+   "url": "https://medicalmarca.com/es/esterilizacion/1248-ustomed-caja-de-esterilizacion-y-almacenamiento-para-4-instrumentos.html",
+   "img": "https://medicalmarca.com/1277-home_default/ustomed-caja-de-esterilizacion-y-almacenamiento-para-4-instrumentos.jpg",
+   "now": 47.76,
+   "was": null,
+   "cat": "instrumental"
+  },
+  {
+   "id": 1039,
+   "name": "Fórceps de extracción fig 1 para incisivos y caninos superiores",
+   "url": "https://medicalmarca.com/es/instrumental/1039-forceps-de-extraccion-fig-1-para-incisivos-y-caninos-superiores.html",
+   "img": "https://medicalmarca.com/1050-home_default/forceps-de-extraccion-fig-1-para-incisivos-y-caninos-superiores.jpg",
+   "now": 37.95,
+   "was": null,
+   "cat": "instrumental"
+  },
+  {
+   "id": 666,
+   "name": "SMARTSCRAPER",
+   "url": "https://medicalmarca.com/es/cirugia/666-smartscraper.html",
+   "img": "https://medicalmarca.com/666-home_default/smartscraper.jpg",
+   "now": 165.0,
+   "was": null,
+   "cat": "instrumental"
+  },
+  {
+   "id": 1393,
+   "name": "USTOMED Mango de bisturí anatómico nº 7",
+   "url": "https://medicalmarca.com/es/hojas-de-bisturis-y-mangos/1393-ustomed-mango-de-bisturi-anatomico-n-7.html",
+   "img": "https://medicalmarca.com/1545-home_default/ustomed-mango-de-bisturi-anatomico-n-7.jpg",
+   "now": 16.73,
+   "was": 23.9,
+   "cat": "instrumental"
+  }
+ ]
+}

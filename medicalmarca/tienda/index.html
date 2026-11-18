@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tienda · Medicalmarca · Producto dental</title>
+  <meta name="description" content="Escaparate de producto dental de Medicalmarca: instrumental, fresas, implantología, sutura, profilaxis, desinfección y protección." />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <meta name="theme-color" content="#f3f5f7" />
+  <meta name="robots" content="noindex, nofollow" />
+</head>
+<body class="shop-page">
+  <a class="skip" href="#productos">Saltar a los productos</a>
+  <p class="concept-banner">Concepto de rediseño · No es la web oficial de Medicalmarca · <a href="https://medicalmarca.com/es/">Ir a la tienda real</a></p>
+
+  <header class="nav is-solid">
+    <a href="/" class="nav__logo" aria-label="Medicalmarca, inicio">
+      <img src="/brand/logo-color.png" alt="Medicalmarca" width="597" height="106" />
+    </a>
+    <nav class="nav__links" aria-label="Principal">
+      <a href="/#catalogo">Catálogo</a>
+      <a href="/tienda/" aria-current="page">Tienda</a>
+      <a href="/#nosotros">Nosotros</a>
+      <a href="/#contacto">Contacto</a>
+    </nav>
+    <div class="nav__right">
+      <a class="nav__phone" href="tel:+34665479381">665 479 381</a>
+      <button class="btn btn--dark list-toggle" type="button" aria-haspopup="dialog" aria-controls="lista">
+        Mi lista <span class="list-count" data-list-count>0</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="shop" id="contenido">
+    <section class="shop__head wrap">
+      <div>
+        <h1 class="shop__title">Tienda</h1>
+        <p class="sub" data-summary>Cargando productos…</p>
+      </div>
+      <ul class="shop__perks" aria-label="Condiciones de envío">
+        <li><b>Envío gratis</b> desde 150 €</li>
+        <li><b>Entrega en 2 días</b> laborables</li>
+        <li><b>Devoluciones</b> gratuitas</li>
+      </ul>
+    </section>
+
+    <div class="wrap shop__layout">
+      <aside class="shop__side" aria-label="Categorías">
+        <p class="shop__side-title">Categorías</p>
+        <ul class="cat-list" data-cats></ul>
+      </aside>
+
+      <section class="shop__main" aria-labelledby="titulo-listado">
+        <h2 id="titulo-listado" class="visually-hidden">Productos</h2>
+        <form class="tools" role="search" data-tools>
+          <label class="tools__search">
+            <span class="visually-hidden">Buscar producto</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.7 4.7-1.4 1.4-4.7-4.7A7.5 7.5 0 1 1 10.5 3zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z" fill="currentColor"/></svg>
+            <input type="search" name="q" placeholder="Buscar: curetas, fresas, guantes…" autocomplete="off" maxlength="60" />
+          </label>
+          <label class="tools__sort">
+            <span>Ordenar</span>
+            <select name="sort">
+              <option value="relevance">Destacados</option>
+              <option value="price-asc">Precio: de menor a mayor</option>
+              <option value="price-desc">Precio: de mayor a menor</option>
+              <option value="name">Nombre (A–Z)</option>
+              <option value="discount">Mayor descuento</option>
+            </select>
+          </label>
+          <label class="tools__offers">
+            <input type="checkbox" name="offers" />
+            <span>Solo ofertas</span>
+          </label>
+        </form>
+
+        <p class="results" role="status" aria-live="polite" data-results></p>
+        <div class="grid" id="productos" data-grid></div>
+        <div class="grid__more">
+          <button class="btn btn--line" type="button" data-more hidden>Ver más productos</button>
+          <a class="link" data-full-cat href="https://medicalmarca.com/tienda">Ver el catálogo completo en la tienda</a>
+        </div>
+        <p class="shop__note">Selección de productos y precios (IVA incluido) tomados de medicalmarca.com el <span data-date></span>. El precio final es el de la tienda.</p>
+      </section>
+    </div>
+  </main>
+
+  <!-- Ficha de producto -->
+  <dialog class="sheet" id="ficha" aria-labelledby="ficha-nombre">
+    <button class="sheet__close" type="button" data-close aria-label="Cerrar ficha">×</button>
+    <div class="sheet__body">
+      <div class="sheet__img"><img alt="" data-f="img" /></div>
+      <div class="sheet__info">
+        <p class="sheet__cat" data-f="cat"></p>
+        <h2 id="ficha-nombre" data-f="name"></h2>
+        <p class="prod__price sheet__price" data-f="price"></p>
+        <div class="qty">
+          <label for="ficha-qty">Unidades</label>
+          <div class="qty__ctrl">
+            <button type="button" data-step="-1" aria-label="Quitar una unidad">−</button>
+            <input id="ficha-qty" type="number" min="1" max="999" value="1" inputmode="numeric" />
+            <button type="button" data-step="1" aria-label="Añadir una unidad">+</button>
+          </div>
+        </div>
+        <div class="sheet__actions">
+          <button class="btn btn--violet" type="button" data-add>Añadir a mi lista</button>
+          <a class="btn btn--line" data-f="url" href="https://medicalmarca.com/tienda">Comprar en medicalmarca.com</a>
+        </div>
+        <p class="sheet__hint">Tu lista sirve para preparar el pedido de la clínica y enviarlo por correo. La compra se completa en la tienda.</p>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Lista de pedido -->
+  <dialog class="drawer" id="lista" aria-labelledby="lista-titulo">
+    <div class="drawer__head">
+      <h2 id="lista-titulo">Mi lista de pedido</h2>
+      <button class="sheet__close" type="button" data-close aria-label="Cerrar lista">×</button>
+    </div>
+    <ul class="drawer__items" data-list></ul>
+    <p class="drawer__empty" data-list-empty>Tu lista está vacía. Añade productos desde su ficha para preparar el pedido de la clínica.</p>
+    <div class="drawer__foot" data-list-foot>
+      <p class="drawer__total"><span>Total estimado (IVA incl.)</span> <b data-list-total>0,00 €</b></p>
+      <p class="drawer__ship" data-list-ship></p>
+      <a class="btn btn--violet" data-mail href="mailto:info@medicalmarca.com">Enviar lista por correo</a>
+      <button class="btn btn--line" type="button" data-copy>Copiar lista</button>
+      <button class="drawer__clear" type="button" data-clear>Vaciar lista</button>
+      <p class="drawer__msg" role="status" aria-live="polite" data-list-msg></p>
+    </div>
+  </dialog>
+
+  <footer class="footer">
+    <div class="wrap footer__grid">
+      <a href="/" class="nav__logo" aria-label="Medicalmarca, inicio"><img src="/brand/logo-white.png" alt="Medicalmarca" width="597" height="106" loading="lazy" /></a>
+      <nav aria-label="Tienda">
+        <a href="/tienda/">Tienda</a>
+        <a href="https://medicalmarca.com/ofertas">Ofertas</a>
+        <a href="https://medicalmarca.com/es/novedades">Novedades</a>
+        <a href="https://medicalmarca.com/es/iniciar-sesion">Iniciar sesión</a>
+      </nav>
+      <nav aria-label="Información">
+        <a href="https://medicalmarca.com/es/content/1-entrega">Envío</a>
+        <a href="https://medicalmarca.com/es/content/5-pago-seguro">Pago seguro</a>
+        <a href="https://medicalmarca.com/es/content/6-politica-de-devoluciones">Devoluciones</a>
+        <a href="https://medicalmarca.com/es/content/2-aviso-legal">Aviso legal</a>
+      </nav>
+      <nav aria-label="Contacto">
+        <a href="tel:+34665479381">665 479 381</a>
+        <a href="mailto:info@medicalmarca.com">info@medicalmarca.com</a>
+      </nav>
+    </div>
+    <p class="wrap footer__copy">© Medicalmarca 2026</p>
+  </footer>
+
+  <script type="module" src="/src/shop.js"></script>
+</body>
+</html>
