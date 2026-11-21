@@ -1,0 +1,34 @@
+/* Patrones del lote 2 (ver patterns.js). Usa las variables --bg / --ink del proyecto. */
+body { background: var(--bg); color: var(--ink); transition: none; }
+
+/* 13 · Media incrustada en el titular: <h2>Hacemos <span class="inline-media"><video …></span> películas</h2> */
+.inline-media { display: inline-block; height: 0.78em; aspect-ratio: 16 / 10; vertical-align: -0.08em; border-radius: 0.12em; overflow: hidden; margin: 0 0.08em; }
+.inline-media > img, .inline-media > video { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* 14 · Revelado por bloques */
+.bl { display: block; position: relative; width: fit-content; --cover: 0%; }
+.bl::after { content: ''; position: absolute; inset: 0; background: var(--ink); clip-path: inset(0 0 0 calc(100% - var(--cover))); }
+
+/* 15 · Lista gigante con imagen en hover */
+[data-hover-list] { list-style: none; margin: 0; padding: 0; }
+[data-hover-list] a { display: block; font-size: clamp(2.2rem, 7vw, 7rem); line-height: 1; letter-spacing: -0.04em; text-decoration: none; padding: 0.08em 0; transition: opacity 0.3s, color 0.3s; }
+[data-hover-list].is-hovering a:not(.is-on) { opacity: 0.25; }
+.hover-list__img { position: fixed; left: 0; top: 0; z-index: 50; width: 240px; height: 300px; object-fit: cover; border-radius: 6px; pointer-events: none; opacity: 0; visibility: hidden; transform: scale(0.9); }
+@media (hover: none) { [data-hover-list] a { font-size: clamp(1.8rem, 9vw, 3rem); } }
+
+/* Marquesina */
+[data-marquee] { overflow: hidden; white-space: nowrap; }
+.marquee__track { display: inline-flex; will-change: transform; }
+
+/* 20 · Wordmark gigante del footer (el tamaño lo calcula fitWordmark) */
+[data-wordmark] { margin: 0; line-height: 0.78; letter-spacing: -0.05em; font-weight: 800; white-space: nowrap; overflow: visible; }
+
+@media (prefers-reduced-motion: reduce) { .bl::after { display: none; } }
+
+/* 24 · Trazo dibujado */
+[data-draw] { overflow: visible; }
+[data-draw] path { fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
+
+/* 25 · Collage a distintas profundidades */
+.collage { position: relative; min-height: 120vh; }
+.collage > [data-depth] { position: absolute; will-change: transform; }

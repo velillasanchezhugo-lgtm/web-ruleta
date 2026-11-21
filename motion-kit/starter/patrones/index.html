@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Patrones · motion-kit</title>
+  <meta name="robots" content="noindex, nofollow" />
+</head>
+<body>
+  <main>
+    <section class="section pat" data-chapter="#f4f4f2" data-ink="#141414">
+      <div class="wrap">
+        <p class="pat__label">Catálogo de patrones del motion-kit · haz scroll</p>
+        <h1 class="pat__big" data-blocks>Revelado<br>por bloques<br><em>(PSP Production)</em></h1>
+      </div>
+    </section>
+
+    <section class="section pat" data-chapter="#2b1b14" data-ink="#f3e9dc">
+      <div class="wrap">
+        <p class="pat__label">Capítulos de color (Delta Cafés): el fondo cambia al entrar en cada sección</p>
+        <h2 class="pat__big">Hacemos <span class="inline-media"><img src="/demo/1.svg" alt="" /></span> webs que <span class="inline-media"><img src="/demo/2.svg" alt="" /></span> se mueven</h2>
+        <p class="pat__label">↑ Media incrustada en el titular (PSP Production)</p>
+      </div>
+    </section>
+
+    <section class="section pat" data-chapter="#1b2a24" data-ink="#e8f0ea">
+      <div class="wrap">
+        <p class="pat__label">Lista gigante con imagen en hover (Bulletproof) · pasa el ratón</p>
+        <ul data-hover-list>
+          <li><a href="#cliente-1" data-img="/demo/1.svg">Cliente uno</a></li>
+          <li><a href="#cliente-2" data-img="/demo/2.svg">Cliente dos</a></li>
+          <li><a href="#cliente-3" data-img="/demo/3.svg">Cliente tres</a></li>
+        </ul>
+        <span id="cliente-1"></span><span id="cliente-2"></span><span id="cliente-3"></span>
+      </div>
+    </section>
+
+    <section class="section pat" data-chapter="#6b4bb3" data-ink="#ffffff">
+      <p class="pat__label wrap">Marquesina que acelera con el scroll</p>
+      <div class="pat__marquee" data-marquee><span>Web con motion · Diseño · Movimiento · </span></div>
+    </section>
+
+    <section class="section pat" data-chapter="#282c20" data-ink="#d2ff00">
+      <div class="wrap">
+        <p class="pat__label">Trazo que se dibuja con el scroll (Lando Norris)</p>
+        <svg data-draw class="pat__draw" viewBox="0 0 600 200" aria-hidden="true"><path stroke-width="7" d="M20 150 C 80 20, 140 20, 160 120 S 230 180, 260 90 S 330 10, 360 110 S 440 170, 470 70 S 560 40, 580 120" /></svg>
+      </div>
+    </section>
+
+    <section class="section pat collage" data-chapter="#efeadf" data-ink="#282c20">
+      <p class="pat__label wrap">Collage a distintas profundidades (Lando Norris)</p>
+      <img data-depth="0.2" src="/demo/1.svg" alt="" class="pat__c1" />
+      <img data-depth="0.6" src="/demo/2.svg" alt="" class="pat__c2" />
+      <img data-depth="-0.3" src="/demo/3.svg" alt="" class="pat__c3" />
+      <img data-depth="0.9" src="/demo/1.svg" alt="" class="pat__c4" />
+    </section>
+
+    <footer class="pat__footer" data-chapter="#141414" data-ink="#f4f4f2">
+      <p class="pat__label wrap">Wordmark gigante en el footer (Bulletproof)</p>
+      <div class="wrap"><p data-wordmark>MARCA</p></div>
+      <p class="wrap"><a href="/">Volver al starter</a></p>
+    </footer>
+  </main>
+  <script type="module" src="/src/patrones.js"></script>
+</body>
+</html>

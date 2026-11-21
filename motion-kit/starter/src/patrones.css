@@ -1,0 +1,12 @@
+/* Solo para la página de demostración de patrones (/patrones/). */
+.pat { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+.pat__label { opacity: 0.7; font-size: 0.95rem; margin: 0 0 1.5rem; }
+.pat__big { font-size: clamp(2.6rem, 8vw, 8rem); line-height: 0.95; letter-spacing: -0.04em; margin: 0 0 1.5rem; }
+.pat__big em { font-family: Georgia, serif; font-weight: 400; }
+.pat__marquee { font-size: clamp(3rem, 12vw, 11rem); font-weight: 800; letter-spacing: -0.04em; }
+.pat__footer { padding: 6rem 0 2rem; background: var(--bg); color: var(--ink); }
+.pat__draw { width: min(900px, 100%); height: auto; }
+.pat__c1 { left: 8%; top: 18%; width: 18vw; }
+.pat__c2 { left: 34%; top: 40%; width: 22vw; }
+.pat__c3 { right: 10%; top: 12%; width: 16vw; }
+.pat__c4 { right: 26%; top: 62%; width: 12vw; }

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>__CLIENTE__</title>
+  <meta name="description" content="" />
+  <meta name="robots" content="noindex, nofollow" /><!-- quitar al publicar -->
+</head>
+<body>
+  <a class="skip" href="#contenido">Saltar al contenido</a>
+
+  <header class="nav">
+    <a href="#top" class="nav__logo">__CLIENTE__</a>
+    <nav class="nav__links" aria-label="Principal">
+      <a href="#servicios">Servicios</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+    <a class="btn" href="#contacto">Contactar</a>
+  </header>
+
+  <main id="contenido">
+    <!-- PELÍCULA guiada por scroll: genera los fotogramas con `npm run frames video.mp4 public` y rellena src/film.json -->
+    <section class="film" id="top">
+      <div class="film__stage">
+        <canvas class="film__canvas" aria-hidden="true"></canvas>
+        <div class="stop stop--hero" data-stop="0">
+          <h1 class="hero__title split">Titular de <em>__CLIENTE__</em></h1>
+          <p>Subtítulo: qué hacen y para quién, en una frase.</p>
+          <a class="btn btn--primary" href="#contacto">Acción principal</a>
+        </div>
+        <div class="stop" data-stop="1"><h2>Parada 1</h2><p>Un mensaje por parada.</p></div>
+        <div class="stop" data-stop="2"><h2>Parada 2</h2><p>Un mensaje por parada.</p></div>
+        <div class="stop" data-stop="3"><h2>Parada 3</h2><p>Un mensaje por parada.</p></div>
+      </div>
+    </section>
+
+    <section class="section" id="servicios">
+      <div class="wrap">
+        <h2 class="h2 split">Servicios</h2>
+        <p class="reveal">Contenido.</p>
+      </div>
+    </section>
+
+    <section class="section" id="contacto">
+      <div class="wrap">
+        <h2 class="h2 split">Contacto</h2>
+        <p class="reveal"><a href="tel:+34600000000">600 000 000</a> · <a href="mailto:hola@ejemplo.com">hola@ejemplo.com</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="wrap">© __CLIENTE__</div></footer>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

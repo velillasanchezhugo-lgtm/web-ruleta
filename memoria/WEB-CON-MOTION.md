@@ -246,6 +246,98 @@ Cuando no hay metraje (o no se quiere gastar en IA), el plano continuo lo da **u
 - En móvil: bajar DPR, acercar el objeto al centro (x × 0.35) y atenuar el canvas (~0.7).
 - Las capturas de Playwright durante el scroll salen "fantasma"; verificar con una captura quieta tras esperar.
 
+## 9. Retrospectiva: por qué Medicalmarca sacó un 6/10 (y qué hace un 10)
+
+Comparada con las referencias de Hugo y con webs premiadas (lote 2), los fallos fueron de **dirección de arte**, no de código:
+
+| Fallo en Medicalmarca | Qué hacen las webs de 10 |
+|---|---|
+| Contenido "de stock": una clínica genérica generada por IA, con cortes que se notan | Material **real y de calidad** (Delta, Preymaker, PSP) o **concepto abstracto** que no finge realidad (SANTAL: solo tipografía y líneas en 3D) |
+| Paleta lavada (blanco/gris + un violeta tímido) | **Un mundo de color valiente** (PSP: magenta entero) o **capítulos de color** (Delta: marrón café → crema → verde) |
+| Tipografía correcta pero "educada" | **La tipografía ES la imagen**: gigante, a sangre, mezclando grotesca muy pesada + **cursiva serif** dentro del mismo titular (PSP, Bulletproof), lockups condensados con palabras pequeñas/grandes (Delta) |
+| Maquetación de plantilla: texto a la izquierda, imagen a la derecha | Composiciones a sangre, palabras repartidas por toda la pantalla, pantallas partidas fijas, imágenes dentro de **máscaras con forma** |
+| El movimiento solo vive en el hero; después, secciones normales | **El movimiento continúa hasta el pie**: cambios de color entre capítulos, cortinillas, marquesinas, listas con imagen en hover, transiciones entre páginas (Barba), wordmark gigante en el footer |
+| Escaparate útil pero con aspecto de catálogo | Igual de útil, pero con el mismo nivel de dirección de arte que la portada |
+
+**Regla nueva:** antes de escribir código, la propuesta tiene que pasar la prueba del pantallazo: si una captura cualquiera de la web podría ser de otra empresa del sector, todavía no es un 10.
+
+## 10. Webs premiadas analizadas (lote 2 — Awwwards Site of the Day nov. 2026 + Site of the Year 2025)
+
+Grabadas con `motion-kit/tools/capture-refs.cjs` (30 capturas haciendo scroll) y analizadas fotograma a fotograma. Hojas de contacto en `memoria/referencias/lote2/`.
+
+| Web | Sector | Firma (lo que la hace memorable) | Técnica detectada |
+|---|---|---|---|
+| **Delta Cafés** (deltacafes.com) | Marca de consumo | Historia por **capítulos de color** (marrón → crema → verde), lockups tipográficos "THE JOURNEY OF COFFEE", productos flotando a distintas velocidades, collage de fotos de archivo | Nuxt + Lenis, 11 vídeos, WebGL |
+| **SANTAL** (santalarch.com) | Estudio de arquitectura | Cero fotos: wordmark gigante → palabras apiladas → **las palabras se esparcen en 3D y rotan hasta convertirse en líneas de plano** | Nuxt + Lenis + Three.js |
+| **PSP Production** (productionportugal.com) | Productora audiovisual | **Magenta a pantalla completa**, titular ultra-negro + cursiva serif, **revelado con máscaras de bloques blancos**, **vídeos pequeños incrustados en el titular**, contacto en pantalla partida con vídeos que rotan | Webflow + GSAP + Lenis |
+| **Bulletproof** (wearebulletproof.com) | Agencia de branding | Claim con **palabras repartidas por la pantalla**, foto dentro de **máscara con forma** + letras del cliente esparcidas, **lista gigante de clientes con imagen en hover**, marquesina, **wordmark gigante cortado en el footer** | Webflow + Lenis + Barba (transiciones de página), 72 vídeos |
+| **Preymaker** (preymaker.com) | Productora VFX | **Cada scroll = un vídeo a pantalla completa**; cortinilla horizontal partida entre proyectos; UI mínima (etiqueta centrada) | Next.js + Lenis |
+| **AUGE** (auge-xp.com) | Estudio digital | Una sola pantalla: **galería infinita horizontal** de tarjetas que se mueve con la rueda + wordmark gigante | Next.js + WebGL |
+| **Sweet Tape** (sweet-tape.com) | Marca de producto (cinta adhesiva) | **El material del producto es el sistema visual**: papel kraft, pósits, pegatinas; el texto viaja en una **cinta curva que avanza con el scroll**; frase gigante en horizontal ("TO CREATE… TO FIX… TO PROTECT") con productos como pegatinas | Next.js + Lenis + Three.js (rollos en 3D) |
+| **Uncommon** (uncommondesign.group) | Estudio de diseño | Frase centrada en negro mientras **los mockups de sus proyectos vuelan en 3D por el centro**; lista que se enciende; **monograma vertical gigante** en el footer | Next.js + Lenis + WebGL |
+| **197 Historias Ilustradas** | Proyecto editorial | Loader de máquina de escribir + contador; **197 retratos que se ensamblan en rombo y se abren en una galería-lienzo** | Next.js |
+| **Lando Norris** (landonorris.com) — *Site of the Year 2025* | Marca personal (piloto F1) | **Sus propios activos como sistema**: lima de sus cascos, **firma manuscrita que se dibuja con el scroll** sobre una marquesina, collage de fotos **flotando a distintas profundidades**, palabras alternando serif/sans, **"salón de la fama" de cascos en WebGL** | Webflow + GSAP + Lenis, 21 canvas WebGL |
+
+*(Cyera/Active Theory no funciona sin GPU real y By-Kin bloquea el scroll automatizado: no analizables aquí.)*
+
+### Lo que comparten las 10 analizadas (la "fórmula" 2026)
+1. **Un concepto sacado del mundo de la marca**, no del sector genérico: cinta → kraft y pegatinas; café → capítulos del origen; arquitectura → líneas de plano; piloto → casco y firma; productora → bobina de vídeo.
+2. **Activos propios y reales** (producto, personas, trabajos, firma, archivo). Ninguna usa realismo de stock o IA que finja ser real.
+3. **Color con carácter**: un color de marca dominante + un acento eléctrico (Lando: oliva + lima; PSP: magenta; Sweet Tape: lima + verde), o capítulos de color.
+4. **Tipografía protagonista** y mezclada: grotesca pesada/condensada + serif o manuscrita en la misma frase.
+5. **El movimiento llega hasta el footer** (wordmark o monograma gigante, marquesinas, firmas).
+6. **Lenis en 9 de 10**; GSAP donde hay coreografía; WebGL solo donde el concepto lo pide.
+
+### Patrones nuevos (continúa el catálogo P3)
+22. **Texto en una trayectoria curva** que avanza con el scroll (SVG `textPath` + `startOffset` con scrub) — Sweet Tape.
+23. **Frase gigante horizontal** con objetos que cruzan como pegatinas (sección fijada + `x` con scrub).
+24. **Trazo a mano que se dibuja** con el scroll (SVG `stroke-dashoffset`) — Lando Norris.
+25. **Collage a distintas profundidades** (cada foto con su velocidad de parallax) — Lando Norris.
+26. **Mockups volando en 3D** por el centro mientras el texto queda fijo — Uncommon.
+27. **Galería que se ensambla** (rejilla que nace de una forma y se expande) — 197 Historias.
+
+### Patrones nuevos (se añaden al catálogo P3)
+12. **Capítulos de color**: el fondo cambia de color con el scroll al cambiar de capítulo (GSAP `backgroundColor` con scrub o variables CSS).
+13. **Media incrustada en el titular**: vídeos/fotos pequeños dentro de la línea de texto (`display:inline-block`, alto = 0.8em).
+14. **Revelado por bloques**: rectángulos del color de fondo que se retiran por partes (`clip-path: inset()` por línea).
+15. **Lista gigante con imagen en hover**: nombres de clientes/proyectos enormes en gris; al pasar, el nombre se enciende y aparece su foto (ya usado en el catálogo de Medicalmarca: subir el tamaño).
+16. **Máscara con forma**: foto recortada por una silueta (logo, letra, objeto) con `mask-image` o SVG `clipPath`.
+17. **Tipografía a 3D**: palabras en un plano 3D que rota y se desintegra en líneas (Three.js + troika-three-text).
+18. **Reel a pantalla completa**: secciones de 100vh con vídeo y cortinilla partida al pasar (scroll-snap o ScrollTrigger con `pin`).
+19. **Galería infinita horizontal** movida por la rueda (marquesina con inercia, Lenis horizontal o GSAP `Observer`).
+20. **Wordmark gigante en el footer** a sangre, cortado por el borde.
+21. **Transiciones entre páginas** (Barba/Swup o View Transitions API) en webs de varias páginas.
+
+### Datos técnicos (2026)
+- **Lenis está en las 6** webs; GSAP en las de Webflow; Three.js solo donde la idea lo pide (SANTAL).
+- Las **animaciones CSS ligadas al scroll** (`animation-timeline: scroll()/view()`) ya son *Baseline* (Chrome, Safari 26, Firefox 159): úsalas para efectos sencillos (barras de progreso, fades) y deja GSAP para coreografías.
+- Las **View Transitions** entre documentos funcionan en Chromium; en Safari/Firefox aún hay que comprobarlo → usarlas como mejora progresiva.
+
+## 11. Método 10/10 para la próxima web (lunes)
+
+**Fase 0 — Brief (antes de nada):** cliente, para quién, qué deben hacer al entrar (CTA), y qué material real tienen (fotos, vídeos, producto). Sin material bueno, la firma tiene que ser tipográfica o 3D abstracta, nunca una IA que finja realidad.
+
+**Fase 1 — Elegir UNA firma** (solo una, ejecutada perfecta), según el material:
+| Si el cliente tiene… | Firma recomendada |
+|---|---|
+| Vídeo bueno (productora, marca, eventos) | Reel a pantalla completa (Preymaker) o vídeo incrustado en titular (PSP) |
+| Producto físico fotogénico | Capítulos de color + producto flotando (Delta) o película guiada por scroll con producto real |
+| Poco material visual / servicio abstracto | Tipografía cinética o tipografía a 3D (SANTAL), objeto-hilo 3D (UMOTION) |
+| Muchos proyectos/clientes | Lista gigante con imagen en hover (Bulletproof) o galería infinita (AUGE) |
+| Producto de consumo con personalidad | Material del producto como sistema visual + texto en cinta curva (Sweet Tape) |
+| Marca personal (deportista, artista, médico, chef) | Sus activos propios como sistema: firma que se dibuja, colores de su equipo, collage a distintas profundidades (Lando Norris) |
+| Lugar / espacio (clínica, hotel, inmobiliaria) | Película de recorrido **con fotos/vídeo reales del lugar** (wearebrand) |
+
+**Fase 2 — Dirección de arte en 3 pantallazos** (portada, una sección intermedia, footer) antes de programar: un mundo de color valiente, pareja tipográfica con contraste (grotesca pesada + cursiva serif), y la composición a sangre. Se enseñan a Hugo y se valida.
+
+**Fase 3 — Construcción** con `motion-kit` (`motion-kit/new-project.sh`). Si hay vídeo IA: generarlo **por tramos** (fotograma clave A→B, B→C… de 5 s cada uno) en lugar de un único vídeo con fotogramas intermedios, para evitar cortes; comprobar con `tools/video-to-frames.sh`.
+
+**Fase 4 — Capa de pulido** (lo que separa un 7 de un 9): pantalla de carga con momento de marca, movimiento hasta el footer (capítulos de color o cortinillas), estados hover cuidados, marquesina o lista gigante, wordmark en el footer, transiciones de página si hay varias.
+
+**Fase 5 — Control de calidad**: `tools/device-matrix.cjs` (9 dispositivos), `tools/link-audit.cjs` (ningún clic sin destino), cabeceras de seguridad del starter, Lighthouse.
+
+**Autoevaluación antes de enseñarla (sobre 10):** idea/firma (2) · dirección de arte y color (2) · tipografía (2) · movimiento continuo hasta el final (2) · pulido, rendimiento y móvil (2). Si no llega a 8, no se enseña todavía.
+
 ## Proyectos hechos
 - **UMOTION v1 (2026-11-17)** — `umotion/` (Vite + Three + GSAP + Lenis). Hilo: papeles sueltos (trabajo repetitivo) → hoja ordenada → grulla de origami que vuela al final ("Menos tareas. Más negocio."). Mundo azul noche, Instrument Sans + Instrument Serif cursiva.
 
@@ -270,3 +362,4 @@ Cuando no hay metraje (o no se quiere gastar en IA), el plano continuo lo da **u
 
 ## Registro de referencias
 - **Lote 1** (2026-11-17): 7 vídeos TikTok/IG — R1–R7 arriba.
+- **Lote 2** (2026-11-21): webs Awwwards Site of the Day (noviembre 2026) — ver §10.
