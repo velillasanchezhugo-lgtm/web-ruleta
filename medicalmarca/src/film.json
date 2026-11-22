@@ -1,6 +1,7 @@
 {
-  "desktop": { "count": 361, "cuts": [53, 128] },
-  "mobile": { "count": 271, "cuts": [40, 96] },
+  "desktop": { "count": 181, "cuts": [27, 64] },
+  "mobile": { "count": 181, "cuts": [27, 64] },
+  "uhd": { "count": 181, "cuts": [27, 64] },
   "stops": [0, 0.24, 0.47, 0.735, 1],
-  "note": "stops = posición de cada parada en el vídeo (0–1): clínica, bandeja, lámpara, sillón, mueble. cuts = primer fotograma tras un corte del vídeo generado; se disimulan con fundido + zoom."
+  "note": "Vídeo reescalado a 4K con IA (3806×2160). Tres niveles a 12 fps con fundido entre fotogramas: uhd 2880 px (pantallas retina/4K), desktop 1920 px, mobile 1280 px. cuts = primer fotograma tras un corte; se disimulan con fundido + zoom."
 }

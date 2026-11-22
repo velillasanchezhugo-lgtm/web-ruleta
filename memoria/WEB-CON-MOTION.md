@@ -354,6 +354,16 @@ Grabadas con `motion-kit/tools/capture-refs.cjs` (30 capturas haciendo scroll) y
 6. Extraer WebP: escritorio 1600 px q72 a 24 fps (~15 MB / 361 fotogramas), móvil 1100 px q62 a 18 fps (~6 MB). En móvil, encuadre desplazado (`focalX` 0,72) hacia donde están los aparatos.
 7. Mapear scroll → vídeo con smoothstep entre paradas: la cámara frena sola en cada aparato mientras aparece su texto.
 
+### Calidad 4K / retina (lección de Medicalmarca, 22/11/2026)
+- **Mide antes de tocar**: tamaño real de cada imagen frente a tamaño mostrado × densidad de pantalla (retina = ×2). Todo lo que se estira más de ×1,2 se ve pixelado.
+- **Película a pantalla completa**: generar o reescalar el vídeo a **4K** (Higgsfield `upscale_video`, preset `aigc`, ~12 créditos por 15 s) y servir **3 niveles** según los píxeles reales de la pantalla: 4K 2880 px (retina/4K), HD 1920 px, móvil.
+- **Móvil en vertical**: el canvas cubre la ALTURA → un 16:9 se estira ×2,3. Exportar un **recorte vertical** (p. ej. 960×1706) centrado en el sujeto.
+- **12 fps + fundido entre fotogramas** solo mientras hay movimiento (parece desenfoque de movimiento); al parar, fotograma exacto. Mezclar siempre deja una doble imagen visible.
+- `ctx.imageSmoothingQuality = 'high'` en el canvas.
+- **Fotos de producto de una tienda**: la versión grande suele tener mucho margen blanco (el producto ocupa ~45%). Recortar el margen automáticamente y reencuadrar (`medicalmarca/scripts/optimize-product-images.py`), servir en local en WebP.
+- **Imágenes diminutas sin versión mayor** (categorías de 141 px): reescalar con IA (`upscale_image` 2K, 2 créditos cada una) y revisar una a una que corresponden.
+- El **texto HTML siempre es nítido**; si “se ven pixeladas las letras”, son las letras dentro de fotos/vídeo.
+
 ### Más lecciones
 - Fondo claro + metal: el `RoomEnvironment` (PMREM) da reflejos creíbles sin texturas; la sombra con `ShadowMaterial` "posa" el objeto en el fondo.
 - Girar el objeto sobre su propio eje ligado al scroll hace "correr" los reflejos: sensación de movimiento sin desplazar nada.

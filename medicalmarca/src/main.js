@@ -36,7 +36,7 @@ $('[data-products]').innerHTML = PRODUCTS.map((p) => {
   const pid = String(p.url).match(/\/(\d+)-[^/]+\.html$/)?.[1];
   const url = pid ? `/tienda/#producto-${pid}` : esc(safeUrl(p.url));
   return `<article class="prod">
-    <a class="prod__img" href="${url}"><img src="${esc(img(imgName(p.img)))}" alt="${esc(p.name)}" loading="lazy" width="400" height="400" /></a>
+    <a class="prod__img" href="${url}"><img src="${pid ? `/products/${pid}.webp` : esc(img(imgName(p.img)))}" alt="${esc(p.name)}" loading="lazy" width="800" height="800" /></a>
     <p class="prod__brand">${esc(p.brand ?? 'Medicalmarca')}</p>
     <h3><a href="${url}">${esc(p.name)}</a></h3>
     <p class="prod__price"><b>${eur.format(now)}</b> <s aria-label="Antes">${eur.format(was)}</s> <span class="prod__off">−${off} %</span></p>
@@ -74,12 +74,18 @@ $$('a[href^="#"]').forEach((a) => a.addEventListener('click', (e) => {
 // (smoothstep), así se "detiene" en cada aparato mientras aparece su texto.
 const filmEl = $('.film');
 const mobileFilm = window.matchMedia('(max-width: 760px)').matches;
-const seq = mobileFilm ? FILM.mobile : FILM.desktop;
+// Calidad según los píxeles reales de la pantalla: móvil → recorte vertical 960×1706; retina/4K → 2880 px; resto → 1920 px
+const dpr = Math.min(window.devicePixelRatio || 1, 2);
+const needPx = Math.max(window.innerWidth, (window.innerHeight * 16) / 9) * dpr;
+const tier = mobileFilm ? 'film-m' : needPx > 2100 ? 'film-4k' : 'film';
+const seq = mobileFilm ? FILM.mobile : tier === 'film-4k' ? FILM.uhd : FILM.desktop;
 const film = createFilm($('.film__canvas'), {
   count: seq.count,
   cuts: seq.cuts,
-  focalX: window.matchMedia('(max-width: 760px), (max-width: 1100px) and (orientation: portrait)').matches ? 0.72 : 0.5,
-  src: (i) => `${import.meta.env.BASE_URL}${mobileFilm ? 'film-m' : 'film'}/f_${String(i + 1).padStart(4, '0')}.webp`,
+  blend: 5, // ventana del fundido en los cortes (secuencias a 12 fps)
+  interpolate: true, // fundido entre fotogramas consecutivos: suave aunque haya 12 por segundo
+  focalX: !mobileFilm && window.matchMedia('(max-width: 1100px) and (orientation: portrait)').matches ? 0.72 : 0.5,
+  src: (i) => `${import.meta.env.BASE_URL}${tier}/f_${String(i + 1).padStart(4, '0')}.webp`,
 });
 film.onProgress((r) => { $('.film__loading i').style.transform = `scaleX(${r})`; if (r >= 1) $('.film__loading').classList.add('is-done'); });
 
@@ -113,6 +119,7 @@ function paintStops(p) {
 }
 gsap.ticker.add(() => {
   filmNow += (filmTarget - filmNow) * (reduced ? 1 : 0.18);
+  if (Math.abs(filmTarget - filmNow) < 2e-4) filmNow = filmTarget; // se detiene del todo: imagen quieta y nítida
   film.progress = videoAt(filmNow);
 });
 

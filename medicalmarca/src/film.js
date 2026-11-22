@@ -4,10 +4,10 @@
 
 const smooth = (t) => t * t * (3 - 2 * t);
 
-export function createFilm(canvas, { count, src, cuts = [], blend = 9, focalX = 0.5, firstBatch = 24 }) {
+export function createFilm(canvas, { count, src, cuts = [], blend = 9, focalX = 0.5, firstBatch = 24, interpolate = false }) {
   const ctx = canvas.getContext('2d', { alpha: false });
   const frames = new Array(count);
-  let pos = 0, lastKey = '', loaded = 0;
+  let pos = 0, lastKey = '', loaded = 0, moving = false, settleTimer = 0;
   const listeners = [];
 
   function ok(i) { const im = frames[i]; return im && im.complete && im.naturalWidth > 0; }
@@ -46,6 +46,8 @@ export function createFilm(canvas, { count, src, cuts = [], blend = 9, focalX = 
     const cw = canvas.width, ch = canvas.height;
     const s = Math.max(cw / im.naturalWidth, ch / im.naturalHeight) * zoom; // cover
     const w = im.naturalWidth * s, h = im.naturalHeight * s;
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high'; // escalado de máxima calidad (por defecto el navegador usa uno rápido)
     ctx.globalAlpha = alpha;
     ctx.drawImage(im, (cw - w) * focalX, (ch - h) / 2, w, h);
   }
@@ -55,9 +57,14 @@ export function createFilm(canvas, { count, src, cuts = [], blend = 9, focalX = 
     const i = Math.round(f);
     // ¿estamos cerca de un corte?
     const c = cuts.find((k) => f > k - 0.5 - blend && f < k - 0.5 + blend);
-    const key = c ? `${c}:${f.toFixed(2)}` : `${i}`;
+    // interpolate: fundido entre fotogramas consecutivos → movimiento suave aunque la secuencia tenga menos fotogramas (4K a 12 fps)
+    const i0 = Math.floor(f), frac = f - i0;
+    // solo se mezclan fotogramas mientras hay movimiento (parece desenfoque de movimiento); quieto = fotograma exacto y nítido
+    const tween = interpolate && moving && !c && frac > 0.04 && frac < 0.96 && i0 + 1 < count && ok(i0) && ok(i0 + 1);
+    const key = c ? `${c}:${f.toFixed(2)}` : tween ? `${i0}:${frac.toFixed(2)}` : `${i}`;
     if (key === lastKey) return;
     lastKey = key;
+    if (tween) { paint(i0, 1, 1); paint(i0 + 1, frac, 1); ctx.globalAlpha = 1; return; }
     if (!c) { paint(i, 1, 1); return; }
     // t: 0 → 1 a lo largo de la ventana del corte
     const t = smooth((f - (c - 0.5 - blend)) / (2 * blend));
@@ -78,7 +85,16 @@ export function createFilm(canvas, { count, src, cuts = [], blend = 9, focalX = 
   resize();
 
   return {
-    set progress(p) { pos = Math.max(0, Math.min(1, p)); draw(); },
+    set progress(p) {
+      const next = Math.max(0, Math.min(1, p));
+      if (Math.abs(next - pos) > 1e-5) {
+        moving = true;
+        clearTimeout(settleTimer);
+        settleTimer = setTimeout(() => { moving = false; lastKey = ''; draw(); }, 140);
+      }
+      pos = next;
+      draw();
+    },
     onProgress(f) { listeners.push(f); },
   };
 }

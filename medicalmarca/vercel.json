@@ -49,7 +49,7 @@
       ]
     },
     {
-      "source": "/(film|film-m|img|brand)/(.*)",
+      "source": "/(film|film-m|film-4k|img|brand)/(.*)",
       "headers": [
         {
           "key": "Cache-Control",

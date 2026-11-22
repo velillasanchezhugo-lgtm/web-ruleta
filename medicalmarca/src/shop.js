@@ -19,6 +19,8 @@ function safeUrl(u, fallback = STORE) {
   catch { return fallback; }
 }
 const PLACEHOLDER = '/brand/logo-color.png';
+// Fotos de la tienda: home_default = 250 px, large_default = 800 px (para pantallas retina/4K)
+const large = (u) => (u.includes('-home_default/') ? u.replace('-home_default/', '-large_default/') : u);
 const norm = (s) => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
 // Nombres en MAYÚSCULAS de la tienda → tipo frase, conservando marcas y modelos (NSK, S-MAX, M25…)
@@ -44,7 +46,7 @@ const PRODUCTS = DATA.products
   .filter((p) => Number.isInteger(p.id) && typeof p.name === 'string' && Number.isFinite(p.now) && CAT_NAME[p.cat])
   .map((p, i) => ({
     id: p.id, order: i, name: niceName(p.name.trim()), cat: p.cat,
-    url: safeUrl(p.url), img: safeUrl(p.img, PLACEHOLDER),
+    url: safeUrl(p.url), img: /^\/products\/\d+\.webp$/.test(p.img) ? p.img : safeUrl(p.img, PLACEHOLDER),
     now: p.now, was: Number.isFinite(p.was) && p.was > p.now ? p.was : null,
     key: norm(`${p.name} ${CAT_NAME[p.cat]}`),
   }));
@@ -110,7 +112,7 @@ const grid = $('[data-grid]');
 function card(p) {
   return `<article class="prod shop-card" data-id="${p.id}">
     <button class="prod__img shop-card__open" type="button" data-open="${p.id}" aria-label="Ver ficha: ${esc(p.name)}">
-      <img src="${esc(p.img)}" alt="" loading="lazy" decoding="async" width="250" height="250" />
+      <img src="${esc(p.img)}" alt="" loading="lazy" decoding="async" width="800" height="800" />
       ${p.off ? `<span class="prod__off shop-card__badge">−${p.off} %</span>` : ''}
     </button>
     <p class="prod__brand">${esc(CAT_NAME[p.cat])}</p>
@@ -152,7 +154,7 @@ function render(fromStart) {
   full.textContent = c && c.total ? `Ver los ${c.total} productos de ${c.name} en la tienda` : 'Ver el catálogo completo en la tienda';
 }
 // imágenes que no cargan → logotipo (sin onerror en línea: la CSP lo prohíbe)
-grid.addEventListener('error', (e) => { const t = e.target; if (t.tagName === 'IMG' && !t.src.endsWith(PLACEHOLDER)) { t.src = PLACEHOLDER; t.classList.add('is-fallback'); } }, true);
+grid.addEventListener('error', (e) => { const t = e.target; if (t.tagName === 'IMG' && !t.src.endsWith(PLACEHOLDER)) { t.removeAttribute('srcset'); t.src = PLACEHOLDER; t.classList.add('is-fallback'); } }, true);
 grid.addEventListener('click', (e) => {
   if (e.target.closest('[data-reset]')) { tools.reset(); Object.assign(state, { cat: 'todas', q: '', offers: false, sort: 'relevance', shown: PAGE }); history.replaceState(null, '', location.pathname); renderCats(); render(true); return; }
   const open = e.target.closest('[data-open]'); if (open) { openSheet(+open.dataset.open); return; }
@@ -167,7 +169,7 @@ function openSheet(id) {
   const p = BY_ID.get(id); if (!p) return;
   sheetId = id;
   const img = $('[data-f=img]', sheet);
-  img.src = p.img.replace('home_default', 'large_default'); img.alt = p.name;
+  img.src = large(p.img); img.alt = p.name;
   $('[data-f=cat]', sheet).textContent = CAT_NAME[p.cat];
   $('[data-f=name]', sheet).textContent = p.name;
   $('[data-f=price]', sheet).innerHTML = `<b>${eur.format(p.now)}</b>${p.was ? ` <s aria-label="Antes">${eur.format(p.was)}</s> <span class="prod__off">−${p.off} %</span>` : ''}`;
