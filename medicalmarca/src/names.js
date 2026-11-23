@@ -14,5 +14,7 @@ export function niceName(n) {
     if (/^[A-ZÑ]$/.test(bare) && !'YAOEU'.includes(bare)) return w; // letra de modelo: S-MAX M, TI-MAX Z
     return w.toLowerCase().replace(/perfustomed/g, 'Perfustomed').replace(/ustomed/g, 'Ustomed');
   }).join('');
-  return out.charAt(0).toUpperCase() + out.slice(1);
+  // «Dr. Nombre Apellido»: el tratamiento y el nombre propio que le sigue van con mayúscula
+  const fixed = out.replace(/\bdr\. ?([a-záéíóúñ]+)(?: ([a-záéíóúñ]+))?/g, (_, a, b) => `Dr. ${a[0].toUpperCase()}${a.slice(1)}${b ? ` ${b[0].toUpperCase()}${b.slice(1)}` : ''}`);
+  return fixed.charAt(0).toUpperCase() + fixed.slice(1);
 }
