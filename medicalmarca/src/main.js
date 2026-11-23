@@ -1,4 +1,4 @@
-import '@fontsource-variable/archivo/wdth.css';
+import './fonts.css';
 import './style.css';
 
 import Lenis from 'lenis';
@@ -8,6 +8,7 @@ import { createFilm } from './film.js';
 import FILM from './film.json';
 import { CATEGORIES, PRODUCTS } from './data.js';
 import CATALOG from './catalog-tree.json';
+import { setHTML } from './safe-html.js';
 import { niceCat } from './catnames.js';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -34,7 +35,7 @@ const TREE = new Map(CATALOG.tree.map((f) => [f.id, f]));
 const catIntro = document.querySelector('.catalog__intro .sub');
 if (catIntro && CATALOG.products) catIntro.textContent = `${new Intl.NumberFormat('es-ES').format(CATALOG.products)} productos en ${CATALOG.categories} categorías y subcategorías. Elige una familia o ve directo a lo que buscas.`;
 const nf = new Intl.NumberFormat('es-ES');
-$('[data-cats]').innerHTML = CATEGORIES.map((c) => {
+setHTML($('[data-cats]'), CATEGORIES.map((c) => {
   const id = Number(String(c.url).split('/').pop().match(/^(\d+)-/)?.[1]);
   const fam = TREE.get(id);
   const famHref = fam ? `/tienda/#${fam.id}-${esc(fam.slug)}` : `/tienda/#${esc(catSlug(c.url))}`;
@@ -43,21 +44,21 @@ $('[data-cats]').innerHTML = CATEGORIES.map((c) => {
     <a class="cats__fam" href="${famHref}" data-img="${esc(img(imgName(c.img)))}"><span>${esc(c.name)}</span>${fam?.count ? `<small>${nf.format(fam.count)}</small>` : ''}</a>
     ${subs ? `<p class="cats__subs">${subs}</p>` : ''}
   </li>`;
-}).join('');
+}).join(''));
 
-$('[data-products]').innerHTML = PRODUCTS.map((p) => {
+setHTML($('[data-products]'), PRODUCTS.map((p) => {
   const now = Number(p.now), was = Number(p.was);
   const off = Math.round((1 - now / was) * 100);
   const pid = String(p.url).match(/\/(\d+)-[^/]+\.html$/)?.[1];
   const url = pid ? `/tienda/#producto-${pid}` : esc(safeUrl(p.url));
   return `<article class="prod">
-    <a class="prod__img" href="${url}"><img src="${pid ? `/products/${pid}.webp` : esc(img(imgName(p.img)))}" alt="${esc(p.name)}" loading="lazy" width="800" height="800" /></a>
+    <a class="prod__img" href="${url}" tabindex="-1" aria-hidden="true"><img src="${pid ? `/products/${pid}.webp` : esc(img(imgName(p.img)))}"${pid ? ` srcset="/products/400/${pid}.webp 400w, /products/${pid}.webp 800w" sizes="(max-width: 760px) 70vw, 320px"` : ''} alt="" loading="lazy" decoding="async" width="800" height="800" /></a>
     <p class="prod__brand">${esc(p.brand ?? 'Medicalmarca')}</p>
     <h3><a href="${url}">${esc(p.name)}</a></h3>
     <p class="prod__price"><b>${eur.format(now)}</b> <s aria-label="Antes">${eur.format(was)}</s> <span class="prod__off">−${off} %</span></p>
-    <a class="btn btn--line btn--sm" href="${url}">Ver producto</a>
+    <a class="btn btn--line btn--sm" href="${url}">Ver producto<span class="visually-hidden">: ${esc(p.name)}</span></a>
   </article>`;
-}).join('');
+}).join(''));
 
 // Newsletter (maqueta: no se envía a ningún sitio)
 $('.news').addEventListener('submit', (e) => {
@@ -126,12 +127,20 @@ function paintStops(p) {
     const d = Math.abs(p - at);
     const o = reduced ? (Math.round(p * (N - 1)) === i ? 1 : 0) : Math.max(0, Math.min(1, 1 - (d - 0.045) / 0.06));
     el.style.opacity = o;
-    el.style.visibility = o < 0.01 ? 'hidden' : 'visible';
+    // sin visibility:hidden: el texto de cada parada sigue disponible para lectores de pantalla y teclado
+    el.style.pointerEvents = o < 0.5 ? 'none' : '';
     el.style.transform = `translateY(${(p < at ? 1 : -1) * (1 - o) * 40}px)`;
     if (d < 0.5 / (N - 1)) active = i;
   });
   dots.forEach((d, i) => d.classList.toggle('is-on', i === active));
 }
+// Teclado: al llegar con Tab a un enlace de una parada oculta, la película avanza hasta esa parada
+stops.forEach((el, i) => el.addEventListener('focusin', () => {
+  const y = filmEl.offsetTop + (filmEl.offsetHeight - window.innerHeight) * (i / (N - 1));
+  if (Math.abs(window.scrollY - y) < 4) return;
+  lenis ? lenis.scrollTo(y, { immediate: true }) : window.scrollTo(0, y);
+  filmTarget = filmNow = filmProgress(y); paintStops(filmTarget);
+}));
 gsap.ticker.add(() => {
   filmNow += (filmTarget - filmNow) * (reduced ? 1 : 0.18);
   if (Math.abs(filmTarget - filmNow) < 2e-4) filmNow = filmTarget; // se detiene del todo: imagen quieta y nítida

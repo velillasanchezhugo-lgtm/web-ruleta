@@ -7,7 +7,7 @@ const smooth = (t) => t * t * (3 - 2 * t);
 export function createFilm(canvas, { count, src, cuts = [], blend = 9, focalX = 0.5, firstBatch = 24, interpolate = false }) {
   const ctx = canvas.getContext('2d', { alpha: false });
   const frames = new Array(count);
-  let pos = 0, lastKey = '', loaded = 0, moving = false, settleTimer = 0;
+  let pos = 0, lastKey = '', loaded = 0, moving = false, settleTimer = 0, shown = -1;
   const listeners = [];
 
   function ok(i) { const im = frames[i]; return im && im.complete && im.naturalWidth > 0; }
@@ -16,7 +16,12 @@ export function createFilm(canvas, { count, src, cuts = [], blend = 9, focalX = 
     const im = new Image();
     im.decoding = 'async';
     im.src = src(i);
-    im.onload = () => { loaded++; listeners.forEach((f) => f(loaded / count)); lastKey = ''; draw(); };
+    im.onload = () => {
+      loaded++; listeners.forEach((f) => f(loaded / count));
+      // solo se repinta si el fotograma recién llegado está más cerca del que toca que el que se ve ahora
+      const want = Math.round(pos * (count - 1));
+      if (shown < 0 || Math.abs(i - want) < Math.abs(shown - want)) { lastKey = ''; draw(); }
+    };
     frames[i] = im;
   }
   // primero el arranque, luego fotogramas espaciados (para poder hacer scroll rápido) y después el resto
@@ -25,10 +30,13 @@ export function createFilm(canvas, { count, src, cuts = [], blend = 9, focalX = 
   const order = [];
   for (let step = 16; step >= 1; step >>= 1) for (let i = 0; i < count; i += step) order.push(i);
   let oi = 0;
-  (function idle() {
+  // el resto se pide cuando la página ya ha cargado y el navegador está libre (no compite con lo visible)
+  const later = window.requestIdleCallback || ((fn) => setTimeout(fn, 40));
+  function idle() {
     for (let n = 0; n < 6 && oi < order.length; n++) load(order[oi++]);
-    if (oi < order.length) setTimeout(idle, 25);
-  })();
+    if (oi < order.length) later(idle, { timeout: 120 });
+  }
+  if (document.readyState === 'complete') later(idle); else window.addEventListener('load', () => later(idle), { once: true });
 
   function nearest(i) {
     i = Math.max(0, Math.min(count - 1, i));
@@ -42,6 +50,7 @@ export function createFilm(canvas, { count, src, cuts = [], blend = 9, focalX = 
   function paint(i, alpha, zoom) {
     const j = nearest(i);
     if (j < 0) return;
+    if (alpha === 1) shown = j;
     const im = frames[j];
     const cw = canvas.width, ch = canvas.height;
     const s = Math.max(cw / im.naturalWidth, ch / im.naturalHeight) * zoom; // cover

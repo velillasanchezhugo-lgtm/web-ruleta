@@ -37,3 +37,9 @@ Fecha: 18/11/2026 · Alcance: `medicalmarca/` (sitio estático Vite) desplegado 
 2. Si los productos vienen de la API de PrestaShop: hacerlo en el servidor o en build, mantener el escape actual.
 3. Quitar el aviso de concepto y el `noindex`.
 4. Añadir aviso de cookies solo si se incorpora analítica.
+
+## Auditoría 23-11-2026 (rendimiento, accesibilidad y seguridad)
+- **Trusted Types**: CSP con `require-trusted-types-for 'script'; trusted-types mm-html`. Todo el HTML pasa por `src/safe-html.js`, que además bloquea `<script>`, `on…=` y `javascript:`. Probado en Chromium y WebKit: 0 violaciones.
+- HSTS explícito (2 años) y `X-Permitted-Cross-Domain-Policies: none`. `npm audit`: 0 vulnerabilidades.
+- Lighthouse: home 100/100/100 (móvil y escritorio) y tienda 99/100/100 con CLS 0. El SEO sale 63 solo por el `noindex` del concepto; al publicarlo como web oficial hay que quitar `noindex` (HTML y `X-Robots-Tag`).
+- axe-core WCAG 2.2 AA: 0 fallos en la home, la tienda, la ficha, la lista y la página 404, en móvil y escritorio. Probado con teclado: cada parada del film se puede alcanzar con Tab.

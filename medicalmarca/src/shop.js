@@ -1,9 +1,10 @@
 // Escaparate de la tienda: categorías, búsqueda, orden, ofertas, ficha de producto y "Mi lista de pedido".
 // Datos: src/shop-data.json (selección extraída de medicalmarca.com). No hay pago: se compra en su tienda.
-import '@fontsource-variable/archivo/wdth.css';
+import './fonts.css';
 import './style.css';
 import './shop.css';
 import DATA from './shop-data.json';
+import { setHTML } from './safe-html.js';
 import { niceCat, ROOT_NAMES } from './catnames.js';
 
 const $ = (s, r = document) => r.querySelector(s);
@@ -102,13 +103,13 @@ function renderCats() {
       ${open ? `<ul class="cat-list__sub">${kids.map((k) => li(CAT.get(k))).join('')}</ul>` : ''}
     </li>`;
   };
-  $('[data-cats]').innerHTML = `<li><a href="/tienda/" data-cat="todas" ${state.cat === 'todas' ? 'aria-current="true"' : ''}><span>Todas</span><small>${PRODUCTS.length}</small></a></li>`
-    + ROOTS.map(li).join('');
+  setHTML($('[data-cats]'), `<li><a href="/tienda/" data-cat="todas" ${state.cat === 'todas' ? 'aria-current="true"' : ''}><span>Todas</span><small>${PRODUCTS.length}</small></a></li>`
+    + ROOTS.map(li).join(''));
   // migas y accesos a subcategorías
   const crumbs = $('[data-crumbs]');
-  crumbs.innerHTML = state.cat === 'todas' ? '' : `<a href="/tienda/" data-cat="todas">Tienda</a>${pathOf(state.cat).map((c) => ` <span aria-hidden="true">›</span> ${c.id === state.cat ? `<span aria-current="page">${esc(c.name)}</span>` : `<a href="#${esc(catHash(c.id))}" data-cat="${c.id}">${esc(c.name)}</a>`}`).join('')}`;
+  setHTML(crumbs, state.cat === 'todas' ? '' : `<a href="/tienda/" data-cat="todas">Tienda</a>${pathOf(state.cat).map((c) => ` <span aria-hidden="true">›</span> ${c.id === state.cat ? `<span aria-current="page">${esc(c.name)}</span>` : `<a href="#${esc(catHash(c.id))}" data-cat="${c.id}">${esc(c.name)}</a>`}`).join('')}`);
   const kids = state.cat === 'todas' ? [] : (KIDS.get(state.cat) || []);
-  $('[data-subcats]').innerHTML = kids.map((k) => `<li><a href="#${esc(catHash(k))}" data-cat="${k}">${esc(catName(k))} <small>${countIn(k) || '↗'}</small></a></li>`).join('');
+  setHTML($('[data-subcats]'), kids.map((k) => `<li><a href="#${esc(catHash(k))}" data-cat="${k}">${esc(catName(k))} <small>${countIn(k) || '↗'}</small></a></li>`).join(''));
 }
 function selectCat(id) {
   state.cat = id === 'todas' ? 'todas' : +id; state.shown = PAGE;
@@ -148,16 +149,24 @@ function filtered() {
 
 // ---------- Rejilla ----------
 const grid = $('[data-grid]');
-function card(p) {
+// Foto local: 400 px para móviles, 800 px para retina/4K (el navegador elige según la pantalla)
+const LOCAL = /^\/products\/(\d+)\.webp$/;
+function imgAttrs(p, sizes, eager) {
+  const m = LOCAL.exec(p.img);
+  const set = m ? ` srcset="/products/400/${m[1]}.webp 400w, /products/${m[1]}.webp 800w" sizes="${sizes}"` : '';
+  return `src="${esc(p.img)}"${set} ${eager ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"'} decoding="async"`;
+}
+function card(p, i) {
+  const off = p.off ? `, −${p.off} %` : '';
   return `<article class="prod shop-card" data-id="${p.id}">
-    <button class="prod__img shop-card__open" type="button" data-open="${p.id}" aria-label="Ver ficha: ${esc(p.name)}">
-      <img src="${esc(p.img)}" alt="" loading="lazy" decoding="async" width="800" height="800" />
+    <button class="prod__img shop-card__open" type="button" data-open="${p.id}" aria-label="Ver ficha: ${esc(p.name)}${off}">
+      <img ${imgAttrs(p, '(max-width: 760px) 46vw, 280px', i < 4)} alt="" width="800" height="800" />
       ${p.off ? `<span class="prod__off shop-card__badge">−${p.off} %</span>` : ''}
     </button>
     <p class="prod__brand">${esc(catLabel(p.cat))}</p>
     <h3><button type="button" class="shop-card__name" data-open="${p.id}">${esc(p.name)}</button></h3>
     <p class="prod__price"><b>${eur.format(p.now)}</b>${p.was ? ` <s aria-label="Antes">${eur.format(p.was)}</s>` : ''}</p>
-    <button class="btn btn--line btn--sm" type="button" data-quick-add="${p.id}">Añadir a mi lista</button>
+    <button class="btn btn--line btn--sm" type="button" data-quick-add="${p.id}"><span data-qa>Añadir a mi lista</span><span class="visually-hidden">: ${esc(p.name)}</span></button>
   </article>`;
 }
 function render(fromStart) {
@@ -166,7 +175,7 @@ function render(fromStart) {
   const catInfo = state.cat === 'todas' ? null : CAT.get(state.cat);
   const catEmpty = catInfo && countIn(state.cat) === 0;
   const storeUrl = (c) => safeUrl(`https://medicalmarca.com/es/${c.id}-${c.slug}`);
-  grid.innerHTML = slice.length ? slice.map(card).join('') : catEmpty ? `
+  setHTML(grid, slice.length ? slice.map((p, i) => card(p, fromStart ? i : 99)).join('') : catEmpty ? `
     <div class="grid__empty grid__empty--cat">
       <img src="/img/c${Number(rootOf(catInfo.id).id)}.jpg" alt="" width="141" height="180" />
       <div>
@@ -184,7 +193,7 @@ function render(fromStart) {
       <p><b>No hay productos con esos filtros.</b></p>
       <p>Prueba con otra palabra, quita «Solo ofertas» o mira todas las categorías.</p>
       <button class="btn btn--line btn--sm" type="button" data-reset>Quitar filtros</button>
-    </div>`;
+    </div>`);
   $$('.shop-card', grid).forEach((c, i) => c.style.setProperty('--i', String(fromStart ? i % PAGE : Math.max(0, i - (state.shown - PAGE)))));
   grid.classList.toggle('is-animating', !reduced);
   const catLabel = catInfo ? catInfo.name : 'todas las categorías';
@@ -202,7 +211,7 @@ grid.addEventListener('click', (e) => {
   if (e.target.closest('[data-reset]')) { tools.reset(); Object.assign(state, { cat: 'todas', q: '', offers: false, sort: 'relevance', shown: PAGE }); history.replaceState(null, '', location.pathname); renderCats(); render(true); return; }
   const open = e.target.closest('[data-open]'); if (open) { openSheet(+open.dataset.open); return; }
   const add = e.target.closest('[data-quick-add]');
-  if (add) { addToList(+add.dataset.quickAdd, 1); add.textContent = 'Añadido ✓'; setTimeout(() => (add.textContent = 'Añadir a mi lista'), 1400); }
+  if (add) { addToList(+add.dataset.quickAdd, 1); const t = $('[data-qa]', add); t.textContent = 'Añadido ✓'; setTimeout(() => (t.textContent = 'Añadir a mi lista'), 1400); }
 });
 
 // ---------- Ficha ----------
@@ -215,7 +224,7 @@ function openSheet(id) {
   img.src = large(p.img); img.alt = p.name;
   $('[data-f=cat]', sheet).textContent = pathOf(p.cat).map((c) => c.name).join(' › ');
   $('[data-f=name]', sheet).textContent = p.name;
-  $('[data-f=price]', sheet).innerHTML = `<b>${eur.format(p.now)}</b>${p.was ? ` <s aria-label="Antes">${eur.format(p.was)}</s> <span class="prod__off">−${p.off} %</span>` : ''}`;
+  setHTML($('[data-f=price]', sheet), `<b>${eur.format(p.now)}</b>${p.was ? ` <s aria-label="Antes">${eur.format(p.was)}</s> <span class="prod__off">−${p.off} %</span>` : ''}`);
   $('[data-f=url]', sheet).href = p.url;
   qtyInput.value = 1; syncQty();
   sheet.showModal();
@@ -265,9 +274,9 @@ function renderList() {
   const total = lines.reduce((s, { p, q }) => s + p.now * q, 0);
   const units = lines.reduce((s, { q }) => s + q, 0);
   $('[data-list-count]').textContent = String(units);
-  $('[data-list]').innerHTML = lines.map(({ p, q }) => `
+  setHTML($('[data-list]'), lines.map(({ p, q }) => `
     <li class="line" data-id="${p.id}">
-      <img src="${esc(p.img)}" alt="" width="64" height="64" loading="lazy" />
+      <img src="${esc(LOCAL.test(p.img) ? p.img.replace('/products/', '/products/400/') : p.img)}" alt="" width="64" height="64" loading="lazy" />
       <div class="line__info">
         <a href="${esc(p.url)}">${esc(p.name)}</a>
         <span>${eur.format(p.now)} / ud.</span>
@@ -279,7 +288,7 @@ function renderList() {
       </div>
       <b class="line__sum">${eur.format(p.now * q)}</b>
       <button class="line__del" type="button" data-line-del aria-label="Quitar ${esc(p.name)} de la lista">×</button>
-    </li>`).join('');
+    </li>`).join(''));
   $('[data-list-empty]').hidden = lines.length > 0;
   $('[data-list-foot]').hidden = lines.length === 0;
   $('[data-list-total]').textContent = eur.format(total);

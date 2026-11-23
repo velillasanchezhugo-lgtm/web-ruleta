@@ -17,7 +17,7 @@
   --violet-tint: #ece6f8;
   --line: rgba(28, 26, 36, 0.12);
   --gutter: clamp(1.25rem, 5.5vw, 6rem);
-  --font: 'Archivo Variable', 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font: 'Archivo Variable', 'Archivo Fallback', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   color-scheme: light;
 }
@@ -34,6 +34,7 @@ body {
 a { color: inherit; }
 img { display: block; max-width: 100%; }
 :focus-visible { outline: 2px solid var(--violet); outline-offset: 3px; border-radius: 4px; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
 .skip { position: absolute; left: -999px; top: 8px; z-index: 100; background: var(--ink); color: #fff; padding: 8px 14px; }
 .skip:focus { left: 8px; }
 .wrap { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 var(--gutter); }
