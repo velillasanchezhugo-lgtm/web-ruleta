@@ -27,11 +27,13 @@ Enlaces directos útiles: `/tienda/#ofertas`, `/tienda/#implantologia` (cualquie
 
 ## Productos de la tienda
 
-Los productos y precios están en `src/shop-data.json` (selección real de medicalmarca.com). Para actualizarlos:
+Los productos y precios están en `src/shop-data.json`: **catálogo completo** de medicalmarca.com (1805 productos en 170 categorías y subcategorías, descargado el 23/11/2026). Para actualizarlo:
 
 ```bash
 npm install
-npm run catalogo   # descarga la 1.ª página de cada categoría (1 petición a la vez) y la une al escaparate
+python3 -I scripts/crawl-catalog.py /tmp/catalogo.json       # catálogo completo, 1 petición cada 1,5 s, reanudable
+node scripts/build-shop-data.mjs /tmp/catalogo.json         # genera src/shop-data.json y el resumen de portada
+python3 -I scripts/optimize-product-images.py               # fotos a 800 px sin margen blanco (solo las nuevas)
 npm run build
 ```
 

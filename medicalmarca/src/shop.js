@@ -55,13 +55,14 @@ const rootOf = (id) => pathOf(id)[0];
 const subtree = (id) => { const out = new Set([id]); (KIDS.get(id) || []).forEach((k) => subtree(k).forEach((x) => out.add(x))); return out; };
 const catName = (id) => CAT.get(id)?.name || '';
 // Etiqueta de tarjeta: los dos últimos niveles (p. ej. «Estándar › Cavidades»), sin la familia si hay más
-const catLabel = (id) => { const path = pathOf(id); const tail = path.length > 1 ? path.slice(1).slice(-2) : path; return tail.map((c) => c.name).join(' › '); };
+const catLabel = (id) => { const path = pathOf(id); const tail = path.length > 1 ? path.slice(1).slice(-2) : path; return [...new Set(tail.map((c) => c.name))].join(' › '); };
 const catHash = (id) => { const c = CAT.get(id); return c ? `${c.id}-${c.slug}` : ''; };
 
 const PRODUCTS = DATA.products
   .filter((p) => Number.isInteger(p.id) && typeof p.name === 'string' && Number.isFinite(p.now) && CAT.has(p.cat))
   .map((p, i) => ({
     id: p.id, order: i, name: niceName(p.name.trim()), cat: p.cat,
+    cats: (Array.isArray(p.cats) ? p.cats : [p.cat]).filter((c) => CAT.has(c)),
     url: safeUrl(p.url), img: /^\/products\/\d+\.webp$/.test(p.img) ? p.img : safeUrl(p.img, PLACEHOLDER),
     now: p.now, was: Number.isFinite(p.was) && p.was > p.now ? p.was : null,
     key: norm(`${p.name} ${pathOf(p.cat).map((c) => c.name).join(' ')}`),
@@ -69,7 +70,7 @@ const PRODUCTS = DATA.products
 PRODUCTS.forEach((p) => { p.off = p.was ? Math.round((1 - p.now / p.was) * 100) : 0; });
 const BY_ID = new Map(PRODUCTS.map((p) => [p.id, p]));
 const COUNT = new Map();
-PRODUCTS.forEach((p) => pathOf(p.cat).forEach((c) => COUNT.set(c.id, (COUNT.get(c.id) || 0) + 1)));
+PRODUCTS.forEach((p) => { const all = new Set(); p.cats.forEach((id) => pathOf(id).forEach((c) => all.add(c.id))); all.forEach((id) => COUNT.set(id, (COUNT.get(id) || 0) + 1)); });
 const countIn = (id) => (id === 'todas' ? PRODUCTS.length : COUNT.get(id) || 0);
 
 // ---------- Estado ----------
@@ -134,7 +135,7 @@ $('[data-more]').addEventListener('click', () => { state.shown += PAGE; render(f
 function filtered() {
   const words = norm(state.q).split(/\s+/).filter(Boolean);
   const inCat = state.cat === 'todas' ? null : subtree(state.cat);
-  const list = PRODUCTS.filter((p) => (!inCat || inCat.has(p.cat)) && (!state.offers || p.was) && words.every((w) => p.key.includes(w)));
+  const list = PRODUCTS.filter((p) => (!inCat || p.cats.some((id) => inCat.has(id))) && (!state.offers || p.was) && words.every((w) => p.key.includes(w)));
   const by = {
     relevance: (a, b) => (b.off > 0) - (a.off > 0) || a.order - b.order,
     'price-asc': (a, b) => a.now - b.now,
@@ -170,8 +171,12 @@ function render(fromStart) {
       <img src="/img/c${Number(rootOf(catInfo.id).id)}.jpg" alt="" width="141" height="180" />
       <div>
         <p><b>${esc(catInfo.name)}</b></p>
+        ${catInfo.total === 0 ? `
+        <p>Ahora mismo Medicalmarca no tiene ${esc(catInfo.name.toLowerCase())} disponibles en su tienda online. Llámanos o escríbenos y te decimos disponibilidad y precio.</p>
+        <a class="btn btn--violet" href="tel:+34665479381">Llamar al 665 479 381</a>
+        <a class="btn btn--line" href="mailto:info@medicalmarca.com?subject=${encodeURIComponent(`Consulta: ${catInfo.name}`)}">Escribir por correo</a>` : `
         <p>Los productos de ${esc(catInfo.name.toLowerCase())} están en la tienda de Medicalmarca, con precios y stock al día.</p>
-        <a class="btn btn--violet" href="${esc(storeUrl(catInfo))}">Ver ${esc(catInfo.name.toLowerCase())} en medicalmarca.com</a>
+        <a class="btn btn--violet" href="${esc(storeUrl(catInfo))}">Ver ${esc(catInfo.name.toLowerCase())} en medicalmarca.com</a>`}
         <button class="btn btn--line" type="button" data-reset>Ver otros productos</button>
       </div>
     </div>` : `

@@ -23,7 +23,7 @@ const products = Object.values(crawl.products)
     const cat = [...p.cats].sort((a, b) => (depth[b] ?? 0) - (depth[a] ?? 0))[0];
     const old = prevById.get(p.id);
     return {
-      id: p.id, name: p.name, url: p.url, now: p.now, was: p.was ?? null, cat,
+      id: p.id, name: p.name, url: p.url, now: p.now, was: p.was ?? null, cat, cats: [...new Set(p.cats)],
       img: localImg(p.id) ? `/products/${p.id}.webp` : p.img,
       remote_img: old?.remote_img || p.img,
     };
@@ -34,10 +34,10 @@ writeFileSync(OUT, JSON.stringify({ scraped: crawl.scraped, categories, products
 const roots = categories.filter((c) => c.parent === null);
 const under = (rid) => { const ids = new Set([rid]); let grew = true; while (grew) { grew = false; for (const c of categories) if (c.parent !== null && ids.has(c.parent) && !ids.has(c.id)) { ids.add(c.id); grew = true; } } return ids; };
 console.log(`${products.length} productos · ${categories.length} categorías`);
-for (const r of roots) { const ids = under(r.id); console.log(`  ${r.name.padEnd(40)} ${products.filter((p) => ids.has(p.cat)).length} (en su tienda: ${r.total ?? '?'})`); }
+for (const r of roots) { const ids = under(r.id); console.log(`  ${r.name.padEnd(40)} ${products.filter((p) => p.cats.some((c) => ids.has(c))).length} (en su tienda: ${r.total ?? '?'})`); }
 
 // Resumen ligero para la portada: familias con sus subcategorías de primer nivel y nº de productos (incluye subárbol)
-const count = (id) => { const ids = under(id); return products.filter((p) => ids.has(p.cat)).length; };
+const count = (id) => { const ids = under(id); return products.filter((p) => p.cats.some((c) => ids.has(c))).length; };
 const homeTree = roots.map((r) => ({
   id: r.id, slug: r.slug, name: r.name, count: count(r.id),
   children: categories.filter((c) => c.parent === r.id).map((c) => ({ id: c.id, slug: c.slug, name: c.name, count: count(c.id) })),
