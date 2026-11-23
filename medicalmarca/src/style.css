@@ -93,17 +93,18 @@ main, .footer { position: relative; z-index: 1; }
 .ruler__read { position: absolute; top: calc(100% + 14px); left: -2px; font-size: 0.72rem; font-stretch: 75%; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--violet-ink); }
 
 /* PELÍCULA (recorrido de cámara por la clínica) */
-.film { height: 760vh; position: relative; }
-.film__stage { position: sticky; top: 0; height: 100vh; overflow: hidden; background: #eef1f4; }
+.film { height: 860vh; position: relative; }
+.film__stage { position: sticky; top: 0; height: 100vh; overflow: hidden; background: #eef1f4; transform-origin: 50% 40%; will-change: transform; }
+.film__dim { position: absolute; inset: 0; pointer-events: none; opacity: 0; background: radial-gradient(120% 100% at 50% 40%, rgba(22, 24, 29, 0.25), rgba(22, 24, 29, 0.6)); z-index: 2; }
 .film__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 /* velo blanco desde la izquierda para que el texto se lea sobre la imagen clara */
 .film__veil { position: absolute; inset: 0; pointer-events: none;
   background: linear-gradient(90deg, rgba(243, 245, 247, 0.92) 0%, rgba(243, 245, 247, 0.72) 30%, rgba(243, 245, 247, 0) 55%); }
 .stop { position: absolute; left: calc(var(--gutter) + 24px); top: 50%; translate: 0 -50%; width: min(520px, 40vw); will-change: transform, opacity; }
 .stop h2 { font-stretch: 118%; font-weight: 600; letter-spacing: -0.025em; text-wrap: balance; font-size: clamp(1.9rem, 3.4vw, 3.1rem); line-height: 1.04; margin: 0 0 1rem; }
-.stop p { color: var(--ink); opacity: 0.78; margin: 0 0 1.1rem; max-width: 44ch; }
-.stop .stop__where { opacity: 1; color: var(--violet-ink); font-weight: 600; font-stretch: 90%; margin-bottom: 0.6rem; }
-.stop--hero { width: min(760px, 58vw); top: auto; bottom: 7vh; translate: none; }
+.stop p { color: var(--ink); opacity: calc(var(--x) * 0.78); margin: 0 0 1.1rem; max-width: 44ch; }
+.stop .stop__where { opacity: var(--x); color: var(--violet-ink); font-weight: 600; font-stretch: 90%; margin-bottom: 0.6rem; }
+.stop--hero { width: min(720px, 54vw); top: auto; bottom: 4.5vh; translate: none; }
 .stop--hero .hero__lead { margin: 1.4rem 0 1.4rem; }
 .stop--hero .facts { margin-top: 1.8rem; }
 .film__progress { position: absolute; right: var(--gutter); bottom: 5vh; display: flex; gap: 18px; font-size: 0.82rem; font-stretch: 90%; color: var(--muted); }
@@ -116,7 +117,7 @@ main, .footer { position: relative; z-index: 1; }
 .film__loading.is-done { opacity: 0; transition: opacity 0.6s 0.3s; }
 
 /* HERO (dentro de la película) */
-.hero__title { margin: 0; font-size: clamp(2.6rem, 6.2vw, 6.6rem); line-height: 0.95; }
+.hero__title { margin: 0; font-size: clamp(2.3rem, 5vw, 5.4rem); line-height: 0.95; }
 .hero__title .line { display: block; overflow: hidden; padding-bottom: 0.04em; }
 .hero__title .line > span { display: inline-block; }
 .hero__foot { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1.5rem 3rem; }
@@ -298,3 +299,26 @@ main, .footer { position: relative; z-index: 1; }
 @media (max-width: 900px) { .about__facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .stop__price { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: flex-start; gap: 4px 10px; }
 .stop__price .prod__off { margin: 0; }
+
+/* Coreografía de cada parada: --o (0–1) llega del scroll; cada capa entra escalonada (--k), sube o baja
+   según el sentido (--dir) y se enfoca. En cada parada todo queda quieto y nítido. */
+.stop { --o: 1; --dir: 1; }
+.stop > * { --k: 0; --x: clamp(0, calc(var(--o) * 2.4 - var(--k) * 0.34), 1);
+  opacity: var(--x); transform: translateY(calc((1 - var(--x)) * 38px * var(--dir))); filter: blur(calc((1 - var(--x)) * 6px)); }
+.stop > :nth-child(2) { --k: 1; }
+.stop > :nth-child(3) { --k: 2; }
+.stop > :nth-child(4) { --k: 3; }
+.stop > :nth-child(5) { --k: 4; }
+.stop h2 { clip-path: inset(-20% -6% calc((1 - var(--x)) * 120% - 20%) -6%); }
+/* El catálogo sube como una lámina por encima de la película */
+.catalog { position: relative; z-index: 3; margin-top: -100vh; background: var(--paper); border-radius: 32px 32px 0 0;
+  box-shadow: 0 -40px 90px -40px rgba(20, 30, 50, 0.45); }
+.reduced .stop > * { filter: none; transform: none; }
+@media (max-width: 760px), (max-width: 1100px) and (orientation: portrait) {
+  .stop--hero { bottom: 8.5vh; }
+  .stop--hero .hero__title { font-size: clamp(2rem, 9vw, 2.6rem); }
+  .stop--hero .hero__lead { font-size: 0.98rem; margin: 0.9rem 0 1rem; }
+  .stop--hero .hero__cta { flex-wrap: nowrap; gap: 8px; }
+  .stop--hero .hero__cta .btn { flex: 1 1 auto; padding-inline: 14px; min-height: 46px; font-size: 0.9rem; white-space: nowrap; }
+  .catalog { border-radius: 22px 22px 0 0; }
+}

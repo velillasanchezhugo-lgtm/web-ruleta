@@ -7,7 +7,7 @@ const smooth = (t) => t * t * (3 - 2 * t);
 export function createFilm(canvas, { count, src, cuts = [], blend = 9, focalX = 0.5, firstBatch = 24, interpolate = false }) {
   const ctx = canvas.getContext('2d', { alpha: false });
   const frames = new Array(count);
-  let pos = 0, lastKey = '', loaded = 0, moving = false, settleTimer = 0, shown = -1;
+  let pos = 0, lastKey = '', loaded = 0, moving = false, settleTimer = 0, shown = -1, push = 1;
   const listeners = [];
 
   function ok(i) { const im = frames[i]; return im && im.complete && im.naturalWidth > 0; }
@@ -53,7 +53,7 @@ export function createFilm(canvas, { count, src, cuts = [], blend = 9, focalX = 
     if (alpha === 1) shown = j;
     const im = frames[j];
     const cw = canvas.width, ch = canvas.height;
-    const s = Math.max(cw / im.naturalWidth, ch / im.naturalHeight) * zoom; // cover
+    const s = Math.max(cw / im.naturalWidth, ch / im.naturalHeight) * zoom * push; // cover + empuje de cámara
     const w = im.naturalWidth * s, h = im.naturalHeight * s;
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high'; // escalado de máxima calidad (por defecto el navegador usa uno rápido)
@@ -70,7 +70,7 @@ export function createFilm(canvas, { count, src, cuts = [], blend = 9, focalX = 
     const i0 = Math.floor(f), frac = f - i0;
     // solo se mezclan fotogramas mientras hay movimiento (parece desenfoque de movimiento); quieto = fotograma exacto y nítido
     const tween = interpolate && moving && !c && frac > 0.04 && frac < 0.96 && i0 + 1 < count && ok(i0) && ok(i0 + 1);
-    const key = c ? `${c}:${f.toFixed(2)}` : tween ? `${i0}:${frac.toFixed(2)}` : `${i}`;
+    const key = (c ? `${c}:${f.toFixed(2)}` : tween ? `${i0}:${frac.toFixed(2)}` : `${i}`) + `|${push.toFixed(4)}`;
     if (key === lastKey) return;
     lastKey = key;
     if (tween) { paint(i0, 1, 1); paint(i0 + 1, frac, 1); ctx.globalAlpha = 1; return; }
@@ -104,6 +104,8 @@ export function createFilm(canvas, { count, src, cuts = [], blend = 9, focalX = 
       pos = next;
       draw();
     },
+    // empuje de cámara entre paradas (1 = sin zoom: en cada parada la imagen queda nativa y nítida)
+    set zoom(z) { push = Math.max(1, Math.min(1.2, z)); },
     onProgress(f) { listeners.push(f); },
   };
 }
