@@ -274,3 +274,14 @@ main, .footer { position: relative; z-index: 1; }
 .cats .cats__subs a { display: inline; min-height: 0; padding: 0; font-size: inherit; font-stretch: 100%; font-weight: 400; letter-spacing: 0; color: var(--muted); text-decoration: none; }
 .cats .cats__subs a:hover, .cats .cats__subs a:focus-visible { color: var(--violet-ink); text-decoration: underline; padding-left: 0; }
 @media (pointer: coarse) { .cats .cats__subs a { display: inline-block; padding: 6px 0; } }
+
+/* Catálogos en PDF */
+.pdfs { padding: clamp(4rem, 10vh, 7rem) 0 0; }
+.pdfs__list { list-style: none; margin: 2rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.pdf { background: var(--white); border: 1px solid var(--line); border-radius: 12px; padding: clamp(22px, 3vw, 34px); display: flex; flex-direction: column; gap: 10px; }
+.pdf h3 { margin: 0; font-size: 1.5rem; font-stretch: 112%; font-weight: 600; letter-spacing: -0.015em; line-height: 1.15; }
+.pdf p { margin: 0; color: var(--muted); }
+.pdf .pdf__brand { color: var(--violet-ink); font-weight: 600; font-stretch: 90%; font-size: 0.9rem; }
+.pdf .pdf__meta { font-stretch: 85%; font-variant-numeric: tabular-nums; font-size: 0.88rem; margin-top: auto; padding-top: 8px; }
+.pdf .btn { align-self: flex-start; }
+@media (max-width: 760px) { .pdfs__list { grid-template-columns: 1fr; } .pdf .btn { align-self: stretch; } }

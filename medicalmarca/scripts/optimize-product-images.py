@@ -57,7 +57,10 @@ def process(p):
             raw = fetch(remote)
         except Exception as e:  # noqa: BLE001
             return p, remote, str(e)
-    img, _ = trim_and_square(Image.open(io.BytesIO(raw)))
+    try:
+        img, _ = trim_and_square(Image.open(io.BytesIO(raw)))
+    except Exception as e:  # noqa: BLE001  (su servidor a veces devuelve una página de error en vez de la imagen)
+        return p, remote, f'imagen no válida: {e}'
     img.save(dest, 'WEBP', quality=88, method=6)
     return p, remote, None
 
