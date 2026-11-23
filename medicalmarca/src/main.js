@@ -7,6 +7,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { createFilm } from './film.js';
 import FILM from './film.json';
 import { CATEGORIES, PRODUCTS } from './data.js';
+import CATALOG from './catalog-tree.json';
+import { niceCat } from './catnames.js';
 
 gsap.registerPlugin(ScrollTrigger);
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -27,8 +29,21 @@ const safeUrl = (u) => {
 const catSlug = (u) => String(u).split('/').pop().replace(/^\d+-/, '').replace(/[^a-z0-9-]/g, '');
 const imgName = (n) => (/^[a-z0-9-]+$/i.test(n) ? n : 'logo');
 
-$('[data-cats]').innerHTML = CATEGORIES.map((c) => `
-  <li><a href="/tienda/#${esc(catSlug(c.url))}" data-img="${esc(img(imgName(c.img)))}"><span>${esc(c.name)}</span></a></li>`).join('');
+// Catálogo completo: cada familia con su nº de productos y sus subcategorías (src/catalog-tree.json, generado al descargar el catálogo)
+const TREE = new Map(CATALOG.tree.map((f) => [f.id, f]));
+const catIntro = document.querySelector('.catalog__intro .sub');
+if (catIntro && CATALOG.products) catIntro.textContent = `${new Intl.NumberFormat('es-ES').format(CATALOG.products)} productos en ${CATALOG.categories} categorías y subcategorías. Elige una familia o ve directo a lo que buscas.`;
+const nf = new Intl.NumberFormat('es-ES');
+$('[data-cats]').innerHTML = CATEGORIES.map((c) => {
+  const id = Number(String(c.url).split('/').pop().match(/^(\d+)-/)?.[1]);
+  const fam = TREE.get(id);
+  const famHref = fam ? `/tienda/#${fam.id}-${esc(fam.slug)}` : `/tienda/#${esc(catSlug(c.url))}`;
+  const subs = (fam?.children || []).map((k) => `<a href="/tienda/#${k.id}-${esc(k.slug)}">${esc(niceCat(k.name))}</a>`).join('<span aria-hidden="true"> · </span>');
+  return `<li>
+    <a class="cats__fam" href="${famHref}" data-img="${esc(img(imgName(c.img)))}"><span>${esc(c.name)}</span>${fam?.count ? `<small>${nf.format(fam.count)}</small>` : ''}</a>
+    ${subs ? `<p class="cats__subs">${subs}</p>` : ''}
+  </li>`;
+}).join('');
 
 $('[data-products]').innerHTML = PRODUCTS.map((p) => {
   const now = Number(p.now), was = Number(p.was);
@@ -160,7 +175,7 @@ if (finePointer && !reduced) {
   const px = gsap.quickTo(preview, 'x', { duration: 0.5, ease: 'power3' });
   const py = gsap.quickTo(preview, 'y', { duration: 0.5, ease: 'power3' });
   $('.cats').addEventListener('pointermove', (e) => { px(e.clientX + 24); py(e.clientY - 90); });
-  $$('.cats a').forEach((a) => {
+  $$('.cats a[data-img]').forEach((a) => {
     a.addEventListener('pointerenter', () => { preview.src = a.dataset.img; gsap.to(preview, { autoAlpha: 1, scale: 1, rotate: -3, duration: 0.35 }); });
     a.addEventListener('pointerleave', () => gsap.to(preview, { autoAlpha: 0, scale: 0.85, rotate: 0, duration: 0.25 }));
   });

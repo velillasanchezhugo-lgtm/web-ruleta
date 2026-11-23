@@ -265,3 +265,12 @@ main, .footer { position: relative; z-index: 1; }
   .contact__ways a span { align-self: flex-start; }
 }
 .contact__ways a { overflow-wrap: normal; word-break: normal; }
+
+/* Catálogo de portada: familia + subcategorías */
+.cats li { padding: 4px 0 14px; }
+.cats .cats__fam { justify-content: space-between; gap: 12px; min-height: 64px; padding-bottom: 4px; }
+.cats .cats__fam small { font-size: 0.85rem; font-stretch: 85%; color: var(--muted); font-variant-numeric: tabular-nums; font-weight: 500; }
+.cats__subs { margin: 0; font-size: 0.9rem; line-height: 1.7; color: var(--muted); }
+.cats .cats__subs a { display: inline; min-height: 0; padding: 0; font-size: inherit; font-stretch: 100%; font-weight: 400; letter-spacing: 0; color: var(--muted); text-decoration: none; }
+.cats .cats__subs a:hover, .cats .cats__subs a:focus-visible { color: var(--violet-ink); text-decoration: underline; padding-left: 0; }
+@media (pointer: coarse) { .cats .cats__subs a { display: inline-block; padding: 6px 0; } }

@@ -42,28 +42,44 @@ def trim_and_square(im):
     return canvas.resize((SIZE, SIZE), Image.LANCZOS), crop.size
 
 
+def process(p):
+    remote = p.get('remote_img') or p['img']
+    dest = os.path.join(OUT, f"{p['id']}.webp")
+    if os.path.exists(dest):  # ya optimizada en una ejecución anterior
+        return p, remote, None
+    if not remote.startswith('https://medicalmarca.com/'):
+        return p, remote, 'sin imagen remota'
+    large = remote.replace('-home_default/', '-large_default/')
+    try:
+        raw = fetch(large)
+    except Exception:  # noqa: BLE001
+        try:
+            raw = fetch(remote)
+        except Exception as e:  # noqa: BLE001
+            return p, remote, str(e)
+    img, _ = trim_and_square(Image.open(io.BytesIO(raw)))
+    img.save(dest, 'WEBP', quality=88, method=6)
+    return p, remote, None
+
+
 def main():
+    from concurrent.futures import ThreadPoolExecutor
     os.makedirs(OUT, exist_ok=True)
     data = json.load(open(DATA, encoding='utf-8'))
-    done = 0
-    for p in data['products']:
-        remote = p.get('remote_img') or p['img']
-        if not remote.startswith('https://medicalmarca.com/'):
-            continue
-        large = remote.replace('-home_default/', '-large_default/')
-        try:
-            raw = fetch(large)
-        except Exception as e:  # noqa: BLE001
-            print('sin large, uso home:', p['id'], e, file=sys.stderr)
-            raw = fetch(remote)
-        img, src = trim_and_square(Image.open(io.BytesIO(raw)))
-        img.save(os.path.join(OUT, f"{p['id']}.webp"), 'WEBP', quality=88, method=6)
-        p['remote_img'] = remote
-        p['img'] = f"/products/{p['id']}.webp"
-        done += 1
-        print(f"{p['id']}: producto {src[0]}×{src[1]} px → {SIZE}×{SIZE}")
+    ok = fail = 0
+    with ThreadPoolExecutor(max_workers=int(os.environ.get("WORKERS", "3"))) as ex:  # 3 a la vez: sus imágenes estáticas aguantan bien, sin saturar
+        for i, (p, remote, err) in enumerate(ex.map(process, data['products']), 1):
+            if err:
+                fail += 1
+                print('fallo', p['id'], err, file=sys.stderr, flush=True)
+                continue
+            p['remote_img'] = remote
+            p['img'] = f"/products/{p['id']}.webp"
+            ok += 1
+            if i % 100 == 0:
+                print(f'{i}/{len(data["products"])} imágenes', flush=True)
     json.dump(data, open(DATA, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-    print('Listo:', done, 'imágenes')
+    print('Listo:', ok, 'imágenes optimizadas,', fail, 'fallos')
 
 
 if __name__ == '__main__':

@@ -4,6 +4,7 @@ import '@fontsource-variable/archivo/wdth.css';
 import './style.css';
 import './shop.css';
 import DATA from './shop-data.json';
+import { niceCat, ROOT_NAMES } from './catnames.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -40,47 +41,84 @@ function niceName(n) {
   }).join('');
   return out.charAt(0).toUpperCase() + out.slice(1);
 }
-const CATS = DATA.categories.filter((c) => /^[a-z0-9-]+$/.test(c.slug));
-const CAT_NAME = Object.fromEntries(CATS.map((c) => [c.slug, c.name]));
+// ---------- Categorías: árbol completo de medicalmarca.com (familias › subcategorías › …) ----------
+const CATS = DATA.categories
+  .filter((c) => Number.isInteger(c.id) && /^[a-z0-9-]+$/.test(c.slug))
+  .map((c) => ({ ...c, name: ROOT_NAMES[c.id] || niceCat(c.name) }));
+const CAT = new Map(CATS.map((c) => [c.id, c]));
+const KIDS = new Map();
+CATS.forEach((c) => { if (c.parent != null && CAT.has(c.parent)) { if (!KIDS.has(c.parent)) KIDS.set(c.parent, []); KIDS.get(c.parent).push(c.id); } });
+KIDS.forEach((ids) => ids.sort((a, b) => collator.compare(CAT.get(a).name, CAT.get(b).name)));
+const ROOTS = CATS.filter((c) => c.parent == null).sort((a, b) => a.id - b.id);
+const pathOf = (id) => { const out = []; let c = CAT.get(id); while (c) { out.unshift(c); c = CAT.get(c.parent); } return out; };
+const rootOf = (id) => pathOf(id)[0];
+const subtree = (id) => { const out = new Set([id]); (KIDS.get(id) || []).forEach((k) => subtree(k).forEach((x) => out.add(x))); return out; };
+const catName = (id) => CAT.get(id)?.name || '';
+// Etiqueta de tarjeta: los dos últimos niveles (p. ej. «Estándar › Cavidades»), sin la familia si hay más
+const catLabel = (id) => { const path = pathOf(id); const tail = path.length > 1 ? path.slice(1).slice(-2) : path; return tail.map((c) => c.name).join(' › '); };
+const catHash = (id) => { const c = CAT.get(id); return c ? `${c.id}-${c.slug}` : ''; };
+
 const PRODUCTS = DATA.products
-  .filter((p) => Number.isInteger(p.id) && typeof p.name === 'string' && Number.isFinite(p.now) && CAT_NAME[p.cat])
+  .filter((p) => Number.isInteger(p.id) && typeof p.name === 'string' && Number.isFinite(p.now) && CAT.has(p.cat))
   .map((p, i) => ({
     id: p.id, order: i, name: niceName(p.name.trim()), cat: p.cat,
     url: safeUrl(p.url), img: /^\/products\/\d+\.webp$/.test(p.img) ? p.img : safeUrl(p.img, PLACEHOLDER),
     now: p.now, was: Number.isFinite(p.was) && p.was > p.now ? p.was : null,
-    key: norm(`${p.name} ${CAT_NAME[p.cat]}`),
+    key: norm(`${p.name} ${pathOf(p.cat).map((c) => c.name).join(' ')}`),
   }));
 PRODUCTS.forEach((p) => { p.off = p.was ? Math.round((1 - p.now / p.was) * 100) : 0; });
 const BY_ID = new Map(PRODUCTS.map((p) => [p.id, p]));
+const COUNT = new Map();
+PRODUCTS.forEach((p) => pathOf(p.cat).forEach((c) => COUNT.set(c.id, (COUNT.get(c.id) || 0) + 1)));
+const countIn = (id) => (id === 'todas' ? PRODUCTS.length : COUNT.get(id) || 0);
 
 // ---------- Estado ----------
 const PAGE = 24;
 const state = { cat: 'todas', q: '', sort: 'relevance', offers: false, shown: PAGE };
 let pendingProduct = null;
+const ROOT_BY_SLUG = Object.fromEntries(ROOTS.map((c) => [c.slug, c.id]));
 function fromHash() {
   const h = decodeURIComponent(location.hash.slice(1));
   const prod = h.match(/^producto-(\d+)$/);
+  const byId = h.match(/^(\d+)-[a-z0-9-]+$/);
   if (h === 'ofertas') { state.cat = 'todas'; state.offers = true; }
   else if (prod) { pendingProduct = +prod[1]; }
-  else { state.cat = CAT_NAME[h] ? h : 'todas'; state.offers = false; }
+  else if (byId && CAT.has(+byId[1])) { state.cat = +byId[1]; state.offers = false; }
+  else { state.cat = ROOT_BY_SLUG[h] ?? 'todas'; state.offers = false; } // enlaces antiguos: #fresas, #sutura…
 }
 fromHash();
 
-// ---------- Categorías ----------
-const countIn = (slug) => PRODUCTS.filter((p) => slug === 'todas' || p.cat === slug).length;
+// Árbol lateral: familias; se despliega la rama de la categoría activa
 function renderCats() {
-  const items = [{ slug: 'todas', name: 'Todas' }, ...CATS];
-  $('[data-cats]').innerHTML = items.map((c) => `
-    <li><a href="#${esc(c.slug === 'todas' ? '' : c.slug)}" data-cat="${esc(c.slug)}" ${state.cat === c.slug ? 'aria-current="true"' : ''}>
-      <span>${esc(c.name)}</span><small>${countIn(c.slug) || '<span aria-label="en la tienda completa">↗</span>'}</small></a></li>`).join('');
+  const active = state.cat === 'todas' ? [] : pathOf(state.cat).map((c) => c.id);
+  const li = (c) => {
+    const kids = KIDS.get(c.id) || [];
+    const open = active.includes(c.id) && kids.length;
+    const n = countIn(c.id);
+    return `<li class="${open ? 'is-open' : ''}">
+      <a href="#${esc(catHash(c.id))}" data-cat="${c.id}" ${state.cat === c.id ? 'aria-current="true"' : ''} ${kids.length ? `aria-expanded="${open ? 'true' : 'false'}"` : ''}>
+        <span>${esc(c.name)}</span><small>${n || '<span aria-label="ver en la tienda completa">↗</span>'}</small></a>
+      ${open ? `<ul class="cat-list__sub">${kids.map((k) => li(CAT.get(k))).join('')}</ul>` : ''}
+    </li>`;
+  };
+  $('[data-cats]').innerHTML = `<li><a href="/tienda/" data-cat="todas" ${state.cat === 'todas' ? 'aria-current="true"' : ''}><span>Todas</span><small>${PRODUCTS.length}</small></a></li>`
+    + ROOTS.map(li).join('');
+  // migas y accesos a subcategorías
+  const crumbs = $('[data-crumbs]');
+  crumbs.innerHTML = state.cat === 'todas' ? '' : `<a href="/tienda/" data-cat="todas">Tienda</a>${pathOf(state.cat).map((c) => ` <span aria-hidden="true">›</span> ${c.id === state.cat ? `<span aria-current="page">${esc(c.name)}</span>` : `<a href="#${esc(catHash(c.id))}" data-cat="${c.id}">${esc(c.name)}</a>`}`).join('')}`;
+  const kids = state.cat === 'todas' ? [] : (KIDS.get(state.cat) || []);
+  $('[data-subcats]').innerHTML = kids.map((k) => `<li><a href="#${esc(catHash(k))}" data-cat="${k}">${esc(catName(k))} <small>${countIn(k) || '↗'}</small></a></li>`).join('');
 }
-$('[data-cats]').addEventListener('click', (e) => {
-  const a = e.target.closest('[data-cat]'); if (!a) return;
-  e.preventDefault();
-  state.cat = a.dataset.cat; state.shown = PAGE;
-  history.replaceState(null, '', state.cat === 'todas' ? location.pathname : `#${state.cat}`);
+function selectCat(id) {
+  state.cat = id === 'todas' ? 'todas' : +id; state.shown = PAGE;
+  history.replaceState(null, '', state.cat === 'todas' ? location.pathname : `#${catHash(state.cat)}`);
   renderCats(); render(true);
   $('.shop__main').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+}
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('[data-cat]'); if (!a || !a.closest('[data-cats], [data-crumbs], [data-subcats]')) return;
+  e.preventDefault();
+  selectCat(a.dataset.cat);
 });
 window.addEventListener('hashchange', () => { fromHash(); tools.offers.checked = state.offers; state.shown = PAGE; renderCats(); render(true); openPending(); });
 
@@ -95,8 +133,8 @@ $('[data-more]').addEventListener('click', () => { state.shown += PAGE; render(f
 
 function filtered() {
   const words = norm(state.q).split(/\s+/).filter(Boolean);
-  let list = PRODUCTS.filter((p) => (state.cat === 'todas' || p.cat === state.cat)
-    && (!state.offers || p.was) && words.every((w) => p.key.includes(w)));
+  const inCat = state.cat === 'todas' ? null : subtree(state.cat);
+  const list = PRODUCTS.filter((p) => (!inCat || inCat.has(p.cat)) && (!state.offers || p.was) && words.every((w) => p.key.includes(w)));
   const by = {
     relevance: (a, b) => (b.off > 0) - (a.off > 0) || a.order - b.order,
     'price-asc': (a, b) => a.now - b.now,
@@ -115,7 +153,7 @@ function card(p) {
       <img src="${esc(p.img)}" alt="" loading="lazy" decoding="async" width="800" height="800" />
       ${p.off ? `<span class="prod__off shop-card__badge">−${p.off} %</span>` : ''}
     </button>
-    <p class="prod__brand">${esc(CAT_NAME[p.cat])}</p>
+    <p class="prod__brand">${esc(catLabel(p.cat))}</p>
     <h3><button type="button" class="shop-card__name" data-open="${p.id}">${esc(p.name)}</button></h3>
     <p class="prod__price"><b>${eur.format(p.now)}</b>${p.was ? ` <s aria-label="Antes">${eur.format(p.was)}</s>` : ''}</p>
     <button class="btn btn--line btn--sm" type="button" data-quick-add="${p.id}">Añadir a mi lista</button>
@@ -124,15 +162,16 @@ function card(p) {
 function render(fromStart) {
   const list = filtered();
   const slice = list.slice(0, state.shown);
-  const catInfo = CATS.find((x) => x.slug === state.cat);
+  const catInfo = state.cat === 'todas' ? null : CAT.get(state.cat);
   const catEmpty = catInfo && countIn(state.cat) === 0;
+  const storeUrl = (c) => safeUrl(`https://medicalmarca.com/es/${c.id}-${c.slug}`);
   grid.innerHTML = slice.length ? slice.map(card).join('') : catEmpty ? `
     <div class="grid__empty grid__empty--cat">
-      <img src="/img/c${Number(catInfo.id)}.jpg" alt="" width="141" height="180" />
+      <img src="/img/c${Number(rootOf(catInfo.id).id)}.jpg" alt="" width="141" height="180" />
       <div>
         <p><b>${esc(catInfo.name)}</b></p>
-        <p>${catInfo.total ? `Hay ${Number(catInfo.total)} productos de ${esc(catInfo.name.toLowerCase())}` : `Todos los productos de ${esc(catInfo.name.toLowerCase())} están`} en la tienda de Medicalmarca, con precios y stock al día.</p>
-        <a class="btn btn--violet" href="${esc(safeUrl(`https://medicalmarca.com/es/${catInfo.id}-${catInfo.slug}`))}">Ver ${esc(catInfo.name.toLowerCase())} en medicalmarca.com</a>
+        <p>Los productos de ${esc(catInfo.name.toLowerCase())} están en la tienda de Medicalmarca, con precios y stock al día.</p>
+        <a class="btn btn--violet" href="${esc(storeUrl(catInfo))}">Ver ${esc(catInfo.name.toLowerCase())} en medicalmarca.com</a>
         <button class="btn btn--line" type="button" data-reset>Ver otros productos</button>
       </div>
     </div>` : `
@@ -143,15 +182,14 @@ function render(fromStart) {
     </div>`;
   $$('.shop-card', grid).forEach((c, i) => c.style.setProperty('--i', String(fromStart ? i % PAGE : Math.max(0, i - (state.shown - PAGE)))));
   grid.classList.toggle('is-animating', !reduced);
-  const catLabel = state.cat === 'todas' ? 'todas las categorías' : CAT_NAME[state.cat];
+  const catLabel = catInfo ? catInfo.name : 'todas las categorías';
   $('[data-results]').textContent = `${list.length} ${list.length === 1 ? 'producto' : 'productos'} en ${catLabel}${state.q ? ` para «${state.q}»` : ''}.`;
   const more = $('[data-more]');
   more.hidden = list.length <= state.shown;
   more.textContent = `Ver más productos (${list.length - state.shown > 0 ? list.length - state.shown : 0} más)`;
   const full = $('[data-full-cat]');
-  const c = CATS.find((x) => x.slug === state.cat);
-  full.href = c ? safeUrl(`https://medicalmarca.com/es/${c.id}-${c.slug}`) : STORE;
-  full.textContent = c && c.total ? `Ver los ${c.total} productos de ${c.name} en la tienda` : 'Ver el catálogo completo en la tienda';
+  full.href = catInfo ? storeUrl(catInfo) : STORE;
+  full.textContent = catInfo ? `Ver ${catInfo.name.toLowerCase()} en medicalmarca.com` : 'Ver la tienda en medicalmarca.com';
 }
 // imágenes que no cargan → logotipo (sin onerror en línea: la CSP lo prohíbe)
 grid.addEventListener('error', (e) => { const t = e.target; if (t.tagName === 'IMG' && !t.src.endsWith(PLACEHOLDER)) { t.removeAttribute('srcset'); t.src = PLACEHOLDER; t.classList.add('is-fallback'); } }, true);
@@ -170,7 +208,7 @@ function openSheet(id) {
   sheetId = id;
   const img = $('[data-f=img]', sheet);
   img.src = large(p.img); img.alt = p.name;
-  $('[data-f=cat]', sheet).textContent = CAT_NAME[p.cat];
+  $('[data-f=cat]', sheet).textContent = pathOf(p.cat).map((c) => c.name).join(' › ');
   $('[data-f=name]', sheet).textContent = p.name;
   $('[data-f=price]', sheet).innerHTML = `<b>${eur.format(p.now)}</b>${p.was ? ` <s aria-label="Antes">${eur.format(p.was)}</s> <span class="prod__off">−${p.off} %</span>` : ''}`;
   $('[data-f=url]', sheet).href = p.url;
@@ -277,7 +315,7 @@ window.addEventListener('storage', (e) => { if (e.key === KEY) { list = loadList
 // ---------- Arranque ----------
 const day = new Date(`${DATA.scraped}T12:00:00`);
 $('[data-date]').textContent = Number.isNaN(day.getTime()) ? DATA.scraped : day.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
-$('[data-summary]').textContent = `${PRODUCTS.length} productos seleccionados en ${CATS.length} categorías. Elige una categoría, busca por nombre u ordena por precio.`;
+$('[data-summary]').textContent = `${PRODUCTS.length.toLocaleString('es-ES')} productos en ${ROOTS.length} familias y ${CATS.length - ROOTS.length} subcategorías. Elige una categoría, busca por nombre u ordena por precio.`;
 function openPending() {
   if (pendingProduct && BY_ID.has(pendingProduct)) openSheet(pendingProduct);
   else if (pendingProduct) location.href = STORE;
