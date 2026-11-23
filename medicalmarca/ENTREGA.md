@@ -51,3 +51,29 @@ El servidor actual de la tienda es muy lento; por eso la descarga va de una en u
 ## Técnica
 
 Vite (HTML/CSS/JS sin framework), GSAP + Lenis para el movimiento, secuencia de fotogramas WebP en `<canvas>` para el recorrido (generado con IA a partir de una foto real de clínica). Despliegue estático en Vercel con cabeceras de seguridad en `vercel.json`.
+
+## Actualización 23-11-2026: pedidos reales, material original y fichas completas
+
+### 1. Pedidos desde la web (`api/pedido.js`)
+La lista de la tienda termina en **«Hacer el pedido»**: la clínica rellena sus datos (clínica, contacto, correo, teléfono,
+CIF/NIF opcional, dirección de entrega y observaciones) y el pedido llega por correo a Medicalmarca, con una copia a la clínica.
+- Los precios se **recalculan en el servidor** con el catálogo: no se pueden manipular desde el navegador.
+- Validación de todos los campos, trampa anti-bots, límite de 5 pedidos cada 10 minutos por IP y solo peticiones de la propia web.
+- **Para activarlo** (Vercel › Project › Settings › Environment Variables) y volver a desplegar:
+  - `RESEND_API_KEY`: clave de resend.com, que tiene un plan gratuito y exige verificar el dominio medicalmarca.com.
+  - `ORDER_TO`: correo que recibe los pedidos, p. ej. `pedidos@medicalmarca.com`.
+  - `ORDER_FROM`: remitente verificado, p. ej. `Medicalmarca <pedidos@medicalmarca.com>`.
+- Mientras no esté configurado, el servidor responde «no activado» y la web abre el correo de la clínica con el pedido completo ya escrito. No se pierde ningún pedido.
+- No se cobra en la web: Medicalmarca confirma el plazo y la forma de pago. Para cobrar online haría falta conectar una pasarela (Redsys o Stripe) o su carrito de PrestaShop.
+
+### 3. Solo material de medicalmarca.com
+- La portada es un recorrido por su catálogo con **sus fotos de producto**, nombres, precios y familias reales. Se genera al compilar desde `src/shop-data.json` (`src/home-build.js`).
+- Los textos son los suyos: «Envío gratis a España Peninsular a partir de 150€», «Entrega en 2 días laborales», «Devoluciones gratuitas», «Nuestro catálogo», «Productos destacados», «Últimos catálogos», «Sobre nosotros», «Contáctenos» y «Suscríbete a nuestra Newsletter».
+- «Productos destacados» son los 8 de su portada, en el mismo orden.
+- La película generada con IA y las imágenes de categoría ampliadas con IA están en `archivo-ia/` y **no se publican** (ver su LEEME).
+
+### 4. Fichas: referencia, stock y descripción
+- Ya están las **referencias de modelo** que aparecen en sus nombres de producto (1201 productos, p. ej. «802L-FG»). También sirven para buscar.
+- Para tener **stock, todas las referencias y descripciones**: Medicalmarca exporta su catálogo desde PrestaShop (Catálogo › Productos › Exportar a CSV) y se importa con
+  `node scripts/import-prestashop-csv.mjs products.csv` (y después `npm run build`). La descripción se guarda como texto plano: nunca se inserta HTML externo.
+- La ficha muestra «En stock», «Quedan N» o «Sin stock ahora mismo» cuando hay datos. Si no los hay, remite a la tienda o al teléfono.

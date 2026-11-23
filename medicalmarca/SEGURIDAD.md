@@ -43,3 +43,5 @@ Fecha: 18/11/2026 · Alcance: `medicalmarca/` (sitio estático Vite) desplegado 
 - HSTS explícito (2 años) y `X-Permitted-Cross-Domain-Policies: none`. `npm audit`: 0 vulnerabilidades.
 - Lighthouse: home 100/100/100 (móvil y escritorio) y tienda 99/100/100 con CLS 0. El SEO sale 63 solo por el `noindex` del concepto; al publicarlo como web oficial hay que quitar `noindex` (HTML y `X-Robots-Tag`).
 - axe-core WCAG 2.2 AA: 0 fallos en la home, la tienda, la ficha, la lista y la página 404, en móvil y escritorio. Probado con teclado: cada parada del film se puede alcanzar con Tab.
+- **Pedidos (`/api/pedido`)**: solo acepta POST con JSON, desde el mismo origen y de 20 KB como máximo. Valida todos los campos, recalcula los precios en el servidor, tiene trampa anti-bots y límite por IP, y escapa el HTML de los correos. Probado con precios manipulados, productos inexistentes, cantidades fuera de rango, otro origen, métodos y tipos no válidos y ráfagas.
+- **Importación de fichas**: las descripciones de PrestaShop se convierten a texto plano (se eliminan `<script>`, `<style>`, `<iframe>`…), y la web las inserta con `textContent`.

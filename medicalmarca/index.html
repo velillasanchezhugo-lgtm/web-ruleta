@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Medicalmarca · Instrumental y producto dental</title>
-  <meta name="description" content="Distribución de producto e instrumental dental desde 2006. Envío gratis a España peninsular desde 150 €, entrega en 2 días laborables y devoluciones gratuitas." />
+  <title>Medicalmarca · Tienda de producto dental</title>
+  <meta name="description" content="Envío gratis a España Peninsular a partir de 150€. Entrega en 2 días laborales. Devoluciones gratuitas." />
   <link rel="preload" href="/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <meta name="theme-color" content="#f3f5f7" />
@@ -37,62 +37,29 @@
   </header>
 
   <main id="contenido">
-    <!-- PELÍCULA: recorrido de cámara por la clínica, guiado por el scroll -->
+    <!-- PORTADA: recorrido por el catálogo con las fotos de producto de medicalmarca.com (se genera al compilar) -->
     <section class="film" id="top">
       <div class="film__stage">
-        <canvas class="film__canvas" aria-hidden="true"></canvas>
-        <div class="film__veil" aria-hidden="true"></div>
+        <div class="vitrina" aria-hidden="true">
+          <!--HOME:PHOTOS-->
+        </div>
 
         <div class="stop stop--hero" data-stop="0">
           <h1 class="hero__title">
-            <span class="line"><span>Instrumental dental,</span></span>
-            <span class="line"><span>en tu clínica</span></span>
-            <span class="line"><span>en dos días.</span></span>
+            <span class="line"><span>Envío gratis</span></span>
+            <span class="line"><span>a España Peninsular</span></span>
+            <span class="line"><span>a partir de 150€</span></span>
           </h1>
-          <p class="hero__lead">Todo lo que usa tu gabinete, de la pieza de mano al guante. Distribuimos producto dental a clínicas de toda España desde 2006.</p>
+          <p class="hero__lead">Entrega en 2 días laborales. Devoluciones gratuitas.</p>
           <div class="hero__cta">
-            <a class="btn btn--violet" href="/tienda/">Ver el catálogo completo</a>
+            <a class="btn btn--violet" href="/tienda/">Ver catálogo</a>
             <a class="btn btn--line" href="/tienda/#ofertas">Ver ofertas</a>
           </div>
-          <ul class="facts" aria-label="Condiciones de envío">
-            <li><b>Envío gratis</b> a España peninsular desde 150 €</li>
-            <li><b>Entrega en 2 días</b> laborables</li>
-            <li><b>Devoluciones</b> gratuitas</li>
-          </ul>
         </div>
 
-        <div class="stop" data-stop="1">
-          <p class="stop__where">En la bandeja</p>
-          <h2>Piezas de mano, fresas e insertos.</h2>
-          <p>Aparatología e instrumental rotatorio, como el destornillador protésico inalámbrico IDS 900 de NSK, y las fresas e insertos que lo acompañan.</p>
-          <a class="link" href="/tienda/#aparatologia-y-instrumental-rotatorio">Ver instrumental rotatorio</a>
-        </div>
+        <!--HOME:STOPS-->
 
-        <div class="stop" data-stop="2">
-          <p class="stop__where">Bajo la lámpara</p>
-          <h2>Kits completos para cada intervención.</h2>
-          <p>Implantología, microcirugía, cirugía apical o tunelización: el instrumental que necesitas, ordenado en su caja.</p>
-          <a class="link" href="/tienda/#implantologia">Ver implantología</a>
-        </div>
-
-        <div class="stop" data-stop="3">
-          <p class="stop__where">En el sillón</p>
-          <h2>Profilaxis, pulido y sutura.</h2>
-          <p>Lo que usas en cada paciente, cada día, con entrega en dos días laborables para que no te quedes sin stock.</p>
-          <a class="link" href="/tienda/#profilaxis">Ver profilaxis</a>
-        </div>
-
-        <div class="stop" data-stop="4">
-          <p class="stop__where">En el mueble</p>
-          <h2>Protección, desinfección e instrumental esterilizable.</h2>
-          <p>Guantes y material de protección, gel hidroalcohólico, desinfección e instrumental Ustomed de acero inoxidable.</p>
-          <a class="link" href="/tienda/#material-proteccion">Ver material de protección</a>
-        </div>
-
-        <div class="film__progress" aria-hidden="true">
-          <span data-dot="0">Clínica</span><span data-dot="1">Bandeja</span><span data-dot="2">Lámpara</span><span data-dot="3">Sillón</span><span data-dot="4">Mueble</span>
-        </div>
-        <div class="film__loading" aria-hidden="true"><i></i></div>
+        <div class="film__progress" aria-hidden="true"><!--HOME:DOTS--></div>
       </div>
     </section>
 
@@ -100,8 +67,8 @@
     <section class="catalog" id="catalogo">
       <div class="wrap catalog__grid">
         <div class="catalog__intro">
-          <h2 class="h2">Doce familias de producto para el gabinete y el quirófano.</h2>
-          <p class="sub">Elige una familia para ver sus productos en la tienda.</p>
+          <h2 class="h2">Nuestro catálogo</h2>
+          <p class="sub" data-cat-sum></p>
         </div>
         <ul class="cats" data-cats></ul>
       </div>
@@ -112,48 +79,48 @@
     <section class="featured" id="destacados">
       <div class="featured__sticky">
         <div class="wrap featured__head">
-          <h2 class="h2">Destacados con descuento.</h2>
+          <h2 class="h2">Productos destacados</h2>
           <a class="link" href="/tienda/#ofertas">Todas las ofertas</a>
         </div>
-        <div class="rail" data-products></div>
-        <p class="wrap featured__note">Precios con IVA según la tienda online. Pueden cambiar; el precio final es el del carrito.</p>
+        <div class="rail">
+        <!--HOME:FEATURED-->
+        </div>
+        <p class="wrap featured__note">Precios de medicalmarca.com, IVA incluido.</p>
       </div>
     </section>
 
-    <!-- NOSOTROS -->
+    <!-- NOSOTROS: solo datos de medicalmarca.com -->
     <section class="about" id="nosotros">
-      <div class="wrap about__grid">
-        <p class="about__year" aria-hidden="true">2006</p>
-        <div>
-          <h2 class="h2">Casi veinte años sirviendo a clínicas dentales.</h2>
-          <p class="sub">Medicalmarca nació en 2006 especializada en la distribución de producto dental, y desde entonces no ha dejado de crecer. Hoy servimos a todo el territorio español, Baleares y Canarias.</p>
-          <p class="sub">Nuestra misión es hacer más fácil el día a día de tu clínica: te asesoramos y garantizamos todos nuestros productos.</p>
-          <ul class="langs" aria-label="Tienda disponible en">
-            <li>Castellano</li><li>Català</li><li>Galego</li><li>Euskara</li>
-          </ul>
-        </div>
+      <div class="wrap">
+        <h2 class="h2">Sobre nosotros</h2>
+        <dl class="about__facts">
+          <div><dt>2006</dt><dd>Distribución de producto dental desde 2006</dd></div>
+          <div><dt data-fact="products"></dt><dd>productos en la tienda</dd></div>
+          <div><dt>12</dt><dd>familias de producto</dd></div>
+          <div><dt>2 días</dt><dd>Entrega en 2 días laborales</dd></div>
+        </dl>
+        <ul class="langs" aria-label="Idiomas de la tienda">
+          <li lang="es">Castellano</li><li lang="ca">Català</li><li lang="gl">Galego</li><li lang="eu">Euskara</li>
+        </ul>
       </div>
     </section>
 
     <!-- CATÁLOGOS EN PDF (los que publica Medicalmarca en su web) -->
     <section class="pdfs" id="catalogos">
       <div class="wrap">
-        <h2 class="h2">Catálogos para descargar.</h2>
-        <p class="sub">Los catálogos de fabricante que distribuye Medicalmarca, en PDF.</p>
+        <h2 class="h2">Últimos catálogos</h2>
         <ul class="pdfs__list">
           <li class="pdf">
-            <p class="pdf__brand">EDENTA Dental</p>
-            <h3>Catálogo de laboratorio</h3>
-            <p>Pulidores, fresas de carburo de tungsteno, acero y diamante, accesorios e instrucciones de uso.</p>
+            <p class="pdf__brand">EDENTA DENTAL</p>
+            <h3>Laboratorio</h3>
             <p class="pdf__meta">PDF · 132 páginas · 5,5 MB</p>
             <a class="btn btn--violet" href="https://medicalmarca.com/img/cms/catalogo/L20+Labor-Katalog+2017_compressed.pdf">Descargar el catálogo de laboratorio</a>
           </li>
           <li class="pdf">
-            <p class="pdf__brand">SZ Dentalprodukte · NEO-TEC Dental · Alemania</p>
-            <h3>Materiales dentales Made in Germany</h3>
-            <p>Composites nanohíbridos fotopolimerizables y otros materiales de restauración.</p>
+            <p class="pdf__brand">Dentalprodukte</p>
+            <h3>Made in Germany</h3>
             <p class="pdf__meta">PDF · 14 páginas · 0,3 MB</p>
-            <a class="btn btn--violet" href="https://medicalmarca.com/img/cms/catalogo/sz.pdf">Descargar el catálogo SZ</a>
+            <a class="btn btn--violet" href="https://medicalmarca.com/img/cms/catalogo/sz.pdf">Descargar el catálogo Made in Germany</a>
           </li>
         </ul>
       </div>
@@ -163,16 +130,15 @@
     <section class="contact" id="contacto">
       <div class="wrap contact__grid">
         <div>
-          <h2 class="h2">¿Buscas un producto que no ves en la web?</h2>
-          <p class="sub">Llámanos o escríbenos y te decimos si lo tenemos o te lo conseguimos.</p>
-          <div class="contact__ways">
+          <h2 class="h2">Contáctenos</h2>
+                    <div class="contact__ways">
             <a href="tel:+34665479381"><span>Teléfono</span>665 479 381</a>
             <a href="mailto:info@medicalmarca.com"><span>Correo</span>info@medicalmarca.com</a>
           </div>
         </div>
         <form class="news" novalidate>
-          <h3>Ofertas y novedades en tu correo</h3>
-          <p>Un correo cuando entran productos nuevos o hay ofertas. Al suscribirte se abre tu correo con la solicitud lista para enviar. Puedes darte de baja cuando quieras.</p>
+          <h3>Suscríbete a nuestra Newsletter</h3>
+          <p>Infórmese de nuestras últimas noticias y ofertas especiales</p>
           <label for="email">Correo electrónico</label>
           <div class="news__row">
             <input id="email" name="email" type="email" autocomplete="email" placeholder="clinica@ejemplo.com" required />

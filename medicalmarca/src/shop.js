@@ -6,6 +6,8 @@ import './shop.css';
 import DATA from './shop-data.json';
 import { setHTML } from './safe-html.js';
 import { niceCat, ROOT_NAMES } from './catnames.js';
+import { niceName } from './names.js';
+import { FAMILY_PHOTO } from './home-build.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -25,23 +27,6 @@ const PLACEHOLDER = '/brand/logo-color.png';
 const large = (u) => (u.includes('-home_default/') ? u.replace('-home_default/', '-large_default/') : u);
 const norm = (s) => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
-// Nombres en MAYÚSCULAS de la tienda → tipo frase, conservando marcas y modelos (NSK, S-MAX, M25…)
-const KEEP = new Set(['NSK', 'IDS', 'LED', 'PEEK', 'UNC', 'CP15', 'ICARE', 'KAVO', 'W&H', 'S-MAX', 'TI-MAX', 'X-SMART']);
-const BRANDS = { USTOMED: 'Ustomed', PERFUSTOMED: 'Perfustomed', ICARE: 'iCare' };
-function niceName(n) {
-  n = n.replace(/\.(?=[A-Z]{3,})/g, '. ').replace(/PERFUSTOMED/g, 'Perfustomed').replace(/USTOMED/g, 'Ustomed');
-  const letters = n.replace(/[^A-Za-zÁÉÍÓÚÑÜáéíóúñü]/g, '');
-  const upper = letters.replace(/[^A-ZÁÉÍÓÚÑÜ]/g, '').length;
-  if (!letters || upper / letters.length < 0.6) return n;
-  const out = n.split(/(\s+)/).map((w) => {
-    const bare = w.replace(/[^\w&-]/g, '');
-    if (BRANDS[bare]) return w.replace(bare, BRANDS[bare]);
-    if (KEEP.has(bare) || /\d/.test(w)) return w;
-    if (/^[A-ZÑ]$/.test(bare) && !'YAOEU'.includes(bare)) return w; // letra de modelo: S-MAX M, TI-MAX Z
-    return w.toLowerCase().replace(/perfustomed/g, 'Perfustomed').replace(/ustomed/g, 'Ustomed');
-  }).join('');
-  return out.charAt(0).toUpperCase() + out.slice(1);
-}
 // ---------- Categorías: árbol completo de medicalmarca.com (familias › subcategorías › …) ----------
 const CATS = DATA.categories
   .filter((c) => Number.isInteger(c.id) && /^[a-z0-9-]+$/.test(c.slug))
@@ -66,7 +51,10 @@ const PRODUCTS = DATA.products
     cats: (Array.isArray(p.cats) ? p.cats : [p.cat]).filter((c) => CAT.has(c)),
     url: safeUrl(p.url), img: /^\/products\/\d+\.webp$/.test(p.img) ? p.img : safeUrl(p.img, PLACEHOLDER),
     now: p.now, was: Number.isFinite(p.was) && p.was > p.now ? p.was : null,
-    key: norm(`${p.name} ${pathOf(p.cat).map((c) => c.name).join(' ')}`),
+    ref: typeof p.ref === 'string' ? p.ref.slice(0, 40) : '',
+    stock: Number.isInteger(p.stock) ? p.stock : null,
+    desc: typeof p.desc === 'string' ? p.desc.slice(0, 2000) : '',
+    key: norm(`${p.name} ${p.ref || ''} ${pathOf(p.cat).map((c) => c.name).join(' ')}`),
   }));
 PRODUCTS.forEach((p) => { p.off = p.was ? Math.round((1 - p.now / p.was) * 100) : 0; });
 const BY_ID = new Map(PRODUCTS.map((p) => [p.id, p]));
@@ -177,7 +165,7 @@ function render(fromStart) {
   const storeUrl = (c) => safeUrl(`https://medicalmarca.com/es/${c.id}-${c.slug}`);
   setHTML(grid, slice.length ? slice.map((p, i) => card(p, fromStart ? i : 99)).join('') : catEmpty ? `
     <div class="grid__empty grid__empty--cat">
-      <img src="/img/c${Number(rootOf(catInfo.id).id)}.jpg" alt="" width="141" height="180" />
+      ${FAMILY_PHOTO[rootOf(catInfo.id).id] ? `<img src="/products/400/${Number(FAMILY_PHOTO[rootOf(catInfo.id).id])}.webp" alt="" width="160" height="160" />` : ''}
       <div>
         <p><b>${esc(catInfo.name)}</b></p>
         ${catInfo.total === 0 ? `
@@ -226,6 +214,16 @@ function openSheet(id) {
   $('[data-f=name]', sheet).textContent = p.name;
   setHTML($('[data-f=price]', sheet), `<b>${eur.format(p.now)}</b>${p.was ? ` <s aria-label="Antes">${eur.format(p.was)}</s> <span class="prod__off">−${p.off} %</span>` : ''}`);
   $('[data-f=url]', sheet).href = p.url;
+  const ref = $('[data-f=ref]', sheet);
+  ref.hidden = !p.ref; ref.textContent = p.ref ? `Ref. ${p.ref}` : '';
+  const stock = $('[data-f=stock]', sheet);
+  stock.className = `sheet__stock${p.stock == null ? '' : p.stock > 0 ? ' is-in' : ' is-out'}`;
+  stock.textContent = p.stock == null ? 'Stock y plazo: confírmalos en la tienda o llamando al 665 479 381.'
+    : p.stock > 0 ? (p.stock < 5 ? `En stock · quedan ${p.stock}` : 'En stock · entrega en 2 días laborales') : 'Sin stock ahora mismo · pregúntanos el plazo';
+  // descripción como texto plano, párrafo a párrafo (nunca HTML)
+  const desc = $('[data-f=desc]', sheet);
+  desc.replaceChildren(...p.desc.split('\n').filter(Boolean).map((t) => Object.assign(document.createElement('p'), { textContent: t })));
+  desc.hidden = !p.desc;
   qtyInput.value = 1; syncQty();
   sheet.showModal();
 }
@@ -263,7 +261,7 @@ const save = () => { try { localStorage.setItem(KEY, JSON.stringify(list)); } ca
 function addToList(id, qty) { if (!BY_ID.has(id)) return; list[id] = clampQty((list[id] || 0) + qty); save(); renderList(); }
 
 const drawer = $('#lista');
-function openList() { renderList(); drawer.showModal(); }
+function openList() { renderList(); showStep('list'); drawer.showModal(); }
 $('.list-toggle').addEventListener('click', openList);
 
 function listLines() {
@@ -317,14 +315,76 @@ $('[data-list]').addEventListener('click', (e) => {
   if (e.target.closest('[data-line-del]')) delete list[id];
   save(); renderList();
 });
-$('[data-clear]').addEventListener('click', () => { list = {}; save(); renderList(); });
+$('[data-clear]').addEventListener('click', () => { list = {}; save(); renderList(); showStep('list'); });
 $('[data-copy]').addEventListener('click', async () => {
   const lines = listLines(); const text = listText(lines, lines.reduce((s, { p, q }) => s + p.now * q, 0));
   const msg = $('[data-list-msg]');
   try { await navigator.clipboard.writeText(text); msg.textContent = 'Lista copiada. Pégala en un correo o en WhatsApp.'; }
-  catch { msg.textContent = 'No se pudo copiar automáticamente. Usa «Enviar lista por correo».'; }
+  catch { msg.textContent = 'No se pudo copiar automáticamente. Usa «o envíala por correo».'; }
 });
 window.addEventListener('storage', (e) => { if (e.key === KEY) { list = loadList(); renderList(); } });
+
+// ---------- Pedido: datos de la clínica → /api/pedido ----------
+const coForm = $('[data-checkout-form]'), coDone = $('[data-checkout-done]'), coErr = $('[data-checkout-err]');
+function showStep(step) { // 'list' | 'form' | 'done'
+  const lines = listLines();
+  $('[data-list]').hidden = step !== 'list';
+  $('[data-list-empty]').hidden = step !== 'list' || lines.length > 0;
+  $('[data-list-foot]').hidden = step !== 'list' || lines.length === 0;
+  coForm.hidden = step !== 'form'; coDone.hidden = step !== 'done';
+  const title = step === 'form' ? $('.checkout__title', coForm) : step === 'done' ? $('.checkout__title', coDone) : null;
+  title?.focus();
+}
+$('[data-checkout]').addEventListener('click', () => {
+  const lines = listLines(); if (!lines.length) return;
+  const total = lines.reduce((s, { p, q }) => s + p.now * q, 0);
+  const units = lines.reduce((s, { q }) => s + q, 0);
+  $('[data-checkout-sum]').textContent = `${units} ${units === 1 ? 'unidad' : 'unidades'} · ${eur.format(total)} (IVA incl.) · ${total >= 150 ? 'envío gratis' : 'envío según tarifa'}`;
+  coErr.textContent = ''; showStep('form');
+});
+$('[data-checkout-back]').addEventListener('click', () => showStep('list'));
+drawer.addEventListener('close', () => { if (!coDone.hidden) showStep('list'); });
+const coFields = {
+  clinica: 'el nombre de la clínica', nombre: 'la persona de contacto', email: 'un correo válido', telefono: 'un teléfono válido',
+  direccion: 'la dirección de entrega', cp: 'un código postal de 5 cifras', poblacion: 'la población', provincia: 'la provincia',
+};
+coForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const f = coForm.elements;
+  $$('[aria-invalid]', coForm).forEach((el) => el.removeAttribute('aria-invalid'));
+  const tel = f.telefono.value.replace(/[\s().-]/g, '');
+  const bad = Object.keys(coFields).find((k) => !f[k].value.trim() || !f[k].checkValidity() || (k === 'telefono' && !/^\+?\d{9,15}$/.test(tel)));
+  if (bad) { coErr.textContent = `Falta ${coFields[bad]}.`; f[bad].setAttribute('aria-invalid', 'true'); f[bad].focus(); return; }
+  if (!f.acepto.checked) { coErr.textContent = 'Para enviar el pedido, acepta la política de privacidad.'; f.acepto.focus(); return; }
+  const lines = listLines();
+  const body = {
+    items: lines.map(({ p, q }) => ({ id: p.id, q })),
+    cliente: Object.fromEntries(['clinica', 'nombre', 'email', 'telefono', 'nif', 'direccion', 'cp', 'poblacion', 'provincia', 'notas'].map((k) => [k, f[k].value.trim()])),
+    web: f.web.value, // trampa para bots: las personas no la ven
+  };
+  const btn = $('[data-checkout-send]'); btn.disabled = true; btn.textContent = 'Enviando…'; coErr.textContent = '';
+  let res = null;
+  try {
+    const r = await fetch('/api/pedido', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: AbortSignal.timeout?.(20000) });
+    res = { status: r.status, data: await r.json().catch(() => ({})) };
+  } catch { res = { status: 0, data: {} }; }
+  btn.disabled = false; btn.textContent = 'Enviar pedido';
+  if (res.status === 200 && res.data.ok) {
+    $('[data-order-id]').textContent = String(res.data.pedido || '');
+    $('[data-order-mail]').textContent = body.cliente.email;
+    list = {}; save(); renderList(); coForm.reset(); showStep('done');
+    return;
+  }
+  if (res.status === 400 || res.status === 429) { coErr.textContent = res.data.mensaje || 'Revisa los datos e inténtalo de nuevo.'; return; }
+  // Sin servidor de pedidos (no configurado o sin conexión): se abre el correo con el pedido completo ya escrito
+  const c = body.cliente;
+  let text = `${listText(lines, lines.reduce((s, { p, q }) => s + p.now * q, 0)).split('\nNombre de la clínica:')[0]}\n` +
+    `Clínica: ${c.clinica}\nContacto: ${c.nombre}\nCorreo: ${c.email}\nTeléfono: ${c.telefono}\n${c.nif ? `CIF/NIF: ${c.nif}\n` : ''}` +
+    `Entrega: ${c.direccion}, ${c.cp} ${c.poblacion} (${c.provincia})\n${c.notas ? `Observaciones: ${c.notas}\n` : ''}`;
+  if (text.length > 1900) text = `${text.slice(0, 1850)}\n…`;
+  location.href = `mailto:info@medicalmarca.com?subject=${encodeURIComponent(`Pedido: ${c.clinica}`)}&body=${encodeURIComponent(text)}`;
+  coErr.textContent = 'No hemos podido enviar el pedido desde la web, así que se ha abierto tu correo con el pedido ya escrito. Envíalo y listo.';
+});
 
 // ---------- Arranque ----------
 const day = new Date(`${DATA.scraped}T12:00:00`);

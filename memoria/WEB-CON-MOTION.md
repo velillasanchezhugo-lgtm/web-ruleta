@@ -373,3 +373,9 @@ Grabadas con `motion-kit/tools/capture-refs.cjs` (30 capturas haciendo scroll) y
 ## Registro de referencias
 - **Lote 1** (2026-11-17): 7 vídeos TikTok/IG — R1–R7 arriba.
 - **Lote 2** (2026-11-21): webs Awwwards Site of the Day (noviembre 2026) — ver §10.
+
+### Lección (Medicalmarca, 23-11-2026): descarga todo a la primera
+Tras la primera extracción, su web activó una pantalla anti-bots y no se pudo volver a consultar (y no se debe saltar).
+En la **primera** pasada guarda todo lo que pueda hacer falta después: textos de cada página (sobre nosotros, envío, devoluciones),
+imágenes originales sin tocar, y de cada producto descripción, referencia y stock. Y prevé siempre una vía oficial:
+la exportación CSV del back office del cliente.

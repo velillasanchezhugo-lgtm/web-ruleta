@@ -11,10 +11,14 @@ const prev = existsSync(OUT) ? JSON.parse(readFileSync(OUT, 'utf8')) : { product
 const prevById = new Map(prev.products.map((p) => [p.id, p]));
 const localImg = (id) => existsSync(new URL(`../public/products/${id}.webp`, import.meta.url));
 
+// Su tienda guarda algunos nombres con la codificación rota («cilÃ­ndrica»): se reparan
+const fix = (t) => (/[ÃÂ]/.test(t) ? (() => { try { return new TextDecoder('utf-8', { fatal: true }).decode(Uint8Array.from([...t].map((c) => c.charCodeAt(0)))); } catch { return t; } })() : t);
+// Referencia: el código de modelo con el que empieza el nombre en su tienda (p. ej. «802L-FG Fresa…»)
+const refOf = (n) => { const m = /^([A-Z0-9][A-Z0-9./]*(?:-[A-Z0-9./]+)*)\s*[- ]\s*(?=[A-Za-zÁÉÍÓÚáéíóú])/.exec(n); return m && /\d/.test(m[1]) && m[1].length >= 3 ? m[1] : null; };
 const tree = Object.values(crawl.tree);
 const depth = Object.fromEntries(tree.map((c) => [c.id, c.depth]));
 const categories = tree
-  .map(({ id, slug, name, parent, depth: d, total }) => ({ id, slug, name, parent: parent ?? null, depth: d, total: total ?? null }))
+  .map(({ id, slug, name, parent, depth: d, total }) => ({ id, slug, name: fix(name), parent: parent ?? null, depth: d, total: total ?? null }))
   .sort((a, b) => a.depth - b.depth || a.id - b.id);
 
 const products = Object.values(crawl.products)
@@ -22,8 +26,11 @@ const products = Object.values(crawl.products)
   .map((p) => {
     const cat = [...p.cats].sort((a, b) => (depth[b] ?? 0) - (depth[a] ?? 0))[0];
     const old = prevById.get(p.id);
+    const name = fix(p.name);
     return {
-      id: p.id, name: p.name, url: p.url, now: p.now, was: p.was ?? null, cat, cats: [...new Set(p.cats)],
+      id: p.id, name, ...(refOf(name) && { ref: refOf(name) }),
+      // datos de ficha importados del back office (scripts/import-prestashop-csv.mjs): se conservan
+      ...(old?.stock != null && { stock: old.stock }), ...(old?.desc && { desc: old.desc }), ...(old?.ref && { ref: old.ref }), url: p.url, now: p.now, was: p.was ?? null, cat, cats: [...new Set(p.cats)],
       img: localImg(p.id) ? `/products/${p.id}.webp` : p.img,
       remote_img: old?.remote_img || p.img,
     };

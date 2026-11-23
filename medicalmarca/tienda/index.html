@@ -96,7 +96,10 @@
       <div class="sheet__info">
         <p class="sheet__cat" data-f="cat"></p>
         <h2 id="ficha-nombre" data-f="name"></h2>
+        <p class="sheet__ref" data-f="ref" hidden></p>
         <p class="prod__price sheet__price" data-f="price"></p>
+        <p class="sheet__stock" data-f="stock"></p>
+        <div class="sheet__desc" data-f="desc" tabindex="0" role="region" aria-label="Descripción del producto" hidden></div>
         <div class="qty">
           <label for="ficha-qty">Unidades</label>
           <div class="qty__ctrl">
@@ -125,10 +128,44 @@
     <div class="drawer__foot" data-list-foot>
       <p class="drawer__total"><span>Total estimado (IVA incl.)</span> <b data-list-total>0,00 €</b></p>
       <p class="drawer__ship" data-list-ship></p>
-      <a class="btn btn--violet" data-mail href="mailto:info@medicalmarca.com">Enviar lista por correo</a>
+      <button class="btn btn--violet" type="button" data-checkout>Hacer el pedido</button>
       <button class="btn btn--line" type="button" data-copy>Copiar lista</button>
+      <a class="drawer__alt" data-mail href="mailto:info@medicalmarca.com">o envíala por correo</a>
       <button class="drawer__clear" type="button" data-clear>Vaciar lista</button>
       <p class="drawer__msg" role="status" aria-live="polite" data-list-msg></p>
+    </div>
+
+    <!-- Pedido: datos de la clínica. Se envía a /api/pedido (los precios se recalculan en el servidor) -->
+    <form class="checkout" data-checkout-form novalidate hidden>
+      <button class="checkout__back" type="button" data-checkout-back>← Volver a la lista</button>
+      <h3 class="checkout__title" tabindex="-1">Datos de la clínica</h3>
+      <p class="checkout__sum" data-checkout-sum></p>
+      <div class="field"><label for="co-clinica">Clínica o empresa</label><input id="co-clinica" name="clinica" autocomplete="organization" required maxlength="120" /></div>
+      <div class="field"><label for="co-nombre">Persona de contacto</label><input id="co-nombre" name="nombre" autocomplete="name" required maxlength="120" /></div>
+      <div class="field-row">
+        <div class="field"><label for="co-email">Correo electrónico</label><input id="co-email" name="email" type="email" autocomplete="email" required maxlength="160" /></div>
+        <div class="field"><label for="co-tel">Teléfono</label><input id="co-tel" name="telefono" type="tel" autocomplete="tel" inputmode="tel" required maxlength="20" /></div>
+      </div>
+      <div class="field"><label for="co-nif">CIF o NIF <span class="opt">(opcional, para la factura)</span></label><input id="co-nif" name="nif" maxlength="20" autocomplete="off" /></div>
+      <div class="field"><label for="co-dir">Dirección de entrega</label><input id="co-dir" name="direccion" autocomplete="street-address" required maxlength="200" /></div>
+      <div class="field-row field-row--3">
+        <div class="field"><label for="co-cp">Código postal</label><input id="co-cp" name="cp" autocomplete="postal-code" inputmode="numeric" required maxlength="5" pattern="[0-9]{5}" /></div>
+        <div class="field"><label for="co-pob">Población</label><input id="co-pob" name="poblacion" autocomplete="address-level2" required maxlength="80" /></div>
+        <div class="field"><label for="co-prov">Provincia</label><input id="co-prov" name="provincia" autocomplete="address-level1" required maxlength="60" /></div>
+      </div>
+      <div class="field"><label for="co-notas">Observaciones <span class="opt">(opcional)</span></label><textarea id="co-notas" name="notas" rows="3" maxlength="1000"></textarea></div>
+      <div class="field field--hp" aria-hidden="true"><label for="co-web">No rellenar</label><input id="co-web" name="web" tabindex="-1" autocomplete="off" /></div>
+      <label class="checkout__ok"><input type="checkbox" name="acepto" required /> <span>He leído y acepto la <a href="https://medicalmarca.com/es/content/2-aviso-legal">política de privacidad</a></span></label>
+      <p class="checkout__note">No se cobra nada ahora. Medicalmarca te confirma el pedido, el plazo de entrega y la forma de pago por correo o por teléfono.</p>
+      <p class="checkout__err" role="alert" data-checkout-err></p>
+      <button class="btn btn--violet" type="submit" data-checkout-send>Enviar pedido</button>
+    </form>
+
+    <div class="checkout checkout--done" data-checkout-done hidden>
+      <h3 class="checkout__title" tabindex="-1">Pedido enviado</h3>
+      <p>Número de pedido: <b data-order-id></b></p>
+      <p>Hemos enviado una copia a <b data-order-mail></b>. Medicalmarca te contactará para confirmarlo.</p>
+      <button class="btn btn--line" type="button" data-close>Cerrar</button>
     </div>
   </dialog>
 

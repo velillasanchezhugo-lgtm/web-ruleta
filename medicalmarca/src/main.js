@@ -4,9 +4,8 @@ import './style.css';
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { createFilm } from './film.js';
-import FILM from './film.json';
-import { CATEGORIES, PRODUCTS } from './data.js';
+import { CATEGORIES } from './data.js';
+import { FAMILY_PHOTO } from './home-build.js';
 import CATALOG from './catalog-tree.json';
 import { setHTML } from './safe-html.js';
 import { niceCat } from './catnames.js';
@@ -16,24 +15,14 @@ const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 document.documentElement.classList.toggle('reduced', reduced);
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-const img = (n) => `${import.meta.env.BASE_URL}img/${n}.jpg`;
-const eur = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' });
 
 // ---------- Contenido ----------
-// Seguridad: todo dato que entra en el HTML se escapa, y solo se aceptan enlaces https a la tienda.
-// Así, si mañana estos datos vienen de la API de la tienda, no se puede inyectar código.
+// Seguridad: todo dato que entra en el HTML se escapa.
 const esc = (v) => String(v).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
-const safeUrl = (u) => {
-  try { const x = new URL(u); return x.protocol === 'https:' && x.hostname === 'medicalmarca.com' ? x.href : 'https://medicalmarca.com/tienda'; }
-  catch { return 'https://medicalmarca.com/tienda'; }
-};
 const catSlug = (u) => String(u).split('/').pop().replace(/^\d+-/, '').replace(/[^a-z0-9-]/g, '');
-const imgName = (n) => (/^[a-z0-9-]+$/i.test(n) ? n : 'logo');
 
 // Catálogo completo: cada familia con su nº de productos y sus subcategorías (src/catalog-tree.json, generado al descargar el catálogo)
 const TREE = new Map(CATALOG.tree.map((f) => [f.id, f]));
-const catIntro = document.querySelector('.catalog__intro .sub');
-if (catIntro && CATALOG.products) catIntro.textContent = `${new Intl.NumberFormat('es-ES').format(CATALOG.products)} productos en ${CATALOG.categories} categorías y subcategorías. Elige una familia o ve directo a lo que buscas.`;
 const nf = new Intl.NumberFormat('es-ES');
 setHTML($('[data-cats]'), CATEGORIES.map((c) => {
   const id = Number(String(c.url).split('/').pop().match(/^(\d+)-/)?.[1]);
@@ -41,23 +30,9 @@ setHTML($('[data-cats]'), CATEGORIES.map((c) => {
   const famHref = fam ? `/tienda/#${fam.id}-${esc(fam.slug)}` : `/tienda/#${esc(catSlug(c.url))}`;
   const subs = (fam?.children || []).map((k) => `<a href="/tienda/#${k.id}-${esc(k.slug)}">${esc(niceCat(k.name))}</a>`).join('<span aria-hidden="true"> · </span>');
   return `<li>
-    <a class="cats__fam" href="${famHref}" data-img="${esc(img(imgName(c.img)))}"><span>${esc(c.name)}</span>${fam?.count ? `<small>${nf.format(fam.count)}</small>` : ''}</a>
+    <a class="cats__fam" href="${famHref}"${FAMILY_PHOTO[id] ? ` data-img="/products/400/${Number(FAMILY_PHOTO[id])}.webp"` : ''}><span>${esc(c.name)}</span>${fam?.count ? `<small>${nf.format(fam.count)}</small>` : ''}</a>
     ${subs ? `<p class="cats__subs">${subs}</p>` : ''}
   </li>`;
-}).join(''));
-
-setHTML($('[data-products]'), PRODUCTS.map((p) => {
-  const now = Number(p.now), was = Number(p.was);
-  const off = Math.round((1 - now / was) * 100);
-  const pid = String(p.url).match(/\/(\d+)-[^/]+\.html$/)?.[1];
-  const url = pid ? `/tienda/#producto-${pid}` : esc(safeUrl(p.url));
-  return `<article class="prod">
-    <a class="prod__img" href="${url}" tabindex="-1" aria-hidden="true"><img src="${pid ? `/products/${pid}.webp` : esc(img(imgName(p.img)))}"${pid ? ` srcset="/products/400/${pid}.webp 400w, /products/${pid}.webp 800w" sizes="(max-width: 760px) 70vw, 320px"` : ''} alt="" loading="lazy" decoding="async" width="800" height="800" /></a>
-    <p class="prod__brand">${esc(p.brand ?? 'Medicalmarca')}</p>
-    <h3><a href="${url}">${esc(p.name)}</a></h3>
-    <p class="prod__price"><b>${eur.format(now)}</b> <s aria-label="Antes">${eur.format(was)}</s> <span class="prod__off">−${off} %</span></p>
-    <a class="btn btn--line btn--sm" href="${url}">Ver producto<span class="visually-hidden">: ${esc(p.name)}</span></a>
-  </article>`;
 }).join(''));
 
 // Newsletter (maqueta: no se envía a ningún sitio)
@@ -85,40 +60,17 @@ $$('a[href^="#"]').forEach((a) => a.addEventListener('click', (e) => {
   lenis ? lenis.scrollTo(el, { duration: 1.4 }) : el.scrollIntoView();
 }));
 
-// ---------- Película: recorrido de cámara por la clínica ----------
-// FILM.stops: posición (0–1) de cada parada dentro del vídeo. Entre paradas la cámara acelera y frena
-// (smoothstep), así se "detiene" en cada aparato mientras aparece su texto.
+// ---------- Portada: recorrido por el catálogo con sus fotos de producto ----------
 const filmEl = $('.film');
-const mobileFilm = window.matchMedia('(max-width: 760px)').matches;
-// Calidad según los píxeles reales de la pantalla: móvil → recorte vertical 960×1706; retina/4K → 2880 px; resto → 1920 px
-const dpr = Math.min(window.devicePixelRatio || 1, 2);
-const needPx = Math.max(window.innerWidth, (window.innerHeight * 16) / 9) * dpr;
-const tier = mobileFilm ? 'film-m' : needPx > 2100 ? 'film-4k' : 'film';
-const seq = mobileFilm ? FILM.mobile : tier === 'film-4k' ? FILM.uhd : FILM.desktop;
-const film = createFilm($('.film__canvas'), {
-  count: seq.count,
-  cuts: seq.cuts,
-  blend: 5, // ventana del fundido en los cortes (secuencias a 12 fps)
-  interpolate: true, // fundido entre fotogramas consecutivos: suave aunque haya 12 por segundo
-  focalX: !mobileFilm && window.matchMedia('(max-width: 1100px) and (orientation: portrait)').matches ? 0.72 : 0.5,
-  src: (i) => `${import.meta.env.BASE_URL}${tier}/f_${String(i + 1).padStart(4, '0')}.webp`,
-});
-film.onProgress((r) => { $('.film__loading i').style.transform = `scaleX(${r})`; if (r >= 1) $('.film__loading').classList.add('is-done'); });
-
 const stops = $$('.stop');
 const dots = $$('.film__progress span');
-const N = FILM.stops.length;
-let filmTarget = 0, filmNow = 0;
+const photos = $$('.vitrina__ph');
+const N = stops.length;
+let filmTarget = 0;
 
 function filmProgress(y) {
   const span = filmEl.offsetHeight - window.innerHeight;
   return Math.min(1, Math.max(0, (y - filmEl.offsetTop) / (span || 1)));
-}
-function videoAt(p) {
-  const seg = Math.min(N - 2, Math.floor(p * (N - 1)));
-  const t = p * (N - 1) - seg;
-  const e = t * t * (3 - 2 * t);
-  return FILM.stops[seg] + (FILM.stops[seg + 1] - FILM.stops[seg]) * e;
 }
 function paintStops(p) {
   let active = 0;
@@ -130,6 +82,11 @@ function paintStops(p) {
     // sin visibility:hidden: el texto de cada parada sigue disponible para lectores de pantalla y teclado
     el.style.pointerEvents = o < 0.5 ? 'none' : '';
     el.style.transform = `translateY(${(p < at ? 1 : -1) * (1 - o) * 40}px)`;
+    const ph = photos[i];
+    if (ph) { // la foto entra desde abajo, crece y se queda; sale hacia arriba
+      ph.style.opacity = o;
+      ph.style.transform = reduced ? 'none' : `translateY(${(p < at ? 1 : -1) * (1 - o) * 70}px) scale(${0.9 + 0.1 * o})`;
+    }
     if (d < 0.5 / (N - 1)) active = i;
   });
   dots.forEach((d, i) => d.classList.toggle('is-on', i === active));
@@ -139,14 +96,8 @@ stops.forEach((el, i) => el.addEventListener('focusin', () => {
   const y = filmEl.offsetTop + (filmEl.offsetHeight - window.innerHeight) * (i / (N - 1));
   if (Math.abs(window.scrollY - y) < 4) return;
   lenis ? lenis.scrollTo(y, { immediate: true }) : window.scrollTo(0, y);
-  filmTarget = filmNow = filmProgress(y); paintStops(filmTarget);
+  filmTarget = filmProgress(y); paintStops(filmTarget);
 }));
-gsap.ticker.add(() => {
-  filmNow += (filmTarget - filmNow) * (reduced ? 1 : 0.18);
-  if (Math.abs(filmTarget - filmNow) < 2e-4) filmNow = filmTarget; // se detiene del todo: imagen quieta y nítida
-  film.progress = videoAt(filmNow);
-});
-
 // ---------- Regla milimetrada ----------
 const scale = $('.ruler__scale');
 for (let mm = 0; mm <= 15; mm++) {
@@ -203,11 +154,11 @@ if (!reduced) {
 
 // ---------- Entrada: un único momento orquestado ----------
 function intro() {
-  onScroll(window.scrollY); filmNow = filmTarget;
+  onScroll(window.scrollY);
   if (reduced || window.scrollY > 10) return;
   gsap.timeline()
     .from('.hero__title .line > span', { yPercent: 105, duration: 1.2, stagger: 0.09, ease: 'expo.out' }, 0.15)
-    .from('.stop--hero .hero__lead, .stop--hero .hero__cta, .stop--hero .facts', { autoAlpha: 0, y: 16, duration: 0.9, stagger: 0.1, ease: 'power3.out' }, 0.6)
+    .from('.stop--hero .hero__lead, .stop--hero .hero__cta', { autoAlpha: 0, y: 16, duration: 0.9, stagger: 0.1, ease: 'power3.out' }, 0.6)
     .from('.nav, .film__progress', { autoAlpha: 0, duration: 0.8 }, 0.5);
 }
 if (document.readyState === 'complete') intro(); else window.addEventListener('load', intro);
