@@ -37,29 +37,62 @@
   </header>
 
   <main id="contenido">
-    <!-- PORTADA: recorrido por el catálogo con las fotos de producto de medicalmarca.com (se genera al compilar) -->
+    <!-- PELÍCULA: recorrido de cámara por la clínica, guiado por el scroll -->
     <section class="film" id="top">
       <div class="film__stage">
-        <div class="vitrina" aria-hidden="true">
-          <!--HOME:PHOTOS-->
-        </div>
+        <canvas class="film__canvas" aria-hidden="true"></canvas>
+        <div class="film__veil" aria-hidden="true"></div>
 
         <div class="stop stop--hero" data-stop="0">
           <h1 class="hero__title">
-            <span class="line"><span>Envío gratis</span></span>
-            <span class="line"><span>a España Peninsular</span></span>
-            <span class="line"><span>a partir de 150€</span></span>
+            <span class="line"><span>Instrumental dental,</span></span>
+            <span class="line"><span>en tu clínica</span></span>
+            <span class="line"><span>en dos días.</span></span>
           </h1>
-          <p class="hero__lead">Entrega en 2 días laborales. Devoluciones gratuitas.</p>
+          <p class="hero__lead">Todo lo que usa tu gabinete, de la pieza de mano al guante. Distribuimos producto dental a clínicas de toda España desde 2006.</p>
           <div class="hero__cta">
-            <a class="btn btn--violet" href="/tienda/">Ver catálogo</a>
+            <a class="btn btn--violet" href="/tienda/">Ver el catálogo completo</a>
             <a class="btn btn--line" href="/tienda/#ofertas">Ver ofertas</a>
           </div>
+          <ul class="facts" aria-label="Condiciones de envío">
+            <li><b>Envío gratis</b> a España peninsular desde 150 €</li>
+            <li><b>Entrega en 2 días</b> laborables</li>
+            <li><b>Devoluciones</b> gratuitas</li>
+          </ul>
         </div>
 
-        <!--HOME:STOPS-->
+        <div class="stop" data-stop="1">
+          <p class="stop__where">En la bandeja</p>
+          <h2>Piezas de mano, fresas e insertos.</h2>
+          <p>Aparatología e instrumental rotatorio, como el destornillador protésico inalámbrico IDS 900 de NSK, y las fresas e insertos que lo acompañan.</p>
+          <a class="link" href="/tienda/#aparatologia-y-instrumental-rotatorio">Ver instrumental rotatorio</a>
+        </div>
 
-        <div class="film__progress" aria-hidden="true"><!--HOME:DOTS--></div>
+        <div class="stop" data-stop="2">
+          <p class="stop__where">Bajo la lámpara</p>
+          <h2>Kits completos para cada intervención.</h2>
+          <p>Implantología, microcirugía, cirugía apical o tunelización: el instrumental que necesitas, ordenado en su caja.</p>
+          <a class="link" href="/tienda/#implantologia">Ver implantología</a>
+        </div>
+
+        <div class="stop" data-stop="3">
+          <p class="stop__where">En el sillón</p>
+          <h2>Profilaxis, pulido y sutura.</h2>
+          <p>Lo que usas en cada paciente, cada día, con entrega en dos días laborables para que no te quedes sin stock.</p>
+          <a class="link" href="/tienda/#profilaxis">Ver profilaxis</a>
+        </div>
+
+        <div class="stop" data-stop="4">
+          <p class="stop__where">En el mueble</p>
+          <h2>Protección, desinfección e instrumental esterilizable.</h2>
+          <p>Guantes y material de protección, gel hidroalcohólico, desinfección e instrumental Ustomed de acero inoxidable.</p>
+          <a class="link" href="/tienda/#material-proteccion">Ver material de protección</a>
+        </div>
+
+        <div class="film__progress" aria-hidden="true">
+          <span data-dot="0">Clínica</span><span data-dot="1">Bandeja</span><span data-dot="2">Lámpara</span><span data-dot="3">Sillón</span><span data-dot="4">Mueble</span>
+        </div>
+        <div class="film__loading" aria-hidden="true"><i></i></div>
       </div>
     </section>
 

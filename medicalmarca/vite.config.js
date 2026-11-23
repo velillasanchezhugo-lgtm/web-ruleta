@@ -23,12 +23,12 @@ function shopSummary() {
   };
 }
 
-// Portada con material de medicalmarca.com: fotos, nombres, precios y familias reales, escritos en el HTML al compilar
+// Destacados, resumen del catálogo y datos de «Sobre nosotros», escritos en el HTML al compilar desde los datos de su tienda
 function homeFromData() {
   return {
     name: 'home-from-data',
     transformIndexHtml(html) {
-      if (!html.includes('<!--HOME:STOPS-->')) return html;
+      if (!html.includes('<!--HOME:FEATURED-->')) return html;
       const d = JSON.parse(readFileSync(r('./src/shop-data.json'), 'utf8'));
       const parts = homeParts(d, { hasLocal: (id) => existsSync(r(`./public/products/${id}.webp`)) });
       const n = d.products.length.toLocaleString('es-ES');
@@ -36,10 +36,7 @@ function homeFromData() {
         .replace('<!--HOME:PHOTOS-->', parts.photos).replace('<!--HOME:STOPS-->', parts.stops)
         .replace('<!--HOME:DOTS-->', parts.dots).replace('<!--HOME:FEATURED-->', parts.featured)
         .replace('<p class="sub" data-cat-sum></p>', `<p class="sub" data-cat-sum>${n} productos en 12 familias.</p>`)
-        .replace('<dt data-fact="products"></dt>', `<dt data-fact="products">${n}</dt>`)
-        // la primera foto de la portada se pide antes que nada (LCP)
-        .replace('</head>', `  <link rel="preload" as="image" href="/products/${parts.heroPid}.webp" imagesrcset="/products/400/${parts.heroPid}.webp 400w, /products/${parts.heroPid}.webp 800w" imagesizes="(max-width: 760px) 62vw, 440px" fetchpriority="high" />
-</head>`);
+        .replace('<dt data-fact="products"></dt>', `<dt data-fact="products">${n}</dt>`);
     },
   };
 }

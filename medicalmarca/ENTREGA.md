@@ -67,10 +67,10 @@ CIF/NIF opcional, dirección de entrega y observaciones) y el pedido llega por c
 - No se cobra en la web: Medicalmarca confirma el plazo y la forma de pago. Para cobrar online haría falta conectar una pasarela (Redsys o Stripe) o su carrito de PrestaShop.
 
 ### 3. Solo material de medicalmarca.com
-- La portada es un recorrido por su catálogo con **sus fotos de producto**, nombres, precios y familias reales. Se genera al compilar desde `src/shop-data.json` (`src/home-build.js`).
+- **La portada mantiene la película de la clínica** (recorrido de cámara generado con IA a partir de una foto de referencia), a petición del cliente. Es lo único de la web que no es material de Medicalmarca. Antes de publicarla como web oficial, conviene sustituirla por un vídeo real de una clínica o de su almacén.
 - Los textos son los suyos: «Envío gratis a España Peninsular a partir de 150€», «Entrega en 2 días laborales», «Devoluciones gratuitas», «Nuestro catálogo», «Productos destacados», «Últimos catálogos», «Sobre nosotros», «Contáctenos» y «Suscríbete a nuestra Newsletter».
 - «Productos destacados» son los 8 de su portada, en el mismo orden.
-- La película generada con IA y las imágenes de categoría ampliadas con IA están en `archivo-ia/` y **no se publican** (ver su LEEME).
+- Las imágenes de categoría ampliadas con IA están en `archivo-ia/` y no se publican (ver su LEEME).
 
 ### 4. Fichas: referencia, stock y descripción
 - Ya están las **referencias de modelo** que aparecen en sus nombres de producto (1201 productos, p. ej. «802L-FG»). También sirven para buscar.

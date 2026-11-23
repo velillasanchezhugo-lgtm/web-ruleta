@@ -4,6 +4,8 @@ import './style.css';
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { createFilm } from './film.js';
+import FILM from './film.json';
 import { CATEGORIES } from './data.js';
 import { FAMILY_PHOTO } from './home-build.js';
 import CATALOG from './catalog-tree.json';
@@ -60,17 +62,40 @@ $$('a[href^="#"]').forEach((a) => a.addEventListener('click', (e) => {
   lenis ? lenis.scrollTo(el, { duration: 1.4 }) : el.scrollIntoView();
 }));
 
-// ---------- Portada: recorrido por el catálogo con sus fotos de producto ----------
+// ---------- Película: recorrido de cámara por la clínica ----------
+// FILM.stops: posición (0–1) de cada parada dentro del vídeo. Entre paradas la cámara acelera y frena
+// (smoothstep), así se "detiene" en cada aparato mientras aparece su texto.
 const filmEl = $('.film');
+const mobileFilm = window.matchMedia('(max-width: 760px)').matches;
+// Calidad según los píxeles reales de la pantalla: móvil → recorte vertical 960×1706; retina/4K → 2880 px; resto → 1920 px
+const dpr = Math.min(window.devicePixelRatio || 1, 2);
+const needPx = Math.max(window.innerWidth, (window.innerHeight * 16) / 9) * dpr;
+const tier = mobileFilm ? 'film-m' : needPx > 2100 ? 'film-4k' : 'film';
+const seq = mobileFilm ? FILM.mobile : tier === 'film-4k' ? FILM.uhd : FILM.desktop;
+const film = createFilm($('.film__canvas'), {
+  count: seq.count,
+  cuts: seq.cuts,
+  blend: 5, // ventana del fundido en los cortes (secuencias a 12 fps)
+  interpolate: true, // fundido entre fotogramas consecutivos: suave aunque haya 12 por segundo
+  focalX: !mobileFilm && window.matchMedia('(max-width: 1100px) and (orientation: portrait)').matches ? 0.72 : 0.5,
+  src: (i) => `${import.meta.env.BASE_URL}${tier}/f_${String(i + 1).padStart(4, '0')}.webp`,
+});
+film.onProgress((r) => { $('.film__loading i').style.transform = `scaleX(${r})`; if (r >= 1) $('.film__loading').classList.add('is-done'); });
+
 const stops = $$('.stop');
 const dots = $$('.film__progress span');
-const photos = $$('.vitrina__ph');
-const N = stops.length;
-let filmTarget = 0;
+const N = FILM.stops.length;
+let filmTarget = 0, filmNow = 0;
 
 function filmProgress(y) {
   const span = filmEl.offsetHeight - window.innerHeight;
   return Math.min(1, Math.max(0, (y - filmEl.offsetTop) / (span || 1)));
+}
+function videoAt(p) {
+  const seg = Math.min(N - 2, Math.floor(p * (N - 1)));
+  const t = p * (N - 1) - seg;
+  const e = t * t * (3 - 2 * t);
+  return FILM.stops[seg] + (FILM.stops[seg + 1] - FILM.stops[seg]) * e;
 }
 function paintStops(p) {
   let active = 0;
@@ -82,11 +107,6 @@ function paintStops(p) {
     // sin visibility:hidden: el texto de cada parada sigue disponible para lectores de pantalla y teclado
     el.style.pointerEvents = o < 0.5 ? 'none' : '';
     el.style.transform = `translateY(${(p < at ? 1 : -1) * (1 - o) * 40}px)`;
-    const ph = photos[i];
-    if (ph) { // la foto entra desde abajo, crece y se queda; sale hacia arriba
-      ph.style.opacity = o;
-      ph.style.transform = reduced ? 'none' : `translateY(${(p < at ? 1 : -1) * (1 - o) * 70}px) scale(${0.9 + 0.1 * o})`;
-    }
     if (d < 0.5 / (N - 1)) active = i;
   });
   dots.forEach((d, i) => d.classList.toggle('is-on', i === active));
@@ -96,8 +116,14 @@ stops.forEach((el, i) => el.addEventListener('focusin', () => {
   const y = filmEl.offsetTop + (filmEl.offsetHeight - window.innerHeight) * (i / (N - 1));
   if (Math.abs(window.scrollY - y) < 4) return;
   lenis ? lenis.scrollTo(y, { immediate: true }) : window.scrollTo(0, y);
-  filmTarget = filmProgress(y); paintStops(filmTarget);
+  filmTarget = filmNow = filmProgress(y); paintStops(filmTarget);
 }));
+gsap.ticker.add(() => {
+  filmNow += (filmTarget - filmNow) * (reduced ? 1 : 0.18);
+  if (Math.abs(filmTarget - filmNow) < 2e-4) filmNow = filmTarget; // se detiene del todo: imagen quieta y nítida
+  film.progress = videoAt(filmNow);
+});
+
 // ---------- Regla milimetrada ----------
 const scale = $('.ruler__scale');
 for (let mm = 0; mm <= 15; mm++) {
@@ -154,11 +180,11 @@ if (!reduced) {
 
 // ---------- Entrada: un único momento orquestado ----------
 function intro() {
-  onScroll(window.scrollY);
+  onScroll(window.scrollY); filmNow = filmTarget;
   if (reduced || window.scrollY > 10) return;
   gsap.timeline()
     .from('.hero__title .line > span', { yPercent: 105, duration: 1.2, stagger: 0.09, ease: 'expo.out' }, 0.15)
-    .from('.stop--hero .hero__lead, .stop--hero .hero__cta', { autoAlpha: 0, y: 16, duration: 0.9, stagger: 0.1, ease: 'power3.out' }, 0.6)
+    .from('.stop--hero .hero__lead, .stop--hero .hero__cta, .stop--hero .facts', { autoAlpha: 0, y: 16, duration: 0.9, stagger: 0.1, ease: 'power3.out' }, 0.6)
     .from('.nav, .film__progress', { autoAlpha: 0, duration: 0.8 }, 0.5);
 }
 if (document.readyState === 'complete') intro(); else window.addEventListener('load', intro);
