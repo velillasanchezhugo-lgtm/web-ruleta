@@ -9,6 +9,7 @@ Uso:  python3 -I scripts/optimize-product-images.py   (desde la carpeta medicalm
 import io
 import json
 import os
+import re
 import ssl
 import sys
 import urllib.request
@@ -49,14 +50,24 @@ def process(p):
         return p, remote, None
     if not remote.startswith('https://medicalmarca.com/'):
         return p, remote, 'sin imagen remota'
-    large = remote.replace('-home_default/', '-large_default/')
-    try:
-        raw = fetch(large)
-    except Exception:  # noqa: BLE001
+    # Su servidor no genera todos los tamaños para todos los productos y, si falta uno, devuelve una página HTML
+    # con código 200. Se prueban todas las versiones y solo se acepta lo que es realmente una imagen.
+    m = re.match(r'(https://medicalmarca\.com/)(\d+)-home_default/(.+)$', remote)
+    candidates = [remote.replace('-home_default/', '-large_default/')]
+    if m:
+        candidates += [f'{m.group(1)}{m.group(2)}/{m.group(3)}', f'{m.group(1)}{m.group(2)}-medium_default/{m.group(3)}']
+    candidates += [remote]
+    raw = None
+    for url in candidates:
         try:
-            raw = fetch(remote)
-        except Exception as e:  # noqa: BLE001
-            return p, remote, str(e)
+            data = fetch(url)
+        except Exception:  # noqa: BLE001
+            continue
+        if data[:3] == b'\xff\xd8\xff' or data[:8] == b'\x89PNG\r\n\x1a\n' or data[8:12] == b'WEBP' or data[:4] == b'GIF8':
+            raw = data
+            break
+    if raw is None:
+        return p, remote, 'ninguna versión de la imagen disponible en su tienda'
     try:
         img, _ = trim_and_square(Image.open(io.BytesIO(raw)))
     except Exception as e:  # noqa: BLE001  (su servidor a veces devuelve una página de error en vez de la imagen)
